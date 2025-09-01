@@ -9,44 +9,64 @@
    */
 
 
-#define DATA_PIN 11         // Data pin for shift registers
-#define CLOCK_PIN 12        // Clock pin for shift registers
-#define LATCH_PIN 8         // Latch pin for shift registers
-#define EEPROM_WRITE_PIN 4  // Pulse HIGH 1us for Write (connected via NPN transistor)
+#define DATA_PIN 11                 // Data pin for shift registers
+#define CLOCK_PIN 12                // Clock pin for shift registers
+#define LATCH_PIN 8                 // Latch pin for shift registers
+#define EEPROM_WRITE_PIN 4          // Pulse HIGH 1us for Write
+#define EEPROM_OUTPUT_ENABLE_PIN 3  // Turn high during this process
 
+void write_data(byte address1, byte address2, byte data) {
+  // write to the EEPROM "data" at address made from address1 and address2
 
+  digitalWrite(LATCH_PIN, LOW);
+  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, address1);
+  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, address2);
+  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, data);
+  digitalWrite(LATCH_PIN, HIGH);
+
+  // Pulse Write enable to do write
+  digitalWrite(EEPROM_WRITE_PIN, LOW);
+  delayMicroseconds(1);
+  digitalWrite(EEPROM_WRITE_PIN, HIGH);
+  delayMicroseconds(20);
+}
 
 void setup() {
 
   Serial.begin(9600);
+
   pinMode(DATA_PIN, OUTPUT);
   pinMode(CLOCK_PIN, OUTPUT);
   pinMode(LATCH_PIN, OUTPUT);
   pinMode(EEPROM_WRITE_PIN, OUTPUT);
+  pinMode(EEPROM_OUTPUT_ENABLE_PIN, OUTPUT);
 
   digitalWrite(EEPROM_WRITE_PIN, HIGH);
+  digitalWrite(EEPROM_OUTPUT_ENABLE_PIN, HIGH);  // Turn off output enable
+
   delay(500);
+
+  for (int i = 0; i < 255; i++) {
+    byte a = byte(i);
+    byte d = byte(i);
+    write_data(a, a, d);
+  }
+
+  delay(500);
+
 }
 
 void loop() {
 
-  byte data1 = 0xff;
-  byte data2 = 0x00;
-  byte data3 = 0x55;
+  if (Serial.available() > 1) {
 
+    byte add1 = Serial.read();
+    byte add2 = Serial.read();
+    byte data = Serial.read();
 
-  // Shift data to registers:
-  digitalWrite(LATCH_PIN, LOW);
-  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, data1);
-  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, data2);
-  shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, data3);
-  digitalWrite(LATCH_PIN, HIGH);
+    write_data(add1, add2, data);
 
-  // // Pulse write pin
-  // digitalWrite(EEPROM_WRITE_PIN, HIGH);
-  // delayMicroseconds(1);
-  // digitalWrite(EEPROM_WRITE_PIN, LOW);
-  // delay(10);
-
-  while (true) { delay(1000); }
+    Serial.write(0x55);
+    delay(20);
+  }
 }
