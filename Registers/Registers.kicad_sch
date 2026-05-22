@@ -3826,7 +3826,7 @@
 				(pin bidirectional line
 					(at -12.7 29.21 0)
 					(length 5.08)
-					(name "LABus0"
+					(name "LABus7"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3844,7 +3844,7 @@
 				(pin bidirectional line
 					(at -12.7 25.4 0)
 					(length 5.08)
-					(name "LABus1"
+					(name "LABus6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3862,7 +3862,7 @@
 				(pin bidirectional line
 					(at -12.7 21.59 0)
 					(length 5.08)
-					(name "LABus2"
+					(name "LABus5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3880,7 +3880,7 @@
 				(pin bidirectional line
 					(at -12.7 17.78 0)
 					(length 5.08)
-					(name "LABus3"
+					(name "LABus4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3898,7 +3898,7 @@
 				(pin bidirectional line
 					(at -12.7 13.97 0)
 					(length 5.08)
-					(name "LABus4"
+					(name "LABus3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3916,7 +3916,7 @@
 				(pin bidirectional line
 					(at -12.7 10.16 0)
 					(length 5.08)
-					(name "LABus5"
+					(name "LABus2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3934,7 +3934,7 @@
 				(pin bidirectional line
 					(at -12.7 6.35 0)
 					(length 5.08)
-					(name "LABus6"
+					(name "LABus1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3952,7 +3952,7 @@
 				(pin bidirectional line
 					(at -12.7 2.54 0)
 					(length 5.08)
-					(name "LABus7"
+					(name "LABus0"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3970,7 +3970,7 @@
 				(pin bidirectional line
 					(at -12.7 -1.27 0)
 					(length 5.08)
-					(name "LBBus0"
+					(name "LBBus7"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3988,7 +3988,7 @@
 				(pin bidirectional line
 					(at -12.7 -5.08 0)
 					(length 5.08)
-					(name "LBBus1"
+					(name "LBBus6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4006,7 +4006,7 @@
 				(pin bidirectional line
 					(at -12.7 -8.89 0)
 					(length 5.08)
-					(name "LBBus2"
+					(name "LBBus5"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4024,7 +4024,7 @@
 				(pin bidirectional line
 					(at -12.7 -12.7 0)
 					(length 5.08)
-					(name "LBBus3"
+					(name "LBBus4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4042,7 +4042,7 @@
 				(pin bidirectional line
 					(at -12.7 -16.51 0)
 					(length 5.08)
-					(name "LBBus4"
+					(name "LBBus3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4060,7 +4060,7 @@
 				(pin bidirectional line
 					(at -12.7 -20.32 0)
 					(length 5.08)
-					(name "LBBus5"
+					(name "LBBus2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4078,7 +4078,7 @@
 				(pin bidirectional line
 					(at -12.7 -24.13 0)
 					(length 5.08)
-					(name "LBBus6"
+					(name "LBBus1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4096,7 +4096,7 @@
 				(pin bidirectional line
 					(at -12.7 -27.94 0)
 					(length 5.08)
-					(name "LBBus7"
+					(name "LBBus0"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -6093,12 +6093,6 @@
 		(uuid "19a50881-6b55-4570-91a9-9c8240ce74d8")
 	)
 	(junction
-		(at 78.74 35.56)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "25d424b6-a3d4-4c7b-ab0b-617fae38db44")
-	)
-	(junction
 		(at 200.66 20.32)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6169,12 +6163,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "f7f44904-239a-429f-a14c-7218ba2cb6cc")
-	)
-	(junction
-		(at 78.74 58.42)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "f9a3a729-309c-48bd-9a96-2a08cb1df296")
 	)
 	(no_connect
 		(at 154.94 170.18)
@@ -6443,16 +6431,6 @@
 			(type default)
 		)
 		(uuid "1fa1c74a-feda-4b87-b770-4e6adbb73af5")
-	)
-	(wire
-		(pts
-			(xy 78.74 57.15) (xy 78.74 58.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1fd4f31e-4f00-43a5-ad5a-33d7b2f299cc")
 	)
 	(wire
 		(pts
@@ -7163,16 +7141,6 @@
 			(type default)
 		)
 		(uuid "6761cc33-32b4-400a-9121-83998891ba54")
-	)
-	(wire
-		(pts
-			(xy 78.74 35.56) (xy 80.01 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "676cc058-1cd6-4351-93b4-b92889a8aeb2")
 	)
 	(wire
 		(pts
@@ -8760,7 +8728,7 @@
 			)
 		)
 	)
-	(global_label "LBA6"
+	(global_label "LBA1"
 		(shape input)
 		(at 74.93 88.9 180)
 		(fields_autoplaced yes)
@@ -9192,7 +9160,7 @@
 			)
 		)
 	)
-	(global_label "LBA0"
+	(global_label "LBA7"
 		(shape input)
 		(at 74.93 66.04 180)
 		(fields_autoplaced yes)
@@ -9672,7 +9640,7 @@
 			)
 		)
 	)
-	(global_label "LBB3"
+	(global_label "LBB4"
 		(shape input)
 		(at 74.93 107.95 180)
 		(fields_autoplaced yes)
@@ -9792,7 +9760,7 @@
 			)
 		)
 	)
-	(global_label "LBB6"
+	(global_label "LBB1"
 		(shape input)
 		(at 74.93 119.38 180)
 		(fields_autoplaced yes)
@@ -9912,7 +9880,7 @@
 			)
 		)
 	)
-	(global_label "LBB2"
+	(global_label "LBB5"
 		(shape input)
 		(at 74.93 104.14 180)
 		(fields_autoplaced yes)
@@ -10128,7 +10096,7 @@
 			)
 		)
 	)
-	(global_label "LBA2"
+	(global_label "LBA5"
 		(shape input)
 		(at 74.93 73.66 180)
 		(fields_autoplaced yes)
@@ -11160,7 +11128,7 @@
 			)
 		)
 	)
-	(global_label "LBB4"
+	(global_label "LBB3"
 		(shape input)
 		(at 74.93 111.76 180)
 		(fields_autoplaced yes)
@@ -12048,7 +12016,7 @@
 			)
 		)
 	)
-	(global_label "LBA1"
+	(global_label "LBA6"
 		(shape input)
 		(at 74.93 69.85 180)
 		(fields_autoplaced yes)
@@ -12072,7 +12040,7 @@
 			)
 		)
 	)
-	(global_label "LBA4"
+	(global_label "LBA3"
 		(shape input)
 		(at 74.93 81.28 180)
 		(fields_autoplaced yes)
@@ -12576,7 +12544,7 @@
 			)
 		)
 	)
-	(global_label "LBB1"
+	(global_label "LBB6"
 		(shape input)
 		(at 74.93 100.33 180)
 		(fields_autoplaced yes)
@@ -12600,7 +12568,7 @@
 			)
 		)
 	)
-	(global_label "LBB7"
+	(global_label "LBB0"
 		(shape input)
 		(at 74.93 123.19 180)
 		(fields_autoplaced yes)
@@ -13080,7 +13048,7 @@
 			)
 		)
 	)
-	(global_label "LBB0"
+	(global_label "LBB7"
 		(shape input)
 		(at 74.93 96.52 180)
 		(fields_autoplaced yes)
@@ -13296,7 +13264,7 @@
 			)
 		)
 	)
-	(global_label "LBB5"
+	(global_label "LBB2"
 		(shape input)
 		(at 74.93 115.57 180)
 		(fields_autoplaced yes)
@@ -13464,7 +13432,7 @@
 			)
 		)
 	)
-	(global_label "LBA7"
+	(global_label "LBA0"
 		(shape input)
 		(at 74.93 92.71 180)
 		(fields_autoplaced yes)
@@ -13800,7 +13768,7 @@
 			)
 		)
 	)
-	(global_label "LBA5"
+	(global_label "LBA2"
 		(shape input)
 		(at 74.93 85.09 180)
 		(fields_autoplaced yes)
@@ -14280,7 +14248,7 @@
 			)
 		)
 	)
-	(global_label "LBA3"
+	(global_label "LBA4"
 		(shape input)
 		(at 74.93 77.47 180)
 		(fields_autoplaced yes)
