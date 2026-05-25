@@ -8800,7 +8800,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "5V_2"
 		(shape input)
 		(at 200.66 17.78 0)
 		(fields_autoplaced yes)
@@ -8812,7 +8812,7 @@
 		)
 		(uuid "0b103d50-42d2-4f59-abd3-ace9a87e4607")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 205.9433 17.78 0)
+			(at 208.1204 17.78 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11440,7 +11440,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "5V_2"
 		(shape input)
 		(at 53.34 168.91 0)
 		(fields_autoplaced yes)
@@ -11452,7 +11452,7 @@
 		)
 		(uuid "844bf4a8-271b-45bf-a2d1-b9eab7e29f7c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 58.6233 168.91 0)
+			(at 60.8004 168.91 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12952,7 +12952,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "5V_2"
 		(shape input)
 		(at 152.4 17.78 0)
 		(fields_autoplaced yes)
@@ -12964,7 +12964,7 @@
 		)
 		(uuid "c471a094-9466-45c3-81a6-04affcd7ac9f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 157.6833 17.78 0)
+			(at 159.8604 17.78 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
