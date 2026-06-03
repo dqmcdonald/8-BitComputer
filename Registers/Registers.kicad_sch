@@ -5598,6 +5598,147 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Device:R_Small"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.254)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.016 1.016)
+					)
+				)
+			)
+			(property "Value" "R_Small"
+				(at 1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor, small symbol"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "R resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_Small_0_1"
+				(rectangle
+					(start -0.762 1.778)
+					(end 0.762 -1.778)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_Small_1_1"
+				(pin passive line
+					(at 0 2.54 270)
+					(length 0.762)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -2.54 90)
+					(length 0.762)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "MCU_Microchip_ATtiny:ATtiny84-20P"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -6093,6 +6234,12 @@
 		(uuid "19a50881-6b55-4570-91a9-9c8240ce74d8")
 	)
 	(junction
+		(at 167.64 179.07)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2611b44e-b39e-48ce-9544-e9490c2a7072")
+	)
+	(junction
 		(at 200.66 20.32)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6168,10 +6315,6 @@
 		(at 154.94 170.18)
 		(uuid "947063e2-8980-42e5-9245-9f5c92f8a5d2")
 	)
-	(no_connect
-		(at 154.94 177.8)
-		(uuid "98a104a4-fabe-4e35-9d92-bcc874a6810e")
-	)
 	(wire
 		(pts
 			(xy 49.53 73.66) (xy 52.07 73.66)
@@ -6244,6 +6387,16 @@
 	)
 	(wire
 		(pts
+			(xy 157.48 177.8) (xy 157.48 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "078362d0-8a63-40a5-8cb3-546e0e7d2688")
+	)
+	(wire
+		(pts
 			(xy 49.53 100.33) (xy 52.07 100.33)
 		)
 		(stroke
@@ -6304,7 +6457,7 @@
 	)
 	(wire
 		(pts
-			(xy 167.64 137.16) (xy 167.64 189.23)
+			(xy 167.64 137.16) (xy 167.64 179.07)
 		)
 		(stroke
 			(width 0)
@@ -6701,6 +6854,16 @@
 			(type default)
 		)
 		(uuid "4624c31c-443a-499c-be54-6392996664e1")
+	)
+	(wire
+		(pts
+			(xy 165.1 179.07) (xy 167.64 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4625a0c6-36f1-4219-be61-1a6334955577")
 	)
 	(wire
 		(pts
@@ -7874,6 +8037,16 @@
 	)
 	(wire
 		(pts
+			(xy 154.94 177.8) (xy 157.48 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aec79c3f-7082-4310-ae09-478bb0726cb1")
+	)
+	(wire
+		(pts
 			(xy 21.59 130.81) (xy 24.13 130.81)
 		)
 		(stroke
@@ -7941,6 +8114,16 @@
 			(type default)
 		)
 		(uuid "b51bd83e-c330-47e7-bb38-6ac0dfeb27d0")
+	)
+	(wire
+		(pts
+			(xy 167.64 179.07) (xy 167.64 189.23)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b5c612a7-cc5f-4c36-bde6-304dd5eb3488")
 	)
 	(wire
 		(pts
@@ -8071,6 +8254,16 @@
 			(type default)
 		)
 		(uuid "c63a7cde-7d1a-4b21-8c7f-d30d1e2218c5")
+	)
+	(wire
+		(pts
+			(xy 157.48 179.07) (xy 160.02 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c7382948-11b1-4765-b1f9-995e1ea4d329")
 	)
 	(wire
 		(pts
@@ -14422,8 +14615,8 @@
 				)
 			)
 		)
-		(property "MPN" "RC0805FR-07220RL"
-			(at 0 0 0)
+		(property "Description" "Resistor"
+			(at 223.52 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14433,8 +14626,8 @@
 				)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 223.52 130.81 0)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14513,8 +14706,8 @@
 				)
 			)
 		)
-		(property "MPN" "PRPC040SAAN-RC"
-			(at 0 0 0)
+		(property "Description" "Databus for 8-Bit Computer"
+			(at 96.52 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14524,8 +14717,8 @@
 				)
 			)
 		)
-		(property "Description" "Databus for 8-Bit Computer"
-			(at 96.52 52.07 0)
+		(property "MPN" "PRPC040SAAN-RC"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14712,8 +14905,8 @@
 				)
 			)
 		)
-		(property "MPN" "150080RS75000"
-			(at 0 0 0)
+		(property "Description" "Light emitting diode"
+			(at 246.38 142.24 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14723,8 +14916,8 @@
 				)
 			)
 		)
-		(property "Description" "Light emitting diode"
-			(at 246.38 142.24 0)
+		(property "MPN" "150080RS75000"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14814,8 +15007,8 @@
 				)
 			)
 		)
-		(property "MPN" "150080RS75000"
-			(at 0 0 0)
+		(property "Description" "Light emitting diode"
+			(at 269.24 142.24 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14825,8 +15018,8 @@
 				)
 			)
 		)
-		(property "Description" "Light emitting diode"
-			(at 269.24 142.24 0)
+		(property "MPN" "150080RS75000"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14915,8 +15108,8 @@
 				)
 			)
 		)
-		(property "MPN" "PRPC004SAAN-RC"
-			(at 0 0 0)
+		(property "Description" "Generic connector, single row, 01x04, script generated"
+			(at 250.19 102.87 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14926,8 +15119,8 @@
 				)
 			)
 		)
-		(property "Description" "Generic connector, single row, 01x04, script generated"
-			(at 250.19 102.87 0)
+		(property "MPN" "PRPC004SAAN-RC"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15013,8 +15206,8 @@
 				)
 			)
 		)
-		(property "MPN" "SN74HC245N"
-			(at 0 0 0)
+		(property "Description" "Octal BUS Transceivers, 3-State outputs"
+			(at 248.92 41.91 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15024,8 +15217,8 @@
 				)
 			)
 		)
-		(property "Description" "Octal BUS Transceivers, 3-State outputs"
-			(at 248.92 41.91 0)
+		(property "MPN" "SN74HC245N"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15158,8 +15351,8 @@
 				)
 			)
 		)
-		(property "MPN" "RC0805FR-07220RL"
-			(at 0 0 0)
+		(property "Description" "Resistor"
+			(at 189.23 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15169,8 +15362,8 @@
 				)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 189.23 130.81 0)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15249,8 +15442,8 @@
 				)
 			)
 		)
-		(property "MPN" "C315C104M5U5TA"
-			(at 0 0 0)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 257.81 69.85 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15260,8 +15453,8 @@
 				)
 			)
 		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 257.81 69.85 0)
+		(property "MPN" "C315C104M5U5TA"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15340,8 +15533,8 @@
 				)
 			)
 		)
-		(property "MPN" "150080RS75000"
-			(at 0 0 0)
+		(property "Description" "Light emitting diode"
+			(at 257.81 142.24 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15351,8 +15544,8 @@
 				)
 			)
 		)
-		(property "Description" "Light emitting diode"
-			(at 257.81 142.24 0)
+		(property "MPN" "150080RS75000"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15442,8 +15635,8 @@
 				)
 			)
 		)
-		(property "MPN" "PPTC101LFBN-RC"
-			(at 0 0 0)
+		(property "Description" "Generic connector, single row, 01x10, script generated"
+			(at 144.78 99.06 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15453,8 +15646,8 @@
 				)
 			)
 		)
-		(property "Description" "Generic connector, single row, 01x10, script generated"
-			(at 144.78 99.06 0)
+		(property "MPN" "PPTC101LFBN-RC"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15557,8 +15750,8 @@
 				)
 			)
 		)
-		(property "MPN" "RC0805FR-07220RL"
-			(at 0 0 0)
+		(property "Description" "Resistor"
+			(at 234.95 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15568,8 +15761,8 @@
 				)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 234.95 130.81 0)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15648,8 +15841,8 @@
 				)
 			)
 		)
-		(property "MPN" "C315C104M5U5TA"
-			(at 0 0 0)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 162.56 69.85 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15659,8 +15852,8 @@
 				)
 			)
 		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 162.56 69.85 0)
+		(property "MPN" "C315C104M5U5TA"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15740,8 +15933,8 @@
 				)
 			)
 		)
-		(property "MPN" "CD74HC173E"
-			(at 0 0 0)
+		(property "Description" "4-bit D-type Register, 3 state out"
+			(at 152.4 44.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15751,8 +15944,8 @@
 				)
 			)
 		)
-		(property "Description" "4-bit D-type Register, 3 state out"
-			(at 152.4 44.45 0)
+		(property "MPN" "CD74HC173E"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16177,8 +16370,8 @@
 				)
 			)
 		)
-		(property "MPN" "PRPC040SAAN-RC"
-			(at 0 0 0)
+		(property "Description" "Databus for 8-Bit Computer"
+			(at 92.71 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16188,8 +16381,8 @@
 				)
 			)
 		)
-		(property "Description" "Databus for 8-Bit Computer"
-			(at 92.71 52.07 0)
+		(property "MPN" "PRPC040SAAN-RC"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16376,8 +16569,8 @@
 				)
 			)
 		)
-		(property "MPN" "PPTC081LFBN-RC"
-			(at 0 0 0)
+		(property "Description" "Generic connector, single row, 01x08, script generated"
+			(at 196.85 96.52 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16387,8 +16580,8 @@
 				)
 			)
 		)
-		(property "Description" "Generic connector, single row, 01x08, script generated"
-			(at 196.85 96.52 0)
+		(property "MPN" "PPTC081LFBN-RC"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16485,8 +16678,8 @@
 				)
 			)
 		)
-		(property "MPN" "C315C104M5U5TA"
-			(at 0 0 0)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 157.48 189.23 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16496,8 +16689,8 @@
 				)
 			)
 		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 157.48 189.23 0)
+		(property "MPN" "C315C104M5U5TA"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16576,8 +16769,8 @@
 				)
 			)
 		)
-		(property "MPN" "150080RS75000"
-			(at 0 0 0)
+		(property "Description" "Light emitting diode"
+			(at 234.95 142.24 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16587,8 +16780,8 @@
 				)
 			)
 		)
-		(property "Description" "Light emitting diode"
-			(at 234.95 142.24 0)
+		(property "MPN" "150080RS75000"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16678,8 +16871,8 @@
 				)
 			)
 		)
-		(property "MPN" "C315C104M5U5TA"
-			(at 0 0 0)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 210.82 69.85 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16689,8 +16882,8 @@
 				)
 			)
 		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 210.82 69.85 0)
+		(property "MPN" "C315C104M5U5TA"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16769,8 +16962,8 @@
 				)
 			)
 		)
-		(property "MPN" "150080RS75000"
-			(at 0 0 0)
+		(property "Description" "Light emitting diode"
+			(at 189.23 142.24 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16780,8 +16973,8 @@
 				)
 			)
 		)
-		(property "Description" "Light emitting diode"
-			(at 189.23 142.24 0)
+		(property "MPN" "150080RS75000"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16871,8 +17064,8 @@
 				)
 			)
 		)
-		(property "MPN" "150080RS75000"
-			(at 0 0 0)
+		(property "Description" "Light emitting diode"
+			(at 212.09 142.24 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16882,8 +17075,8 @@
 				)
 			)
 		)
-		(property "Description" "Light emitting diode"
-			(at 212.09 142.24 0)
+		(property "MPN" "150080RS75000"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16973,8 +17166,8 @@
 				)
 			)
 		)
-		(property "MPN" "RC0805FR-07220RL"
-			(at 0 0 0)
+		(property "Description" "Resistor"
+			(at 246.38 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16984,8 +17177,8 @@
 				)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 246.38 130.81 0)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17065,8 +17258,8 @@
 				)
 			)
 		)
-		(property "MPN" "CD74HC173E"
-			(at 0 0 0)
+		(property "Description" "4-bit D-type Register, 3 state out"
+			(at 200.66 44.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17076,8 +17269,8 @@
 				)
 			)
 		)
-		(property "Description" "4-bit D-type Register, 3 state out"
-			(at 200.66 44.45 0)
+		(property "MPN" "CD74HC173E"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17198,8 +17391,8 @@
 				)
 			)
 		)
-		(property "MPN" "150080RS75000"
-			(at 0 0 0)
+		(property "Description" "Light emitting diode"
+			(at 223.52 142.24 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17209,8 +17402,8 @@
 				)
 			)
 		)
-		(property "Description" "Light emitting diode"
-			(at 223.52 142.24 0)
+		(property "MPN" "150080RS75000"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17241,6 +17434,85 @@
 			(project "Registers"
 				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
 					(reference "D4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small")
+		(at 162.56 179.07 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "aa831e3a-b350-4f32-a6ef-1dd5537071b0")
+		(property "Reference" "R9"
+			(at 163.322 176.784 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.016 1.016)
+				)
+			)
+		)
+		(property "Value" "4.7K"
+			(at 163.322 181.356 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 162.56 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 162.56 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small symbol"
+			(at 162.56 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "045fefa4-4ee0-4317-9cfe-48290b5dadd0")
+		)
+		(pin "2"
+			(uuid "4e917b63-32c7-4757-8041-545273ffd12c")
+		)
+		(instances
+			(project "Registers"
+				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
+					(reference "R9")
 					(unit 1)
 				)
 			)
@@ -17302,8 +17574,8 @@
 				)
 			)
 		)
-		(property "MPN" "ATTINY84A-PU"
-			(at 0 0 0)
+		(property "Description" "20MHz, 8kB Flash, 512B SRAM, 512B EEPROM, debugWIRE, DIP-14"
+			(at 139.7 162.56 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17313,8 +17585,8 @@
 				)
 			)
 		)
-		(property "Description" "20MHz, 8kB Flash, 512B SRAM, 512B EEPROM, debugWIRE, DIP-14"
-			(at 139.7 162.56 0)
+		(property "MPN" "ATTINY84A-PU"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17429,8 +17701,8 @@
 				)
 			)
 		)
-		(property "MPN" "RC0805FR-07220RL"
-			(at 0 0 0)
+		(property "Description" "Resistor"
+			(at 257.81 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17440,8 +17712,8 @@
 				)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 257.81 130.81 0)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17520,8 +17792,8 @@
 				)
 			)
 		)
-		(property "MPN" "RC0805FR-07220RL"
-			(at 0 0 0)
+		(property "Description" "Resistor"
+			(at 212.09 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17531,8 +17803,8 @@
 				)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 212.09 130.81 0)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17611,8 +17883,8 @@
 				)
 			)
 		)
-		(property "MPN" "PPTC081LFBN-RC"
-			(at 0 0 0)
+		(property "Description" "Generic connector, single row, 01x08, script generated"
+			(at 226.06 156.21 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17622,8 +17894,8 @@
 				)
 			)
 		)
-		(property "Description" "Generic connector, single row, 01x08, script generated"
-			(at 226.06 156.21 0)
+		(property "MPN" "PPTC081LFBN-RC"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17720,8 +17992,8 @@
 				)
 			)
 		)
-		(property "MPN" "150080RS75000"
-			(at 0 0 0)
+		(property "Description" "Light emitting diode"
+			(at 200.66 142.24 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17731,8 +18003,8 @@
 				)
 			)
 		)
-		(property "Description" "Light emitting diode"
-			(at 200.66 142.24 0)
+		(property "MPN" "150080RS75000"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17822,8 +18094,8 @@
 				)
 			)
 		)
-		(property "MPN" "RC0805FR-07220RL"
-			(at 0 0 0)
+		(property "Description" "Resistor"
+			(at 200.66 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17833,8 +18105,8 @@
 				)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 200.66 130.81 0)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17913,8 +18185,8 @@
 				)
 			)
 		)
-		(property "MPN" "RC0805FR-07220RL"
-			(at 0 0 0)
+		(property "Description" "Resistor"
+			(at 269.24 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17924,8 +18196,8 @@
 				)
 			)
 		)
-		(property "Description" "Resistor"
-			(at 269.24 130.81 0)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)

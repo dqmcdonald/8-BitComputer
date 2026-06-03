@@ -161,10 +161,42 @@
 				)
 			)
 		)
+		(property "MPN" "150080RS75000"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "76db0fef-f65e-4e17-9510-30ff13674626")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "7cb51e77-5cff-4dfd-a82c-08fd53b6979a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/76f79847-bebe-4bf5-90b1-623f9229c5f8")
 		(sheetname "/")
 		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -357,6 +389,19 @@
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "f57431e4-8e4d-46a0-bc01-eceb71ad1633")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "SN74HC245N"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "762ecc43-760d-4703-9558-9b8dca88ccc8")
 			(effects
 				(font
 					(size 1 1)
@@ -830,6 +875,19 @@
 				)
 			)
 		)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "78059513-bbe3-42a9-98ff-264a1a46ec64")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "R_*")
 		(path "/7d1091b7-52f5-4551-95ba-bcbad1ced79c")
 		(sheetname "/")
@@ -1046,6 +1104,19 @@
 				)
 			)
 		)
+		(property "MPN" "C315C104M5U5TA"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "621ad219-df9f-49e9-ae89-84b4058934ef")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "C_*")
 		(path "/2241570d-2c16-4786-b829-d1bba06ed21f")
 		(sheetname "/")
@@ -1233,10 +1304,42 @@
 				)
 			)
 		)
+		(property "MPN" "150080RS75000"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "eb8b90f5-2371-4453-b1b6-339bd51948bf")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "8b55b317-1262-4617-bcaa-87880c070f04")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/06e2d97e-e60b-4fe0-b7ed-7e89931158e3")
 		(sheetname "/")
 		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -1443,10 +1546,42 @@
 				)
 			)
 		)
+		(property "MPN" "150080RS75000"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "0eace691-8322-43dd-b355-7a72536ca53e")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "8f8ea0ee-6c46-41ea-8f85-b5797a6adb4d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/0c1f983e-916d-44e0-a932-86027aea89cd")
 		(sheetname "/")
 		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -1639,6 +1774,19 @@
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "266059d9-5e92-4bb7-bc92-37b781255cb2")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "CD74HC173E"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e422f8c4-70a7-48df-843f-5f3749c07d15")
 			(effects
 				(font
 					(size 1 1)
@@ -2012,6 +2160,164 @@
 		)
 	)
 	(footprint "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+		(layer "F.Cu")
+		(uuid "2bd3b4f2-ed6c-4ce8-a0a8-01e5f10376b7")
+		(at 79.6 118 -90)
+		(descr "Resistor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
+		(tags "resistor handsolder")
+		(property "Reference" "R9"
+			(at 0 -1.65 90)
+			(layer "F.SilkS")
+			(uuid "a29e186d-4fe3-4925-aefd-95c89eec8ab2")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "4.7K"
+			(at 0 1.65 90)
+			(layer "F.Fab")
+			(uuid "98b53daf-9213-495d-b782-33a51dfc2379")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 90)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "997a97a2-598e-4785-8f2e-e8d97ae69544")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small symbol"
+			(at 0 0 90)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "d24af0ac-7215-4f32-8b85-a7dde609dbb5")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "KiLib_Generator" "SMD_2terminal_chip_molded"
+			(at 0 0 90)
+			(layer "F.SilkS")
+			(hide yes)
+			(uuid "4d69d79a-06ab-4a26-b1c1-fba3c47b576e")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "R_*")
+		(path "/aa831e3a-b350-4f32-a6ef-1dd5537071b0")
+		(sheetname "/")
+		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
+		(attr smd)
+		(duplicate_pad_numbers_are_jumpers no)
+		(fp_line
+			(start -0.227064 0.735)
+			(end 0.227064 0.735)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(layer "F.SilkS")
+			(uuid "6049ab03-69c0-4acc-9e0f-a5dbcdf9f860")
+		)
+		(fp_line
+			(start -0.227064 -0.735)
+			(end 0.227064 -0.735)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(layer "F.SilkS")
+			(uuid "5f4f24ec-53dd-4a1c-893f-e201a57c9247")
+		)
+		(fp_rect
+			(start -1.85 -0.95)
+			(end 1.85 0.95)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "c4c9f91f-73a1-46b3-b919-604642ec14a7")
+		)
+		(fp_rect
+			(start -1 -0.625)
+			(end 1 0.625)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "8ebb6f6c-13d9-4aa0-98b6-46239fdce093")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 90)
+			(layer "F.Fab")
+			(uuid "de80a0b4-3b2f-4631-a51f-b26b761f6828")
+			(effects
+				(font
+					(size 0.5 0.5)
+					(thickness 0.08)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at -1 0 270)
+			(size 1.2 1.4)
+			(layers "F.Cu" "F.Mask" "F.Paste")
+			(roundrect_rratio 0.208333)
+			(net "Net-(U4-~{RESET}{slash}PB3)")
+			(pintype "passive")
+			(uuid "9bde9ec0-a4af-46a6-9dba-843c2a3a67d5")
+		)
+		(pad "2" smd roundrect
+			(at 1 0 270)
+			(size 1.2 1.4)
+			(layers "F.Cu" "F.Mask" "F.Paste")
+			(roundrect_rratio 0.208333)
+			(net "5V_2")
+			(pintype "passive")
+			(uuid "339e16ac-b178-484b-b211-a79579ee352f")
+		)
+		(embedded_fonts no)
+		(model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0805_2012Metric.step"
+			(offset
+				(xyz 0 0 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 0)
+			)
+		)
+	)
+	(footprint "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 		(locked yes)
 		(layer "F.Cu")
 		(uuid "2fd6f204-7b4a-4248-b2b9-0b9b1a497331")
@@ -2064,6 +2370,19 @@
 			(effects
 				(font
 					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "21071647-3cd2-4982-a898-e8f50b2e5411")
+			(effects
+				(font
+					(size 1 1)
 					(thickness 0.15)
 				)
 			)
@@ -2277,6 +2596,19 @@
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "c17ebd37-b4d2-4abc-80a2-b3cd59866cf9")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "PRPC004SAAN-RC"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "2c3fcb31-4076-4d5a-b052-2e78df137c6e")
 			(effects
 				(font
 					(size 1 1)
@@ -4102,6 +4434,19 @@
 				)
 			)
 		)
+		(property "MPN" "CD74HC173E"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "0751fae5-c362-4931-82c5-c87340363ad8")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "DIP*W7.62* SOIC*3.9*9.9mm*P1.27mm* TSSOP*4.4*5mm*P0.65mm*")
 		(path "/7fac7c44-35dd-4835-8a92-fb95a45e2871")
 		(sheetname "/")
@@ -4520,6 +4865,19 @@
 			(effects
 				(font
 					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "PRPC040SAAN-RC"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "c611374d-7e94-4cbe-8b7d-c24d20a0d1b5")
+			(effects
+				(font
+					(size 1 1)
 					(thickness 0.15)
 				)
 			)
@@ -5199,6 +5557,19 @@
 				)
 			)
 		)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "37214121-f42b-4509-b9f2-519bdf315ee6")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "R_*")
 		(path "/e1057ec4-f6fe-49ba-ba3e-fe9c4207399a")
 		(sheetname "/")
@@ -5411,10 +5782,42 @@
 				)
 			)
 		)
+		(property "MPN" "150080RS75000"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "f25bea70-a88e-42c1-a445-d299a7f47876")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "96d377a7-5376-458d-a6de-df3edd6d8dc2")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/7ab14e36-d363-4a3c-8642-a137bcaf497a")
 		(sheetname "/")
 		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -5605,6 +6008,19 @@
 			(effects
 				(font
 					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "3fa2dcc7-58c5-4686-9024-44697a1b22d0")
+			(effects
+				(font
+					(size 1 1)
 					(thickness 0.15)
 				)
 			)
@@ -5832,10 +6248,42 @@
 				)
 			)
 		)
+		(property "MPN" "150080RS75000"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "36c0caab-43cd-4dab-a4df-656468940a0c")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "f4b7c98f-8e48-43cd-8ff5-4f9603703f30")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/7a63c248-bb96-4803-a511-f56d551d700f")
 		(sheetname "/")
 		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -6028,6 +6476,19 @@
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "af5cc32a-9df1-41a7-99ff-5db4b58407e1")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "PPTC081LFBN-RC"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "6ae9597f-6a38-4557-bea2-fa7d6db299ef")
 			(effects
 				(font
 					(size 1 1)
@@ -6371,6 +6832,19 @@
 				)
 			)
 		)
+		(property "MPN" "ATTINY84A-PU"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "729bdfcd-d2b2-47e7-b2ef-33caa7aa7fea")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "DIP*W7.62mm*")
 		(path "/ceb857a7-f647-4949-852b-db06d161bff1")
 		(sheetname "/")
@@ -6562,9 +7036,9 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "unconnected-(U4-~{RESET}{slash}PB3-Pad4)")
+			(net "Net-(U4-~{RESET}{slash}PB3)")
 			(pinfunction "~{RESET}/PB3_4")
-			(pintype "bidirectional+no_connect")
+			(pintype "bidirectional")
 			(uuid "d975a6de-db69-4631-b40c-deee88d55266")
 		)
 		(pad "5" thru_hole circle
@@ -6756,6 +7230,19 @@
 				(font
 					(size 0.5 0.5)
 					(thickness 0.08)
+				)
+			)
+		)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "76895eac-5915-4212-b79e-fd0649841323")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -6964,6 +7451,19 @@
 				)
 			)
 		)
+		(property "MPN" "C315C104M5U5TA"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "bb58b8ec-1a00-44f8-bc71-8bc38bd28ffb")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "C_*")
 		(path "/6a546be1-1661-421c-91fa-3ecf87bcd2f0")
 		(sheetname "/")
@@ -7151,10 +7651,42 @@
 				)
 			)
 		)
+		(property "MPN" "150080RS75000"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "0f643d56-6441-4280-ad0d-e8c62c7d9718")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "3850f6de-3955-47f6-9979-7edb677354e3")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/28af95e8-bac1-4928-8b20-932bf75cc973")
 		(sheetname "/")
 		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -7345,6 +7877,19 @@
 			(effects
 				(font
 					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "73f96cfb-1e18-41ed-8570-d3036c654763")
+			(effects
+				(font
+					(size 1 1)
 					(thickness 0.15)
 				)
 			)
@@ -7558,6 +8103,19 @@
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "2c851761-293e-449d-bf10-1cf7107c543d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "PPTC101LFBN-RC"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "19601acc-af1f-424c-8e4f-236b37a5551d")
 			(effects
 				(font
 					(size 1 1)
@@ -7930,10 +8488,42 @@
 				)
 			)
 		)
+		(property "MPN" "150080RS75000"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "b90387ad-a4ad-43b7-b20c-aa94380576c0")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "ce685119-233c-4dce-92ce-6d3239eeff37")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/ea790a23-4503-4cef-a55e-291bf95b2fda")
 		(sheetname "/")
 		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -8133,6 +8723,19 @@
 				)
 			)
 		)
+		(property "MPN" "C315C104M5U5TA"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "757beddd-35f9-4d68-b3fd-6ffd30b3db9d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "C_*")
 		(path "/34991faa-4726-49ff-9953-c519d5788fc9")
 		(sheetname "/")
@@ -8320,10 +8923,42 @@
 				)
 			)
 		)
+		(property "MPN" "150080RS75000"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "aedb5355-abec-4517-a44a-3acc4b83bbbd")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "c6d35ae5-7397-4e95-af79-d77bd619b8b4")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/9a8d6805-093f-49be-bcc3-2c81bfbe815f")
 		(sheetname "/")
 		(sheetfile "Registers.kicad_sch")
+		(units
+			(unit
+				(name "A")
+				(pins "1" "2")
+			)
+		)
 		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -8514,6 +9149,19 @@
 			(effects
 				(font
 					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "9d7ee353-3558-4e13-8b3a-d999fbc49c37")
+			(effects
+				(font
+					(size 1 1)
 					(thickness 0.15)
 				)
 			)
@@ -8733,6 +9381,19 @@
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "aebf0c46-0524-4de5-a117-9fc9e91fcebc")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "PRPC040SAAN-RC"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "599b7c63-6f3d-4feb-8854-f5b02e143c22")
 			(effects
 				(font
 					(size 1 1)
@@ -9397,6 +10058,19 @@
 				)
 			)
 		)
+		(property "MPN" "PPTC081LFBN-RC"
+			(at 0 0 270)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "61d63e5f-870a-4a7d-b424-779db90f7be4")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/e2b44af8-7ae5-4da2-9943-a104b66dd7cd")
 		(sheetname "/")
@@ -9728,6 +10402,19 @@
 				)
 			)
 		)
+		(property "MPN" "RC0805FR-07220RL"
+			(at 0 0 90)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "32d0a7cb-654b-4607-9a6d-0df075db97d5")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "R_*")
 		(path "/cf0242e2-620f-4485-9445-6ff527583855")
 		(sheetname "/")
@@ -9937,6 +10624,19 @@
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "0582f86e-388f-4c99-a950-da33a7ca8f13")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "MPN" "C315C104M5U5TA"
+			(at 0 0 180)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "d7bf0440-0209-4a1a-b026-1934a37e8bf8")
 			(effects
 				(font
 					(size 1 1)
@@ -13054,6 +13754,22 @@
 		(uuid "745d4589-9104-4ef5-8027-5ac5a86becba")
 	)
 	(segment
+		(start 75.1 123.5)
+		(end 79.6 119)
+		(width 0.2)
+		(layer "F.Cu")
+		(net "5V_2")
+		(uuid "807f1a4a-66a0-4b7c-a61f-2c9efeeadd08")
+	)
+	(segment
+		(start 71.81 123.5)
+		(end 75.1 123.5)
+		(width 0.2)
+		(layer "F.Cu")
+		(net "5V_2")
+		(uuid "85d45f14-71a0-4c02-bb1a-5c4a9360612d")
+	)
+	(segment
 		(start 67.69 96.19)
 		(end 67.69 91.62)
 		(width 0.2)
@@ -14427,6 +15143,22 @@
 		(layer "F.Cu")
 		(net "Net-(D1-A)")
 		(uuid "e515abd2-82fe-4bba-a9c2-24fa55ac1206")
+	)
+	(segment
+		(start 79.6 117)
+		(end 79.6 114.06)
+		(width 0.2)
+		(layer "F.Cu")
+		(net "Net-(U4-~{RESET}{slash}PB3)")
+		(uuid "40267cd6-bb4b-4d5b-8c3e-d419705610ee")
+	)
+	(segment
+		(start 79.6 114.06)
+		(end 79.54 114)
+		(width 0.2)
+		(layer "F.Cu")
+		(net "Net-(U4-~{RESET}{slash}PB3)")
+		(uuid "66dd5d2e-0141-474e-9ee6-1d34838c33c7")
 	)
 	(segment
 		(start 77.924948 30.85)
@@ -16443,7 +17175,7 @@
 				(xy 71.426114 58.269576) (xy 71.426503 58.269737) (xy 71.581153 58.300499) (xy 71.581156 58.3005)
 				(xy 71.581158 58.3005) (xy 71.738844 58.3005) (xy 71.738845 58.300499) (xy 71.893497 58.269737)
 				(xy 72.039179 58.209394) (xy 72.067426 58.19052) (xy 72.170875 58.121398) (xy 72.237553 58.10052)
-				(xy 72.239766 58.1005) (xy 77.420234 58.1005) (xy 77.487273 58.120185) (xy 77.489125 58.121398)
+				(xy 72.239766 58.1005) (xy 74.879057 58.1005) (xy 77.420234 58.1005) (xy 77.487273 58.120185) (xy 77.489125 58.121398)
 				(xy 77.620814 58.20939) (xy 77.620827 58.209397) (xy 77.766114 58.269576) (xy 77.766503 58.269737)
 				(xy 77.921153 58.300499) (xy 77.921156 58.3005) (xy 77.921158 58.3005) (xy 78.078844 58.3005) (xy 78.078845 58.300499)
 				(xy 78.233497 58.269737) (xy 78.379179 58.209394) (xy 78.510289 58.121789) (xy 78.621789 58.010289)
