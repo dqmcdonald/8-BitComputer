@@ -1,5 +1,9 @@
 *.swp
 *.zip
 *.ses
+*.bak
 R2
 *.history
+analysis/
+*-design-review.md
+datasheets

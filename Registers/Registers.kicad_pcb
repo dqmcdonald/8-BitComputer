@@ -2231,7 +2231,7 @@
 		(property "Reference" "J1"
 			(at 0 -2.38 90)
 			(layer "F.SilkS")
-			(uuid "0e44f632-e45f-4d4a-833f-f9e5b6380ba3")
+			(uuid "e0d56ffd-b9f1-452a-8c9b-9987b960a07b")
 			(effects
 				(font
 					(size 1 1)
@@ -2242,7 +2242,7 @@
 		(property "Value" "Output to Display"
 			(at -3.5 4.24 0)
 			(layer "F.SilkS")
-			(uuid "7c1966fc-98b0-460e-8a79-48db66de68df")
+			(uuid "e3adeee7-5d14-4e3a-8a0f-11cab0b999f2")
 			(effects
 				(font
 					(size 1 1)
@@ -2254,7 +2254,7 @@
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "86ecbe9d-7e37-4f97-8e0f-84c0c3a77186")
+			(uuid "860ef4f7-61d4-4316-99b1-8b49641aa4fb")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2265,7 +2265,7 @@
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "bace9c7a-058c-40e2-935d-0df8a978e1fd")
+			(uuid "05a2179b-e5de-40f1-b477-6555401c107a")
 			(effects
 				(font
 					(size 1.27 1.27)
