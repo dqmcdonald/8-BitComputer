@@ -14122,22 +14122,22 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "0582eca2-52ee-4d44-9e77-dbfafa72f5e9")
 		(property "Reference" "R4"
-			(at 217.17 130.81 90)
+			(at 220.726 131.826 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "220 Ohm"
-			(at 219.71 130.81 90)
+		(property "Value" "330R"
+			(at 225.806 130.556 90)
 			(show_name no)
-			(do_not_autoplace no)
+			(do_not_autoplace yes)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14858,26 +14858,27 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "1fb294c2-4f88-4932-b56b-ee5fb4a6ae69")
 		(property "Reference" "R1"
-			(at 182.88 130.81 90)
+			(at 186.436 131.826 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "220 Ohm"
-			(at 185.42 130.81 90)
+		(property "Value" "330R"
+			(at 191.77 133.096 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
@@ -15257,26 +15258,27 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "332f1d62-d8d2-44a4-b6e9-ea2abb44e295")
 		(property "Reference" "R5"
-			(at 228.6 130.81 90)
+			(at 231.902 132.08 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "220 Ohm"
-			(at 231.14 130.81 90)
+		(property "Value" "330R"
+			(at 237.744 133.35 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
@@ -16564,22 +16566,22 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "7d1091b7-52f5-4551-95ba-bcbad1ced79c")
 		(property "Reference" "R6"
-			(at 240.03 130.81 90)
+			(at 243.332 132.334 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "220 Ohm"
-			(at 242.57 130.81 90)
+		(property "Value" "330R"
+			(at 248.92 130.81 90)
 			(show_name no)
-			(do_not_autoplace no)
+			(do_not_autoplace yes)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17099,26 +17101,27 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "cf0242e2-620f-4485-9445-6ff527583855")
 		(property "Reference" "R7"
-			(at 251.46 130.81 90)
+			(at 255.27 132.08 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "220 Ohm"
-			(at 254 130.81 90)
+		(property "Value" "330R"
+			(at 260.858 133.35 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
@@ -17190,26 +17193,27 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "e1057ec4-f6fe-49ba-ba3e-fe9c4207399a")
 		(property "Reference" "R3"
-			(at 205.74 130.81 90)
+			(at 209.296 132.08 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "220 Ohm"
-			(at 208.28 130.81 90)
+		(property "Value" "330R"
+			(at 214.884 133.096 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
@@ -17383,26 +17387,27 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "ec0fa64a-6e3b-4648-a816-79c8db240b63")
 		(property "Reference" "R2"
-			(at 194.31 130.81 90)
+			(at 197.612 131.826 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "220 Ohm"
-			(at 196.85 130.81 90)
+		(property "Value" "330R"
+			(at 203.454 133.096 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
@@ -17474,26 +17479,27 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "fb89b567-5149-419d-bc55-09baa5e4227a")
 		(property "Reference" "R8"
-			(at 262.89 130.81 90)
+			(at 266.7 132.08 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
-		(property "Value" "220 Ohm"
-			(at 265.43 130.81 90)
+		(property "Value" "330R"
+			(at 272.034 133.096 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
