@@ -225,7 +225,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "2.0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -632,7 +632,7 @@
       {
         "filename": "Clock.kicad_sch",
         "name": "Clock",
-        "uuid": "00000000-0000-0000-0000-000000000000"
+        "uuid": "af6a4729-ad10-481d-b5ec-4f9b3e39694a"
       }
     ],
     "used_designators": "",
@@ -641,7 +641,7 @@
   "sheets": [
     [
       "af6a4729-ad10-481d-b5ec-4f9b3e39694a",
-      "Root"
+      "Clock"
     ]
   ],
   "text_variables": {},
