@@ -10,6 +10,7 @@ from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller, signals
 from module import Module
+from memory import Memory
 from register import Register
 
 # ---------------------------------------------------------------------------
@@ -444,3 +445,78 @@ class TestRegister:
         bus.setValue(0x55, driver)
         reg.clock_inv_pulse()
         assert reg.getValue() == 0x11
+
+
+# ---------------------------------------------------------------------------
+# Memory
+# ---------------------------------------------------------------------------
+
+SIZE_BITS = 1024  # 128 bytes
+
+
+class TestMemory:
+    @pytest.fixture
+    def ctrl(self):
+        return Controller()
+
+    @pytest.fixture
+    def bus(self):
+        return Bus("Master Bus")
+
+    @pytest.fixture
+    def mem(self, bus):
+        return Memory("RAM", bus, "RAMI", "RAMO", SIZE_BITS)
+
+    def test_is_a_module(self, mem):
+        assert isinstance(mem, Module)
+
+    def test_size_in_bytes(self, mem):
+        assert mem.size() == SIZE_BITS // 8
+
+    def test_initial_values_are_zero(self, mem):
+        for i in range(mem.size()):
+            assert mem.getValue(i) == 0
+
+    def test_set_get_value(self, mem):
+        mem.setValue(0, 0xAB)
+        assert mem.getValue(0) == 0xAB
+
+    def test_value_masked_to_8_bits(self, mem):
+        mem.setValue(0, 0x1FF)
+        assert mem.getValue(0) == 0xFF
+
+    def test_clear_resets_all_to_zero(self, mem):
+        mem.setValue(0, 0xFF)
+        mem.setValue(10, 0x42)
+        mem.clear()
+        assert mem.getValue(0) == 0
+        assert mem.getValue(10) == 0
+
+    def test_address_out_of_range_high_raises(self, mem):
+        with pytest.raises(IndexError):
+            mem.getValue(SIZE_BITS // 8)
+
+    def test_address_negative_raises(self, mem):
+        with pytest.raises(IndexError):
+            mem.getValue(-1)
+
+    def test_set_address_out_of_range_raises(self, mem):
+        with pytest.raises(IndexError):
+            mem.setValue(SIZE_BITS // 8, 0)
+
+    def test_setup_signals_registers_in_and_out(self, mem, ctrl):
+        mem.setupSignals(ctrl)
+        assert "RAMI" in ctrl._registered_modules["RAM"]
+        assert "RAMO" in ctrl._registered_modules["RAM"]
+
+    def test_setup_signals_sets_controller(self, mem, ctrl):
+        mem.setupSignals(ctrl)
+        assert mem._controller is ctrl
+
+    def test_multiple_addresses_independent(self, mem):
+        mem.setValue(0, 0x11)
+        mem.setValue(1, 0x22)
+        mem.setValue(127, 0xFF)
+        assert mem.getValue(0) == 0x11
+        assert mem.getValue(1) == 0x22
+        assert mem.getValue(127) == 0xFF

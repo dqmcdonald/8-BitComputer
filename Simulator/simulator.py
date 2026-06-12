@@ -9,6 +9,7 @@ from queue import SimpleQueue
 from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller
+from memory import Memory
 from module import Module
 from register import Register
 
@@ -31,10 +32,18 @@ class Simulator:
         self._clock = Clock()
         self._master_bus = Bus("Master Bus")
 
+        # Build registers
         self._registerA = Register("RegisterA", self._master_bus, "RAIN", "RAOU")
         self._modules.append(self._registerA)
         self._registerB = Register("RegisterB", self._master_bus, "RBIN", "RBOU")
         self._modules.append(self._registerB)
+        self._instructionReg = Register(
+            "InstructionReg", self._master_bus, "IRIN", "IROU"
+        )
+        self._modules.append(self._instructionReg)
+
+        self._ram = Memory("RAM", self._master_bus, "RAMI", "RAMO", 1024)
+        self._modules.append(self._ram)
 
     def setupClock(self) -> None:
         self._clock.addBus(self._master_bus)

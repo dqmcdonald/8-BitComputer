@@ -24,7 +24,6 @@ class Register(Module):
         super().__init__(name)
         self._value = 0
         self._master_bus = master_bus
-        self._controller: Controller | None = None
         self._in_signal = in_signal
         self._out_signal = out_signal
 
@@ -34,17 +33,6 @@ class Register(Module):
     def setValue(self, value: int) -> None:
         self._value = value & 0xFF
         logger.debug("%s: value set to 0x%02X", self._name, self._value)
-
-    def setupSignals(self, controller: Controller) -> None:
-        self._controller = controller
-        self._controller.registerForSignal(self.getName(), self._in_signal)
-        self._controller.registerForSignal(self.getName(), self._out_signal)
-        logger.info(
-            "%s: registered for signals '%s' (in) and '%s' (out)",
-            self._name,
-            self._in_signal,
-            self._out_signal,
-        )
 
     def clock_pulse(self) -> None:
         if self._controller and self._controller.getSignalState(
