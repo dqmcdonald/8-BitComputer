@@ -10,6 +10,7 @@ from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller, signals
 from module import Module
+from register import Register
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -361,3 +362,85 @@ class TestController:
         ctrl.registerForSignal("ALU", sig)
         ctrl._signal_state[sig] = True
         assert ctrl.getSignalState("ALU", sig) is True
+
+
+# ---------------------------------------------------------------------------
+# Register
+# ---------------------------------------------------------------------------
+
+
+class TestRegister:
+    @pytest.fixture
+    def ctrl(self):
+        return Controller()
+
+    @pytest.fixture
+    def bus(self):
+        return Bus("Master Bus")
+
+    @pytest.fixture
+    def reg(self, bus):
+        return Register("RegA", bus, "RAIN", "RAOU")
+
+    def test_is_a_module(self, reg):
+        assert isinstance(reg, Module)
+
+    def test_initial_value_is_zero(self, reg):
+        assert reg.getValue() == 0
+
+    def test_set_get_value(self, reg):
+        reg.setValue(0x42)
+        assert reg.getValue() == 0x42
+
+    def test_set_value_masked_to_8_bits(self, reg):
+        reg.setValue(0x1FF)
+        assert reg.getValue() == 0xFF
+
+    def test_setup_signals_registers_in_and_out(self, reg, ctrl):
+        reg.setupSignals(ctrl)
+        assert "RAIN" in ctrl._registered_modules["RegA"]
+        assert "RAOU" in ctrl._registered_modules["RegA"]
+
+    def test_clock_pulse_outputs_to_bus_when_out_signal_active(self, reg, bus, ctrl):
+        reg.setupSignals(ctrl)
+        reg.setValue(0xAB)
+        ctrl._signal_state["RAOU"] = True
+        reg.clock_pulse()
+        assert bus.getValue() == 0xAB
+        assert bus.getDriver() is reg
+
+    def test_clock_pulse_does_not_drive_bus_when_out_signal_inactive(self, reg, bus, ctrl):
+        reg.setupSignals(ctrl)
+        reg.setValue(0xAB)
+        ctrl._signal_state["RAOU"] = False
+        reg.clock_pulse()
+        assert bus.getDriver() is None
+
+    def test_clock_inv_pulse_latches_from_bus_when_in_signal_active(self, reg, bus, ctrl):
+        reg.setupSignals(ctrl)
+        driver = Module("Driver")
+        bus.setValue(0x55, driver)
+        ctrl._signal_state["RAIN"] = True
+        reg.clock_inv_pulse()
+        assert reg.getValue() == 0x55
+
+    def test_clock_inv_pulse_does_not_latch_when_in_signal_inactive(self, reg, bus, ctrl):
+        reg.setupSignals(ctrl)
+        reg.setValue(0x11)
+        driver = Module("Driver")
+        bus.setValue(0x55, driver)
+        ctrl._signal_state["RAIN"] = False
+        reg.clock_inv_pulse()
+        assert reg.getValue() == 0x11
+
+    def test_clock_pulse_does_nothing_without_controller(self, reg, bus):
+        reg.setValue(0xAB)
+        reg.clock_pulse()
+        assert bus.getDriver() is None
+
+    def test_clock_inv_pulse_does_nothing_without_controller(self, reg, bus):
+        reg.setValue(0x11)
+        driver = Module("Driver")
+        bus.setValue(0x55, driver)
+        reg.clock_inv_pulse()
+        assert reg.getValue() == 0x11

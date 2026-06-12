@@ -10,7 +10,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-signals = set(["CLEA", "HALT"])
+signals = set(["CLEA", "HALT", "RAIN", "RAOU", "RBIN", "RBOU"])
 
 
 class Controller:

@@ -10,6 +10,7 @@ from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller
 from module import Module
+from register import Register
 
 logger = logging.getLogger(__name__)
 
@@ -30,11 +31,10 @@ class Simulator:
         self._clock = Clock()
         self._master_bus = Bus("Master Bus")
 
-        # Remove this - only for testing purposes
-        self._test_mod1 = Module("Test1")
-        self._modules.append(self._test_mod1)
-        self._test_mod2 = Module("Test2")
-        self._modules.append(self._test_mod2)
+        self._registerA = Register("RegisterA", self._master_bus, "RAIN", "RAOU")
+        self._modules.append(self._registerA)
+        self._registerB = Register("RegisterB", self._master_bus, "RBIN", "RBOU")
+        self._modules.append(self._registerB)
 
     def setupClock(self) -> None:
         self._clock.addBus(self._master_bus)
