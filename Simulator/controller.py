@@ -1,22 +1,20 @@
 """
 
-The control module. Makes signal state available to all other modules
+The controller makes signal state available to all other modules
 and the clock. Modules register to check signals but this is largely to
 allow us to know what is connected to what and be able to report on it.
 
-
-
-
 """
 
-from module import Module
+import logging
+
+logger = logging.getLogger(__name__)
 
 signals = set(["CLEA", "HALT"])
 
 
-class ControlModule(Module):
+class Controller:
     def __init__(self) -> None:
-        super().__init__("ControlModule")
         self._registered_modules = {}  # List of signals registered by module name
         self._signal_state = {}  # Boolean signal state keyed by name
         for m in signals:
@@ -45,6 +43,7 @@ class ControlModule(Module):
         else:
             self._registered_modules[module_name] = []
         self._registered_modules[module_name].append(signal_name)
+        logger.info("'%s' registered for signal '%s'", module_name, signal_name)
 
     def getSignalState(self, module_name, signal_name) -> bool:
         """
@@ -56,7 +55,12 @@ class ControlModule(Module):
         if module_name not in self._registered_modules.keys():
             raise ValueError(f"{module_name} is not the registered for {signal_name}")
 
-        return self._signal_state[signal_name]
+        state = self._signal_state[signal_name]
+        logger.debug("'%s' queried signal '%s' -> %s", module_name, signal_name, state)
+        return state
 
+    def clock_pulse(self):
+        logger.debug("Controller: clock pulse")
 
-control_mod = ControlModule()
+    def clock_inv_pulse(self):
+        logger.debug("Controller: clock inv pulse")

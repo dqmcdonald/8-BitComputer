@@ -1,26 +1,24 @@
 # The Basic class for the modules. Provides all the very lowest level services such as responding to the clock tick.
-#
-#
-#
+
+import logging
+
+from controller import Controller
+
+logger = logging.getLogger(__name__)
 
 
 class Module:
     def __init__(self, name: str):
-        self.name = name
-        pass
+        self._name = name
 
     def getName(self) -> str:
-        return self.name
+        return self._name
 
     def clock_pulse(self) -> None:
-        """
-        Respond to a tick of the clock. Should only be called by the Singleton clock object.
-        """
-
-        pass
+        logger.debug("%s: clock pulse", self._name)
 
     def clock_inv_pulse(self) -> None:
-        """
-        Respond to an inverse tick of the clock. Should only be called by the Singleton clock object.
-        """
+        logger.debug("%s: clock inv pulse", self._name)
+
+    def setupSignals(self, controller: Controller) -> None:
         pass

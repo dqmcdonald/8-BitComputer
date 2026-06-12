@@ -2,20 +2,23 @@
 PyTest suite for the 8-Bit Computer Simulator classes.
 """
 
-import pytest
 from unittest.mock import patch
-from module import Module
+
+import pytest
+
 from bus import Bus
 from clock import Clock, ClockMode
-from control import ControlModule, signals
-
+from controller import Controller, signals
+from module import Module
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 class RecordingModule(Module):
     """Module subclass that records clock calls."""
+
     def __init__(self, name: str):
         super().__init__(name)
         self.pulse_count = 0
@@ -32,6 +35,7 @@ class RecordingModule(Module):
 # Module
 # ---------------------------------------------------------------------------
 
+
 class TestModule:
     def test_name(self):
         m = Module("ALU")
@@ -47,6 +51,7 @@ class TestModule:
 # ---------------------------------------------------------------------------
 # Bus
 # ---------------------------------------------------------------------------
+
 
 class TestBus:
     @pytest.fixture
@@ -146,11 +151,15 @@ class TestBus:
 # Clock
 # ---------------------------------------------------------------------------
 
+
 class TestClock:
     @pytest.fixture
     def clk(self):
-        # Use a fresh Clock instance per test — don't use the module singleton
         return Clock()
+
+    @pytest.fixture
+    def ctrl(self):
+        return Controller()
 
     def test_add_module(self, clk):
         m = Module("M")
@@ -174,15 +183,46 @@ class TestClock:
         with pytest.raises(ValueError):
             clk.addBus(b)
 
-    def test_tick_calls_pulse_and_inv_pulse(self, clk):
+    def test_setup_signals_registers_clock(self, clk, ctrl):
+        clk.setupSignals(ctrl)
+        assert "HALT" in ctrl._registered_modules["Clock"]
+        assert "CLEA" in ctrl._registered_modules["Clock"]
+
+    def test_add_controller(self, clk, ctrl):
+        clk.addController(ctrl)
+        assert clk._controller is ctrl
+
+    def test_tick_calls_pulse_and_inv_pulse(self, clk, ctrl):
+        clk.setupSignals(ctrl)
         m = RecordingModule("M")
         clk.addModule(m)
         clk.tick()
         assert m.pulse_count == 1
         assert m.inv_pulse_count == 1
 
-    def test_tick_calls_buses_before_modules(self, clk):
+    def test_tick_calls_controller_first(self, clk):
         call_order = []
+
+        class TrackedController(Controller):
+            def clock_pulse(self):
+                call_order.append("ctrl_pulse")
+            def clock_inv_pulse(self):
+                call_order.append("ctrl_inv")
+
+        class TrackedModule(Module):
+            def clock_pulse(self):
+                call_order.append("module_pulse")
+            def clock_inv_pulse(self):
+                call_order.append("module_inv")
+
+        clk.addController(TrackedController())
+        clk.addModule(TrackedModule("M"))
+        clk.tick()
+        assert call_order == ["ctrl_pulse", "module_pulse", "ctrl_inv", "module_inv"]
+
+    def test_tick_calls_buses_before_modules(self, clk, ctrl):
+        call_order = []
+        clk.addController(ctrl)
 
         class TrackedBus(Bus):
             def clock_pulse(self):
@@ -218,7 +258,8 @@ class TestClock:
         clk.setSpeed(4.0)
         assert clk._clock_speed == 4.0
 
-    def test_run_single_step_ticks_once(self, clk):
+    def test_run_single_step_ticks_once(self, clk, ctrl):
+        clk.setupSignals(ctrl)
         m = RecordingModule("M")
         clk.addModule(m)
         clk.setSingleStepMode()
@@ -226,7 +267,8 @@ class TestClock:
         assert m.pulse_count == 1
         assert m.inv_pulse_count == 1
 
-    def test_run_continuous_sleeps_at_correct_rate(self, clk):
+    def test_run_continuous_sleeps_at_correct_rate(self, clk, ctrl):
+        clk.setupSignals(ctrl)
         m = RecordingModule("M")
         clk.addModule(m)
         clk.setContinuousMode()
@@ -235,12 +277,14 @@ class TestClock:
         with patch("clock.time.sleep") as mock_sleep:
             original_tick = clk.tick
             call_count = 0
+
             def limited_tick():
                 nonlocal call_count
                 original_tick()
                 call_count += 1
                 if call_count >= tick_limit:
                     raise StopIteration
+
             clk.tick = limited_tick
             with pytest.raises(StopIteration):
                 clk.run()
@@ -249,19 +293,14 @@ class TestClock:
 
 
 # ---------------------------------------------------------------------------
-# ControlModule
+# Controller
 # ---------------------------------------------------------------------------
 
-class TestControlModule:
+
+class TestController:
     @pytest.fixture
     def ctrl(self):
-        return ControlModule()
-
-    def test_is_a_module(self, ctrl):
-        assert isinstance(ctrl, Module)
-
-    def test_name(self, ctrl):
-        assert ctrl.getName() == "ControlModule"
+        return Controller()
 
     def test_all_signals_start_false(self, ctrl):
         for sig in signals:
