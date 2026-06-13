@@ -6,9 +6,11 @@ from unittest.mock import patch
 
 import pytest
 
+from alu import ALU
 from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller, signals
+from flags import FlagsRegister
 from module import Module
 from memory import Memory
 from register import Register
@@ -520,3 +522,212 @@ class TestMemory:
         assert mem.getValue(0) == 0x11
         assert mem.getValue(1) == 0x22
         assert mem.getValue(127) == 0xFF
+
+
+# ---------------------------------------------------------------------------
+# ALU
+# ---------------------------------------------------------------------------
+
+
+class TestALU:
+    @pytest.fixture
+    def ctrl(self):
+        return Controller()
+
+    @pytest.fixture
+    def bus(self):
+        return Bus("Master Bus")
+
+    @pytest.fixture
+    def reg_a(self, bus):
+        return Register("RegisterA", bus, "RAIN", "RAOU")
+
+    @pytest.fixture
+    def reg_b(self, bus):
+        return Register("RegisterB", bus, "RBIN", "RBOU")
+
+    @pytest.fixture
+    def alu(self, bus, reg_a, reg_b, ctrl):
+        a = ALU("ALU", bus, reg_a, reg_b, "ALUO", "SUBT")
+        a.setupSignals(ctrl)
+        return a
+
+    def _set_sub(self, ctrl, on):
+        ctrl._signal_state["SUBT"] = on
+
+    def test_is_a_module(self, alu):
+        assert isinstance(alu, Module)
+
+    def test_setup_signals_registers_out_and_subtract(self, alu, ctrl):
+        assert "ALUO" in ctrl._registered_modules["ALU"]
+        assert "SUBT" in ctrl._registered_modules["ALU"]
+
+    def test_initial_value_is_zero(self, alu):
+        assert alu.getValue() == 0
+        assert alu.zeroFlag() is True
+        assert alu.carryFlag() is False
+
+    # --- addition ---------------------------------------------------------
+
+    def test_add(self, alu, reg_a, reg_b):
+        reg_a.setValue(5)
+        reg_b.setValue(3)
+        assert alu.getValue() == 8
+        assert alu.carryFlag() is False
+        assert alu.zeroFlag() is False
+
+    def test_add_wraps_and_sets_carry(self, alu, reg_a, reg_b):
+        reg_a.setValue(200)
+        reg_b.setValue(100)
+        assert alu.getValue() == (300 & 0xFF)  # 44
+        assert alu.carryFlag() is True
+        assert alu.zeroFlag() is False
+
+    def test_add_to_zero_sets_carry_and_zero(self, alu, reg_a, reg_b):
+        reg_a.setValue(0xFF)
+        reg_b.setValue(0x01)
+        assert alu.getValue() == 0x00
+        assert alu.carryFlag() is True
+        assert alu.zeroFlag() is True
+
+    # --- subtraction (two's complement) -----------------------------------
+
+    def test_subtract(self, alu, reg_a, reg_b, ctrl):
+        self._set_sub(ctrl, True)
+        reg_a.setValue(10)
+        reg_b.setValue(3)
+        assert alu.getValue() == 7
+        assert alu.carryFlag() is True  # no borrow when A >= B
+        assert alu.zeroFlag() is False
+
+    def test_subtract_negative_result_twos_complement(self, alu, reg_a, reg_b, ctrl):
+        self._set_sub(ctrl, True)
+        reg_a.setValue(3)
+        reg_b.setValue(10)
+        assert alu.getValue() == 0xF9  # -7 in two's complement
+        assert alu.carryFlag() is False  # borrow occurred (A < B)
+        assert alu.zeroFlag() is False
+
+    def test_subtract_equal_is_zero(self, alu, reg_a, reg_b, ctrl):
+        self._set_sub(ctrl, True)
+        reg_a.setValue(42)
+        reg_b.setValue(42)
+        assert alu.getValue() == 0
+        assert alu.carryFlag() is True
+        assert alu.zeroFlag() is True
+
+    # --- bus interaction --------------------------------------------------
+
+    def test_clock_pulse_drives_bus_when_out_asserted(self, alu, reg_a, reg_b, bus, ctrl):
+        reg_a.setValue(20)
+        reg_b.setValue(22)
+        ctrl._signal_state["ALUO"] = True
+        alu.clock_pulse()
+        assert bus.getValue() == 42
+        assert bus.getDriver() is alu
+
+    def test_clock_pulse_does_not_drive_bus_when_out_inactive(self, alu, reg_a, reg_b, bus, ctrl):
+        reg_a.setValue(20)
+        reg_b.setValue(22)
+        ctrl._signal_state["ALUO"] = False
+        alu.clock_pulse()
+        assert bus.getDriver() is None
+
+    def test_clock_pulse_drives_subtract_result(self, alu, reg_a, reg_b, bus, ctrl):
+        self._set_sub(ctrl, True)
+        ctrl._signal_state["ALUO"] = True
+        reg_a.setValue(50)
+        reg_b.setValue(8)
+        alu.clock_pulse()
+        assert bus.getValue() == 42
+
+
+# ---------------------------------------------------------------------------
+# FlagsRegister
+# ---------------------------------------------------------------------------
+
+
+class TestFlagsRegister:
+    @pytest.fixture
+    def ctrl(self):
+        return Controller()
+
+    @pytest.fixture
+    def bus(self):
+        return Bus("Master Bus")
+
+    @pytest.fixture
+    def reg_a(self, bus):
+        return Register("RegisterA", bus, "RAIN", "RAOU")
+
+    @pytest.fixture
+    def reg_b(self, bus):
+        return Register("RegisterB", bus, "RBIN", "RBOU")
+
+    @pytest.fixture
+    def alu(self, bus, reg_a, reg_b, ctrl):
+        a = ALU("ALU", bus, reg_a, reg_b, "ALUO", "SUBT")
+        a.setupSignals(ctrl)
+        return a
+
+    @pytest.fixture
+    def flags(self, alu, ctrl):
+        f = FlagsRegister("Flags", alu, "FLGI")
+        f.setupSignals(ctrl)
+        return f
+
+    def test_is_a_module(self, flags):
+        assert isinstance(flags, Module)
+
+    def test_setup_registers_in_signal(self, flags, ctrl):
+        assert "FLGI" in ctrl._registered_modules["Flags"]
+
+    def test_initial_flags_false(self, flags):
+        assert flags.getCarry() is False
+        assert flags.getZero() is False
+
+    def test_latches_carry_and_zero_when_asserted(self, flags, reg_a, reg_b, ctrl):
+        reg_a.setValue(0xFF)
+        reg_b.setValue(0x01)  # sum 0x00 -> carry and zero
+        ctrl._signal_state["FLGI"] = True
+        flags.clock_inv_pulse()
+        assert flags.getCarry() is True
+        assert flags.getZero() is True
+
+    def test_latches_carry_without_zero(self, flags, reg_a, reg_b, ctrl):
+        reg_a.setValue(200)
+        reg_b.setValue(100)  # sum 44 -> carry, not zero
+        ctrl._signal_state["FLGI"] = True
+        flags.clock_inv_pulse()
+        assert flags.getCarry() is True
+        assert flags.getZero() is False
+
+    def test_does_not_latch_when_inactive(self, flags, reg_a, reg_b, ctrl):
+        reg_a.setValue(0xFF)
+        reg_b.setValue(0x01)
+        ctrl._signal_state["FLGI"] = False
+        flags.clock_inv_pulse()
+        assert flags.getCarry() is False
+        assert flags.getZero() is False
+
+    def test_flags_hold_until_next_load(self, flags, reg_a, reg_b, ctrl):
+        reg_a.setValue(200)
+        reg_b.setValue(100)
+        ctrl._signal_state["FLGI"] = True
+        flags.clock_inv_pulse()
+        # Change the ALU inputs but do not assert FLGI; flags must hold.
+        ctrl._signal_state["FLGI"] = False
+        reg_a.setValue(1)
+        reg_b.setValue(1)
+        flags.clock_inv_pulse()
+        assert flags.getCarry() is True
+        assert flags.getZero() is False
+
+    def test_clear_resets_flags(self, flags, reg_a, reg_b, ctrl):
+        reg_a.setValue(0xFF)
+        reg_b.setValue(0x01)
+        ctrl._signal_state["FLGI"] = True
+        flags.clock_inv_pulse()
+        flags.clear()
+        assert flags.getCarry() is False
+        assert flags.getZero() is False

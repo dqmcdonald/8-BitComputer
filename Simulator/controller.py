@@ -11,7 +11,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 signals = set(
-    ["CLEA", "HALT", "RAIN", "RAOU", "RBIN", "RBOU", "IRIN", "IROU", "RAMI", "RAMO"]
+    ["CLEA", "HALT", "RAIN", "RAOU", "RBIN", "RBOU", "IRIN", "IROU", "RAMI", "RAMO",
+     "ALUO", "SUBT", "FLGI"]
 )
 
 
