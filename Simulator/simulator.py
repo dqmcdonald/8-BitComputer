@@ -6,6 +6,7 @@ The main simulator class
 import logging
 from queue import SimpleQueue
 
+from alu import ALU
 from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller
@@ -37,6 +38,13 @@ class Simulator:
         self._modules.append(self._registerA)
         self._registerB = Register("RegisterB", self._master_bus, "RBIN", "RBOU")
         self._modules.append(self._registerB)
+
+        # The ALU reads A and B directly and drives the bus on ALUO.
+        self._alu = ALU(
+            "ALU", self._master_bus, self._registerA, self._registerB, "ALUO", "SUBT"
+        )
+        self._modules.append(self._alu)
+
         self._instructionReg = Register(
             "InstructionReg", self._master_bus, "IRIN", "IROU"
         )
