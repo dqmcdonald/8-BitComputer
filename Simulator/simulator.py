@@ -10,6 +10,7 @@ from alu import ALU
 from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller
+from flags import FlagsRegister
 from memory import Memory
 from module import Module
 from register import Register
@@ -44,6 +45,11 @@ class Simulator:
             "ALU", self._master_bus, self._registerA, self._registerB, "ALUO", "SUBT"
         )
         self._modules.append(self._alu)
+
+        # The flags register latches the ALU's carry/zero on FLGI; it feeds
+        # the control unit rather than the bus.
+        self._flags = FlagsRegister("Flags", self._alu, "FLGI")
+        self._modules.append(self._flags)
 
         self._instructionReg = Register(
             "InstructionReg", self._master_bus, "IRIN", "IROU"
