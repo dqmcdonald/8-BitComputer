@@ -12,7 +12,7 @@ from clock import Clock, ClockMode
 from controller import Controller, signals
 from flags import FlagsRegister
 from module import Module
-from memory import Memory
+from memory import Memory, RAM
 from register import Register
 
 # ---------------------------------------------------------------------------
@@ -731,3 +731,71 @@ class TestFlagsRegister:
         flags.clear()
         assert flags.getCarry() is False
         assert flags.getZero() is False
+
+
+# ---------------------------------------------------------------------------
+# RAM
+# ---------------------------------------------------------------------------
+
+
+class TestRAM:
+    @pytest.fixture
+    def bus(self):
+        return Bus("Master Bus")
+
+    @pytest.fixture
+    def addr_reg(self, bus):
+        return Register("MAR", bus, "MIIN", "MIOU")
+
+    @pytest.fixture
+    def ram(self, bus, addr_reg):
+        return RAM("RAM", bus, "RAMI", "RAMO", 1024, addr_reg)
+
+    def test_is_a_memory(self, ram):
+        assert isinstance(ram, Memory)
+
+    def test_initial_values_are_zero(self, ram):
+        for i in range(ram.size()):
+            assert ram.getValue(i) == 0
+
+    def test_mem_reg_stored(self, ram, addr_reg):
+        assert ram._mem_reg is addr_reg
+
+    def test_load_from_file(self, bus, addr_reg, tmp_path):
+        program = bytes([0x01, 0x02, 0x03, 0xFF])
+        f = tmp_path / "prog.bin"
+        f.write_bytes(program)
+        ram = RAM("RAM", bus, "RAMI", "RAMO", 1024, addr_reg, str(f))
+        assert ram.getValue(0) == 0x01
+        assert ram.getValue(1) == 0x02
+        assert ram.getValue(2) == 0x03
+        assert ram.getValue(3) == 0xFF
+
+    def test_load_from_file_rest_is_zero(self, bus, addr_reg, tmp_path):
+        f = tmp_path / "prog.bin"
+        f.write_bytes(bytes([0xAB]))
+        ram = RAM("RAM", bus, "RAMI", "RAMO", 1024, addr_reg, str(f))
+        assert ram.getValue(0) == 0xAB
+        assert ram.getValue(1) == 0x00
+
+    def test_file_too_large_raises(self, bus, addr_reg, tmp_path):
+        f = tmp_path / "big.bin"
+        f.write_bytes(bytes(200))  # 1024-bit RAM = 128 bytes
+        with pytest.raises(ValueError):
+            RAM("RAM", bus, "RAMI", "RAMO", 1024, addr_reg, str(f))
+
+    def test_nonexistent_file_raises(self, bus, addr_reg):
+        with pytest.raises(FileNotFoundError):
+            RAM("RAM", bus, "RAMI", "RAMO", 1024, addr_reg, "/no/such/file.bin")
+
+    def test_no_file_does_not_raise(self, bus, addr_reg):
+        RAM("RAM", bus, "RAMI", "RAMO", 1024, addr_reg, "")
+
+    def test_set_and_get_value(self, ram):
+        ram.setValue(5, 0xAB)
+        assert ram.getValue(5) == 0xAB
+
+    def test_clear_resets_to_zero(self, ram):
+        ram.setValue(0, 0xFF)
+        ram.clear()
+        assert ram.getValue(0) == 0

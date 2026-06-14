@@ -3,6 +3,7 @@ The main simulator class
 
 """
 
+import argparse
 import logging
 from queue import SimpleQueue
 
@@ -11,21 +12,20 @@ from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller
 from flags import FlagsRegister
-from memory import Memory
-from module import Module
+from memory import RAM
 from register import Register
 
 logger = logging.getLogger(__name__)
 
 
 class Simulator:
-    def __init__(self) -> None:
+    def __init__(self, ram_file: str = "") -> None:
         self._modules = []
-        self.constructSimulator()
+        self.constructSimulator(ram_file)
         self.setupClock()
         self.setupSignals()
 
-    def constructSimulator(self) -> None:
+    def constructSimulator(self, ram_file: str = "") -> None:
         """
         Instantiate all the objects for the simulator
         """
@@ -56,7 +56,20 @@ class Simulator:
         )
         self._modules.append(self._instructionReg)
 
-        self._ram = Memory("RAM", self._master_bus, "RAMI", "RAMO", 1024)
+        self._memory_add_reg = Register(
+            "MemoryAddressReg", self._master_bus, "MIIN", "MIOU"
+        )
+        self._modules.append(self._memory_add_reg)
+
+        self._ram = RAM(
+            "RAM",
+            self._master_bus,
+            "RAMI",
+            "RAMO",
+            1024,
+            self._memory_add_reg,
+            ram_file,
+        )
         self._modules.append(self._ram)
 
     def setupClock(self) -> None:
@@ -96,10 +109,39 @@ class Simulator:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="8-Bit Computer Simulator")
+    parser.add_argument(
+        "--mode", "-m",
+        choices=["single", "continuous"],
+        default="continuous",
+        help="Clock mode: 'single' for single-step, 'continuous' to run freely (default: continuous)",
+    )
+    parser.add_argument(
+        "--speed", "-s",
+        type=float,
+        default=1.0,
+        help="Clock speed in Hz (default: 1.0)",
+    )
+    parser.add_argument(
+        "--ram", "-r",
+        default="",
+        metavar="FILE",
+        help="Binary file to load into RAM at startup",
+    )
+    parser.add_argument(
+        "--debug", "-d",
+        action="store_true",
+        help="Enable DEBUG-level logging (default: INFO)",
+    )
+    args = parser.parse_args()
+
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.DEBUG if args.debug else logging.INFO,
         format="%(levelname)-8s %(name)s: %(message)s",
     )
-    sim = Simulator()
-    sim.setClockProps(0.2, ClockMode.SINGLE_STEP)
+
+    clock_mode = ClockMode.SINGLE_STEP if args.mode == "single" else ClockMode.CONTINUOUS
+
+    sim = Simulator(ram_file=args.ram)
+    sim.setClockProps(args.speed, clock_mode)
     sim.run()

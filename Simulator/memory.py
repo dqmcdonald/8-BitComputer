@@ -5,8 +5,8 @@ an address.
 Memory size is specified in *bits* to match the convention used in
 hardware devices.
 
-This can be substantiated directly to be a RAM type mechanism and
-subclassed to make a ROM.
+The Memory class is the base for the RAM and ROM classes.
+
 """
 
 import logging
@@ -16,6 +16,7 @@ import numpy as np
 from bus import Bus
 from controller import Controller
 from module import Module
+from register import Register
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,9 @@ class Memory(Module):
                 f"(0-{len(self._values) - 1})"
             )
         self._values[address] = value & 0xFF
-        logger.debug("%s: wrote 0x%02X to address %d", self._name, value & 0xFF, address)
+        logger.debug(
+            "%s: wrote 0x%02X to address %d", self._name, value & 0xFF, address
+        )
 
     def clear(self) -> None:
         self._values[:] = 0
@@ -57,3 +60,34 @@ class Memory(Module):
 
     def size(self) -> int:
         return len(self._values)
+
+
+class RAM(Memory):
+    """
+    A RAM module - can optionially be initialised from a
+    specific file and has an associated memory register
+    """
+
+    def __init__(
+        self,
+        name: str,
+        master_bus: Bus,
+        in_signal: str,
+        out_signal: str,
+        size: int,
+        mem_reg: Register,
+        contents_file: str = "",
+    ):
+
+        super().__init__(name, master_bus, in_signal, out_signal, size)
+
+        self._mem_reg = mem_reg
+
+        # Read the contents of a file if specificed:
+        if len(contents_file) > 0:
+            raw = np.fromfile(contents_file, dtype=np.uint8)
+            if len(raw) > len(self._values):
+                raise ValueError(
+                    f"File too large for memory ({len(raw)} > {len(self._values)} bytes)"
+                )
+            self._values[: len(raw)] = raw
