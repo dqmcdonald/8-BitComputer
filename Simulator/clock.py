@@ -101,7 +101,3 @@ class Clock:
                 self.tick()
                 time.sleep(1.0 / self._clock_speed)
                 # TODO: add stopping condition here - checking for HLT
-
-
-# Single shared Clock instance — import this rather than constructing Clock()
-clock = Clock()

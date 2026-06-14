@@ -13,6 +13,7 @@ from controller import Controller, signals
 from flags import FlagsRegister
 from module import Module
 from memory import Memory, RAM
+from progcounter import ProgramCounter
 from register import Register
 
 # ---------------------------------------------------------------------------
@@ -799,3 +800,96 @@ class TestRAM:
         ram.setValue(0, 0xFF)
         ram.clear()
         assert ram.getValue(0) == 0
+
+
+# ---------------------------------------------------------------------------
+# ProgramCounter
+# ---------------------------------------------------------------------------
+
+
+class TestProgramCounter:
+    @pytest.fixture
+    def bus(self):
+        return Bus("Master Bus")
+
+    @pytest.fixture
+    def ctrl(self):
+        return Controller()
+
+    @pytest.fixture
+    def pc(self, bus):
+        return ProgramCounter("PC", bus, "JUMP", "PCOU")
+
+    def test_is_a_module(self, pc):
+        assert isinstance(pc, Module)
+
+    def test_initial_count_is_zero(self, pc):
+        assert pc.getCount() == 0
+
+    def test_reset(self, pc):
+        pc.jumpTo(10)
+        pc.reset()
+        assert pc.getCount() == 0
+
+    def test_jump_to(self, pc):
+        pc.jumpTo(42)
+        assert pc.getCount() == 42
+
+    def test_jump_to_masked_to_8_bits(self, pc):
+        pc.jumpTo(0x1FF)
+        assert pc.getCount() == 0xFF
+
+    def test_clock_pulse_increments_count(self, pc, ctrl):
+        pc.setupSignals(ctrl)
+        pc.clock_pulse()
+        assert pc.getCount() == 1
+
+    def test_clock_pulse_wraps_at_256(self, pc, ctrl):
+        pc.setupSignals(ctrl)
+        pc.jumpTo(0xFF)
+        pc.clock_pulse()
+        assert pc.getCount() == 0
+
+    def test_clock_pulse_outputs_to_bus_when_pcou_active(self, pc, bus, ctrl):
+        pc.setupSignals(ctrl)
+        pc.jumpTo(0x0A)
+        ctrl._signal_state["PCOU"] = True
+        pc.clock_pulse()
+        assert bus.getValue() == 0x0A
+
+    def test_clock_pulse_does_not_drive_bus_when_pcou_inactive(self, pc, bus, ctrl):
+        pc.setupSignals(ctrl)
+        pc.jumpTo(0x0A)
+        ctrl._signal_state["PCOU"] = False
+        pc.clock_pulse()
+        assert bus.getDriver() is None
+
+    def test_clock_inv_pulse_jumps_from_bus_when_jump_active(self, pc, bus, ctrl):
+        pc.setupSignals(ctrl)
+        driver = Module("Driver")
+        bus.setValue(0x20, driver)
+        ctrl._signal_state["JUMP"] = True
+        pc.clock_inv_pulse()
+        assert pc.getCount() == 0x20
+
+    def test_clock_inv_pulse_does_not_jump_when_inactive(self, pc, bus, ctrl):
+        pc.setupSignals(ctrl)
+        pc.jumpTo(0x05)
+        driver = Module("Driver")
+        bus.setValue(0x20, driver)
+        ctrl._signal_state["JUMP"] = False
+        pc.clock_inv_pulse()
+        assert pc.getCount() == 0x05
+
+    def test_clock_pulse_outputs_before_incrementing(self, pc, bus, ctrl):
+        pc.setupSignals(ctrl)
+        pc.jumpTo(0x07)
+        ctrl._signal_state["PCOU"] = True
+        pc.clock_pulse()
+        assert bus.getValue() == 0x07   # value before increment
+        assert pc.getCount() == 0x08   # count after increment
+
+    def test_setup_signals_registers_jump_and_pcou(self, pc, ctrl):
+        pc.setupSignals(ctrl)
+        assert "JUMP" in ctrl._registered_modules["PC"]
+        assert "PCOU" in ctrl._registered_modules["PC"]

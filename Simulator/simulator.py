@@ -13,6 +13,7 @@ from clock import Clock, ClockMode
 from controller import Controller
 from flags import FlagsRegister
 from memory import RAM
+from progcounter import ProgramCounter
 from register import Register
 
 logger = logging.getLogger(__name__)
@@ -72,9 +73,14 @@ class Simulator:
         )
         self._modules.append(self._ram)
 
+        self._prog_counter = ProgramCounter("ProgCounter", self._master_bus, "JUMP", "PCOU")
+        self._modules.append(self._prog_counter)
+
     def setupClock(self) -> None:
         self._clock.addBus(self._master_bus)
         self._clock.addController(self._controller)
+        for m in self._modules:
+            self._clock.addModule(m)
 
     def setupSignals(self) -> None:
         """
@@ -111,25 +117,29 @@ class Simulator:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="8-Bit Computer Simulator")
     parser.add_argument(
-        "--mode", "-m",
+        "--mode",
+        "-m",
         choices=["single", "continuous"],
         default="continuous",
         help="Clock mode: 'single' for single-step, 'continuous' to run freely (default: continuous)",
     )
     parser.add_argument(
-        "--speed", "-s",
+        "--speed",
+        "-s",
         type=float,
         default=1.0,
         help="Clock speed in Hz (default: 1.0)",
     )
     parser.add_argument(
-        "--ram", "-r",
+        "--ram",
+        "-r",
         default="",
         metavar="FILE",
         help="Binary file to load into RAM at startup",
     )
     parser.add_argument(
-        "--debug", "-d",
+        "--debug",
+        "-d",
         action="store_true",
         help="Enable DEBUG-level logging (default: INFO)",
     )
@@ -140,7 +150,9 @@ if __name__ == "__main__":
         format="%(levelname)-8s %(name)s: %(message)s",
     )
 
-    clock_mode = ClockMode.SINGLE_STEP if args.mode == "single" else ClockMode.CONTINUOUS
+    clock_mode = (
+        ClockMode.SINGLE_STEP if args.mode == "single" else ClockMode.CONTINUOUS
+    )
 
     sim = Simulator(ram_file=args.ram)
     sim.setClockProps(args.speed, clock_mode)

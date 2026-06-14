@@ -27,6 +27,8 @@ signals = set(
         "FLGI",
         "MIIN",
         "MIOU",
+        "JUMP",
+        "PCOU",
     ]
 )
 
