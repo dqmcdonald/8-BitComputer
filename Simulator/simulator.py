@@ -14,7 +14,7 @@ from controller import Controller
 from flags import FlagsRegister
 from memory import RAM
 from progcounter import ProgramCounter
-from register import Register
+from register import OutputRegister, Register
 from signals import Signal
 
 logger = logging.getLogger(__name__)
@@ -37,14 +37,23 @@ class Simulator:
         self._master_bus = Bus("Master Bus")
 
         # Build registers
-        self._registerA = Register("RegisterA", self._master_bus, Signal.RAIN, Signal.RAOU)
+        self._registerA = Register(
+            "RegisterA", self._master_bus, Signal.RAIN, Signal.RAOU
+        )
         self._modules.append(self._registerA)
-        self._registerB = Register("RegisterB", self._master_bus, Signal.RBIN, Signal.RBOU)
+        self._registerB = Register(
+            "RegisterB", self._master_bus, Signal.RBIN, Signal.RBOU
+        )
         self._modules.append(self._registerB)
 
         # The ALU reads A and B directly and drives the bus on ALUO.
         self._alu = ALU(
-            "ALU", self._master_bus, self._registerA, self._registerB, Signal.ALUO, Signal.SUBT
+            "ALU",
+            self._master_bus,
+            self._registerA,
+            self._registerB,
+            Signal.ALUO,
+            Signal.SUBT,
         )
         self._modules.append(self._alu)
 
@@ -63,6 +72,11 @@ class Simulator:
         )
         self._modules.append(self._memory_add_reg)
 
+        self._outputReg = OutputRegister(
+            "Output Register", self._master_bus, Signal.ORIN, None
+        )
+        self._modules.append(self._outputReg)
+
         self._ram = RAM(
             "RAM",
             self._master_bus,
@@ -74,7 +88,9 @@ class Simulator:
         )
         self._modules.append(self._ram)
 
-        self._prog_counter = ProgramCounter("ProgCounter", self._master_bus, Signal.JUMP, Signal.PCOU)
+        self._prog_counter = ProgramCounter(
+            "ProgCounter", self._master_bus, Signal.JUMP, Signal.PCOU
+        )
         self._modules.append(self._prog_counter)
 
     def setupClock(self) -> None:

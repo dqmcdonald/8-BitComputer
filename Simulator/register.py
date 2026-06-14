@@ -36,17 +36,36 @@ class Register(Module):
         logger.debug("%s: value set to 0x%02X", self._name, self._value)
 
     def clock_pulse(self) -> None:
-        if self._controller and self._controller.getSignalState(
-            self.getName(), self._out_signal
+        if (
+            self._out_signal
+            and self._controller
+            and self._controller.getSignalState(self.getName(), self._out_signal)
         ):
             self._master_bus.setValue(self._value, self)
             logger.debug("%s: output 0x%02X to bus", self._name, self._value)
         super().clock_pulse()
 
     def clock_inv_pulse(self) -> None:
-        if self._controller and self._controller.getSignalState(
-            self.getName(), self._in_signal
+        if (
+            self._in_signal
+            and self._controller
+            and self._controller.getSignalState(self.getName(), self._in_signal)
         ):
             self._value = self._master_bus.getValue()
             logger.debug("%s: latched 0x%02X from bus", self._name, self._value)
         super().clock_inv_pulse()
+
+
+class OutputRegister(Register):
+    """
+    Lightweight subclass of Register that displays the current value
+    """
+
+    def __init__(
+        self, name: str, master_bus: Bus, in_signal: Signal, out_signal: Signal
+    ):
+        super().__init__(name, master_bus, in_signal, out_signal)
+
+    def clock_pulse(self) -> None:
+        super().clock_pulse()
+        print(f"*** Output: {self._value}")
