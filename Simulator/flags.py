@@ -16,12 +16,13 @@ import logging
 from alu import ALU
 from controller import Controller
 from module import Module
+from signals import Signal
 
 logger = logging.getLogger(__name__)
 
 
 class FlagsRegister(Module):
-    def __init__(self, name: str, alu: ALU, in_signal: str) -> None:
+    def __init__(self, name: str, alu: ALU, in_signal: Signal) -> None:
         super().__init__(name)
         self._alu = alu
         self._in_signal = in_signal

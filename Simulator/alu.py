@@ -25,6 +25,7 @@ from bus import Bus
 from controller import Controller
 from module import Module
 from register import Register
+from signals import Signal
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +37,8 @@ class ALU(Module):
         master_bus: Bus,
         reg_a: Register,
         reg_b: Register,
-        out_signal: str,
-        sub_signal: str,
+        out_signal: Signal,
+        sub_signal: Signal,
     ) -> None:
         super().__init__(name)
         self._master_bus = master_bus
@@ -53,7 +54,7 @@ class ALU(Module):
         super().setupSignals(controller)
         self._controller = controller
         self._controller.registerForSignal(self._name, self._sub_signal)
-        logger.info("%s: registered for subtract signal '%s'", self._name, self._sub_signal)
+        logger.info("%s: registered for subtract signal '%s'", self._name, self._sub_signal.name)
 
     def _subtracting(self) -> bool:
         return bool(

@@ -11,6 +11,7 @@ from itertools import chain
 from bus import Bus
 from controller import Controller
 from module import Module
+from signals import Signal
 
 logger = logging.getLogger(__name__)
 
@@ -42,8 +43,8 @@ class Clock:
 
     def setupSignals(self, controller: Controller) -> None:
         self._controller = controller
-        self._controller.registerForSignal("Clock", "HALT")
-        self._controller.registerForSignal("Clock", "CLEA")
+        self._controller.registerForSignal("Clock", Signal.HALT)
+        self._controller.registerForSignal("Clock", Signal.CLEA)
         logger.info("Clock signals registered")
 
     def addBus(self, bus: Bus):

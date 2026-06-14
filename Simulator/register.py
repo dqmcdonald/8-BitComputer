@@ -9,6 +9,7 @@ import logging
 from bus import Bus
 from controller import Controller
 from module import Module
+from signals import Signal
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +19,8 @@ class Register(Module):
         self,
         name: str,
         master_bus: Bus,
-        in_signal: str,
-        out_signal: str,
+        in_signal: Signal,
+        out_signal: Signal,
     ) -> None:
         super().__init__(name)
         self._value = 0

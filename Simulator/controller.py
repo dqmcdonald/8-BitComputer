@@ -8,75 +8,51 @@ allow us to know what is connected to what and be able to report on it.
 
 import logging
 
-logger = logging.getLogger(__name__)
+from signals import Signal
 
-signals = set(
-    [
-        "CLEA",
-        "HALT",
-        "RAIN",
-        "RAOU",
-        "RBIN",
-        "RBOU",
-        "IRIN",
-        "IROU",
-        "RAMI",
-        "RAMO",
-        "ALUO",
-        "SUBT",
-        "FLGI",
-        "MIIN",
-        "MIOU",
-        "JUMP",
-        "PCOU",
-    ]
-)
+logger = logging.getLogger(__name__)
 
 
 class Controller:
     def __init__(self) -> None:
         self._registered_modules = {}  # List of signals registered by module name
-        self._signal_state = {}  # Boolean signal state keyed by name
-        for m in signals:
-            self._signal_state[m] = False
+        self._signal_state = {sig: False for sig in Signal}
 
     def clear(self):
         self._signal_state = dict.fromkeys(self._signal_state, False)
 
-    def registerForSignal(self, module_name: str, signal_name: str):
+    def registerForSignal(self, module_name: str, signal: Signal):
         """
-        Allows modules to register for signals. This tells us what is c
-        connected and also allows for early checking of unknown signals
-        Modules cannot query signal state of signals they have no registered
+        Allows modules to register for signals. This tells us what is
+        connected and also allows for early checking of unknown signals.
+        Modules cannot query signal state of signals they have not registered
         for.
         """
-        if signal_name not in signals:
-            raise ValueError(f"{signal_name} is not the name of a value signal")
+        if not isinstance(signal, Signal):
+            raise TypeError(f"{signal!r} is not a Signal enum member")
 
-        # Check for duplicates:
-        if module_name in self._registered_modules.keys():
-            sigs = self._registered_modules[module_name]
-            if signal_name in sigs:
+        if module_name in self._registered_modules:
+            if signal in self._registered_modules[module_name]:
                 raise ValueError(
-                    f"Module {module_name} has already registered for signal {signal_name}"
+                    f"Module {module_name} has already registered for signal {signal.name}"
                 )
         else:
             self._registered_modules[module_name] = []
-        self._registered_modules[module_name].append(signal_name)
-        logger.info("'%s' registered for signal '%s'", module_name, signal_name)
+        self._registered_modules[module_name].append(signal)
+        logger.info("'%s' registered for signal '%s'", module_name, signal.name)
 
-    def getSignalState(self, module_name, signal_name) -> bool:
+    def getSignalState(self, module_name: str, signal: Signal) -> bool:
         """
         Return the state of the named signal to the named module
         """
-        if signal_name not in signals:
-            raise ValueError(f"{signal_name} is not the name of a signal")
+        if not isinstance(signal, Signal):
+            raise TypeError(f"{signal!r} is not a Signal enum member")
 
-        if module_name not in self._registered_modules.keys():
-            raise ValueError(f"{module_name} is not the registered for {signal_name}")
+        if module_name not in self._registered_modules:
+            raise ValueError(f"{module_name} is not registered for {signal.name}")
 
-        state = self._signal_state[signal_name]
-        logger.debug("'%s' queried signal '%s' -> %s", module_name, signal_name, state)
+        state = self._signal_state[signal]
+        logger.debug("'%s' queried signal '%s' -> %s", module_name, signal.name, state)
         return state
 
     def clock_pulse(self):

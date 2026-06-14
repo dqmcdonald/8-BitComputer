@@ -17,13 +17,14 @@ from bus import Bus
 from controller import Controller
 from module import Module
 from register import Register
+from signals import Signal
 
 logger = logging.getLogger(__name__)
 
 
 class Memory(Module):
     def __init__(
-        self, name: str, master_bus: Bus, in_signal: str, out_signal: str, size: int
+        self, name: str, master_bus: Bus, in_signal: Signal, out_signal: Signal, size: int
     ):
         super().__init__(name)
         self._master_bus = master_bus
@@ -72,8 +73,8 @@ class RAM(Memory):
         self,
         name: str,
         master_bus: Bus,
-        in_signal: str,
-        out_signal: str,
+        in_signal: Signal,
+        out_signal: Signal,
         size: int,
         mem_reg: Register,
         contents_file: str = "",
