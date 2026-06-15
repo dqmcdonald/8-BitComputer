@@ -8,7 +8,7 @@ allow us to know what is connected to what and be able to report on it.
 
 import logging
 
-from signals import Signal
+from signals import Signal, active_signals
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +17,7 @@ class Controller:
     def __init__(self) -> None:
         self._registered_modules = {}  # List of signals registered by module name
         self._signal_state = {sig: False for sig in Signal}
+        self._signal_flags = {}
 
     def clear(self):
         self._signal_state = dict.fromkeys(self._signal_state, False)
@@ -57,6 +58,12 @@ class Controller:
 
     def clock_pulse(self):
         logger.debug("Controller: clock pulse")
+        self.clear()  # all signals → False
+        # Need to get active signals from the microcode here:
+
+    #        for sig in active_signals(0b100000000000000000000000):
+    #            logger.debug(f"Controller: turning on signal {sig.name}")
+    #            self._signal_state[sig] = True
 
     def clock_inv_pulse(self):
         logger.debug("Controller: clock inv pulse")

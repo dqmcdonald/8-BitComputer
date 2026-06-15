@@ -5,6 +5,7 @@ The main simulator class
 
 import argparse
 import logging
+import sys
 from queue import SimpleQueue
 
 from alu import ALU
@@ -12,6 +13,7 @@ from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller
 from flags import FlagsRegister
+from instructions import InstructionSet
 from memory import RAM
 from progcounter import ProgramCounter
 from register import OutputRegister, Register

@@ -7,6 +7,7 @@ import logging
 import time
 from enum import IntEnum, auto
 from itertools import chain
+from signal import SIGABRT
 
 from bus import Bus
 from controller import Controller
@@ -101,4 +102,5 @@ class Clock:
             while do_run:
                 self.tick()
                 time.sleep(1.0 / self._clock_speed)
-                # TODO: add stopping condition here - checking for HLT
+                if self._controller.getSignalState("Clock", Signal.HALT):
+                    do_run = False
