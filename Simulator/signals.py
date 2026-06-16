@@ -12,7 +12,7 @@ class Signal(Enum):
     OUTI = auto()  # Output register input (there is no output)
     RAMI = auto()  # RAM In: write the bus value into RAM at the current address
     COUE = auto()  # ALU Enable -
-    COUO = auto()  # ALU Out: drive the ALU result onto the bus
+    COUO = auto()  # PC out = program counter out to the bus
     FLGI = (
         auto()
     )  # Flags In: latch the ALU carry and zero flags into the flags register

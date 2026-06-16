@@ -24,7 +24,12 @@ logger = logging.getLogger(__name__)
 
 class Memory(Module):
     def __init__(
-        self, name: str, master_bus: Bus, in_signal: Signal, out_signal: Signal, size: int
+        self,
+        name: str,
+        master_bus: Bus,
+        in_signal: Signal,
+        out_signal: Signal,
+        size: int,
     ):
         super().__init__(name)
         self._master_bus = master_bus
@@ -67,6 +72,7 @@ class RAM(Memory):
     """
     A RAM module - can optionially be initialised from a
     specific file and has an associated memory register
+    Set and get address are handled via memory regiser
     """
 
     def __init__(
@@ -92,3 +98,29 @@ class RAM(Memory):
                     f"File too large for memory ({len(raw)} > {len(self._values)} bytes)"
                 )
             self._values[: len(raw)] = raw
+
+
+class ROM(Memory):
+    """
+    A RAM module - can optionially be initialised from a
+    specific file and has an associated memory register
+    """
+
+    def __init__(
+        self,
+        name: str,
+        master_bus: Bus,
+        in_signal: Signal,
+        out_signal: Signal,
+        size: int,
+        mem_reg: Register,
+        contents_file: str = "",
+    ):
+
+        super().__init__(name, master_bus, in_signal, out_signal, size)
+
+    def setValue(self, address: int, value: int) -> None:
+        """
+        Disallow setting value on ROM
+        """
+        raise ValueError("Can't set value on ROM")

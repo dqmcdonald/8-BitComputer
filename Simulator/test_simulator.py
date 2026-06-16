@@ -844,8 +844,8 @@ class TestProgramCounter:
         return make_controller()
 
     @pytest.fixture
-    def pc(self, bus):
-        return ProgramCounter("PC", bus, Signal.JUMP, Signal.COUO)
+    def pc(self, bus, ctrl):
+        return ProgramCounter("PC", bus, Signal.JUMP, Signal.COUO, Signal.COUE, ctrl)
 
     def test_is_a_module(self, pc):
         assert isinstance(pc, Module)
@@ -866,15 +866,24 @@ class TestProgramCounter:
         pc.jumpTo(0x1FF)
         assert pc.getCount() == 0xFF
 
-    def test_clock_pulse_increments_count(self, pc, ctrl):
+    def test_clock_inv_pulse_increments_when_coue_active(self, pc, ctrl):
         pc.setupSignals(ctrl)
-        pc.clock_pulse()
+        ctrl._signal_state[Signal.COUE] = True
+        pc.clock_inv_pulse()
         assert pc.getCount() == 1
 
-    def test_clock_pulse_wraps_at_256(self, pc, ctrl):
+    def test_clock_inv_pulse_does_not_increment_when_coue_inactive(self, pc, ctrl):
+        pc.setupSignals(ctrl)
+        pc.jumpTo(0x05)
+        ctrl._signal_state[Signal.COUE] = False
+        pc.clock_inv_pulse()
+        assert pc.getCount() == 0x05
+
+    def test_clock_inv_pulse_wraps_at_256(self, pc, ctrl):
         pc.setupSignals(ctrl)
         pc.jumpTo(0xFF)
-        pc.clock_pulse()
+        ctrl._signal_state[Signal.COUE] = True
+        pc.clock_inv_pulse()
         assert pc.getCount() == 0
 
     def test_clock_pulse_outputs_to_bus_when_couo_active(self, pc, bus, ctrl):
@@ -908,15 +917,18 @@ class TestProgramCounter:
         pc.clock_inv_pulse()
         assert pc.getCount() == 0x05
 
-    def test_clock_pulse_outputs_before_incrementing(self, pc, bus, ctrl):
+    def test_clock_pulse_outputs_then_clock_inv_pulse_increments(self, pc, bus, ctrl):
         pc.setupSignals(ctrl)
         pc.jumpTo(0x07)
         ctrl._signal_state[Signal.COUO] = True
         pc.clock_pulse()
-        assert bus.getValue() == 0x07  # value before increment
-        assert pc.getCount() == 0x08  # count after increment
+        assert bus.getValue() == 0x07  # output at clock_pulse, count unchanged
+        ctrl._signal_state[Signal.COUE] = True
+        pc.clock_inv_pulse()
+        assert pc.getCount() == 0x08  # increment at clock_inv_pulse
 
-    def test_setup_signals_registers_jump_and_couo(self, pc, ctrl):
+    def test_setup_signals_registers_jump_couo_and_coue(self, pc, ctrl):
         pc.setupSignals(ctrl)
         assert Signal.JUMP in ctrl._registered_modules["PC"]
         assert Signal.COUO in ctrl._registered_modules["PC"]
+        assert Signal.COUE in ctrl._registered_modules["PC"]

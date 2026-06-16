@@ -94,7 +94,12 @@ class Simulator:
         self._modules.append(self._ram)
 
         self._prog_counter = ProgramCounter(
-            "ProgCounter", self._master_bus, Signal.JUMP, Signal.COUO
+            "ProgCounter",
+            self._master_bus,
+            Signal.JUMP,
+            Signal.COUO,
+            Signal.COUE,
+            self._controller,
         )
         self._modules.append(self._prog_counter)
 
