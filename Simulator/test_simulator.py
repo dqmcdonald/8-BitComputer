@@ -11,7 +11,7 @@ from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller
 from flags import FlagsRegister
-from memory import RAM, Memory
+from memory import RAM, ROM, Memory
 from module import Module
 from progcounter import ProgramCounter
 from register import Register
@@ -827,6 +827,128 @@ class TestRAM:
         ram.setValue(0, 0xFF)
         ram.clear()
         assert ram.getValue(0) == 0
+
+    @pytest.fixture
+    def ctrl(self):
+        return make_controller()
+
+    def test_clock_pulse_outputs_to_bus_when_ramo_active(self, ram, bus, addr_reg, ctrl):
+        ram.setupSignals(ctrl)
+        addr_reg.setValue(0x03)
+        ram.setValue(0x03, 0xBE)
+        ctrl._signal_state[Signal.RAMO] = True
+        ram.clock_pulse()
+        assert bus.getValue() == 0xBE
+        assert bus.getDriver() is ram
+
+    def test_clock_pulse_does_not_drive_bus_when_ramo_inactive(self, ram, bus, addr_reg, ctrl):
+        ram.setupSignals(ctrl)
+        addr_reg.setValue(0x03)
+        ram.setValue(0x03, 0xBE)
+        ctrl._signal_state[Signal.RAMO] = False
+        ram.clock_pulse()
+        assert bus.getDriver() is None
+
+    def test_clock_inv_pulse_writes_from_bus_when_rami_active(self, ram, bus, addr_reg, ctrl):
+        ram.setupSignals(ctrl)
+        addr_reg.setValue(0x07)
+        driver = Module("Driver")
+        bus.setValue(0x42, driver)
+        ctrl._signal_state[Signal.RAMI] = True
+        ram.clock_inv_pulse()
+        assert ram.getValue(0x07) == 0x42
+
+    def test_clock_inv_pulse_does_not_write_when_rami_inactive(self, ram, bus, addr_reg, ctrl):
+        ram.setupSignals(ctrl)
+        addr_reg.setValue(0x07)
+        ram.setValue(0x07, 0x11)
+        driver = Module("Driver")
+        bus.setValue(0x42, driver)
+        ctrl._signal_state[Signal.RAMI] = False
+        ram.clock_inv_pulse()
+        assert ram.getValue(0x07) == 0x11
+
+
+# ---------------------------------------------------------------------------
+# ROM
+# ---------------------------------------------------------------------------
+
+
+class TestROM:
+    @pytest.fixture
+    def bus(self):
+        return Bus("Master Bus")
+
+    @pytest.fixture
+    def ctrl(self):
+        return make_controller()
+
+    @pytest.fixture
+    def addr_reg(self, bus):
+        return Register("ProgROMReg", bus, Signal.MROI, None)
+
+    @pytest.fixture
+    def rom(self, bus, addr_reg):
+        return ROM("ProgROM", bus, Signal.ROMO, 1024, addr_reg)
+
+    def test_is_a_memory(self, rom):
+        assert isinstance(rom, Memory)
+
+    def test_initial_values_are_zero(self, rom):
+        for i in range(rom.size()):
+            assert rom.getValue(i) == 0
+
+    def test_set_value_raises(self, rom):
+        with pytest.raises(TypeError):
+            rom.setValue(0, 0xAB)
+
+    def test_load_from_file(self, bus, addr_reg, tmp_path):
+        program = bytes([0x01, 0x02, 0x03, 0xFF])
+        f = tmp_path / "prog.bin"
+        f.write_bytes(program)
+        r = ROM("ProgROM", bus, Signal.ROMO, 1024, addr_reg, str(f))
+        assert r.getValue(0) == 0x01
+        assert r.getValue(1) == 0x02
+        assert r.getValue(2) == 0x03
+        assert r.getValue(3) == 0xFF
+
+    def test_load_from_file_rest_is_zero(self, bus, addr_reg, tmp_path):
+        f = tmp_path / "prog.bin"
+        f.write_bytes(bytes([0xAB]))
+        r = ROM("ProgROM", bus, Signal.ROMO, 1024, addr_reg, str(f))
+        assert r.getValue(0) == 0xAB
+        assert r.getValue(1) == 0x00
+
+    def test_file_too_large_raises(self, bus, addr_reg, tmp_path):
+        f = tmp_path / "big.bin"
+        f.write_bytes(bytes(200))  # 1024-bit ROM = 128 bytes
+        with pytest.raises(ValueError):
+            ROM("ProgROM", bus, Signal.ROMO, 1024, addr_reg, str(f))
+
+    def test_nonexistent_file_raises(self, bus, addr_reg):
+        with pytest.raises(FileNotFoundError):
+            ROM("ProgROM", bus, Signal.ROMO, 1024, addr_reg, "/no/such/file.bin")
+
+    def test_no_file_does_not_raise(self, bus, addr_reg):
+        ROM("ProgROM", bus, Signal.ROMO, 1024, addr_reg, "")
+
+    def test_clock_pulse_outputs_to_bus_when_romo_active(self, rom, bus, addr_reg, ctrl):
+        rom.setupSignals(ctrl)
+        addr_reg.setupSignals(ctrl)
+        addr_reg.setValue(0x05)
+        rom._values[0x05] = 0x7F  # bypass setValue (ROM is read-only)
+        ctrl._signal_state[Signal.ROMO] = True
+        rom.clock_pulse()
+        assert bus.getValue() == 0x7F
+        assert bus.getDriver() is rom
+
+    def test_clock_pulse_does_not_drive_bus_when_romo_inactive(self, rom, bus, addr_reg, ctrl):
+        rom.setupSignals(ctrl)
+        addr_reg.setValue(0x05)
+        rom._values[0x05] = 0x7F
+        ctrl._signal_state[Signal.ROMO] = False
+        rom.clock_pulse()
+        assert bus.getDriver() is None
 
 
 # ---------------------------------------------------------------------------

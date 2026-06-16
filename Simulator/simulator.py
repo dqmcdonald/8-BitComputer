@@ -14,7 +14,7 @@ from clock import Clock, ClockMode
 from controller import Controller
 from flags import FlagsRegister
 from instructions import InstructionSet
-from memory import RAM
+from memory import RAM, ROM
 from progcounter import ProgramCounter
 from register import OutputRegister, Register
 from signals import Signal
@@ -25,13 +25,13 @@ K = 1024
 
 
 class Simulator:
-    def __init__(self, ram_file: str = "") -> None:
+    def __init__(self, ram_file: str = "", prog_rom_file: str = "") -> None:
         self._modules = []
-        self.constructSimulator(ram_file)
+        self.constructSimulator(ram_file, prog_rom_file)
         self.setupClock()
         self.setupSignals()
 
-    def constructSimulator(self, ram_file: str = "") -> None:
+    def constructSimulator(self, ram_file: str = "", prog_rom_file: str = "") -> None:
         """
         Instantiate all the objects for the simulator
         """
@@ -92,6 +92,21 @@ class Simulator:
             ram_file,
         )
         self._modules.append(self._ram)
+
+        self._prog_rom_reg = Register(
+            "ProgROMReg", self._master_bus, Signal.MROI, None
+        )
+        self._modules.append(self._prog_rom_reg)
+
+        self._prog_rom = ROM(
+            "ProgROM",
+            self._master_bus,
+            Signal.ROMO,
+            64 * K,
+            self._prog_rom_reg,
+            prog_rom_file,
+        )
+        self._modules.append(self._prog_rom)
 
         self._prog_counter = ProgramCounter(
             "ProgCounter",
@@ -165,6 +180,13 @@ if __name__ == "__main__":
         help="Binary file to load into RAM at startup",
     )
     parser.add_argument(
+        "--prog-rom",
+        "-p",
+        default="",
+        metavar="FILE",
+        help="Binary file to load into program ROM at startup",
+    )
+    parser.add_argument(
         "--debug",
         "-d",
         action="store_true",
@@ -181,6 +203,6 @@ if __name__ == "__main__":
         ClockMode.SINGLE_STEP if args.mode == "single" else ClockMode.CONTINUOUS
     )
 
-    sim = Simulator(ram_file=args.ram)
+    sim = Simulator(ram_file=args.ram, prog_rom_file=args.prog_rom)
     sim.setClockProps(args.speed, clock_mode)
     sim.run()

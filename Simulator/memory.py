@@ -27,8 +27,8 @@ class Memory(Module):
         self,
         name: str,
         master_bus: Bus,
-        in_signal: Signal,
-        out_signal: Signal,
+        in_signal: Signal | None,
+        out_signal: Signal | None,
         size: int,
     ):
         super().__init__(name)
@@ -70,9 +70,9 @@ class Memory(Module):
 
 class RAM(Memory):
     """
-    A RAM module - can optionially be initialised from a
-    specific file and has an associated memory register
-    Set and get address are handled via memory regiser
+    RAM with an associated address register. Bus reads and writes always
+    use the address currently held in the memory register.
+    Direct getValue/setValue remain available for initialisation and testing.
     """
 
     def __init__(
@@ -85,13 +85,10 @@ class RAM(Memory):
         mem_reg: Register,
         contents_file: str = "",
     ):
-
         super().__init__(name, master_bus, in_signal, out_signal, size)
-
         self._mem_reg = mem_reg
 
-        # Read the contents of a file if specificed:
-        if len(contents_file) > 0:
+        if contents_file:
             raw = np.fromfile(contents_file, dtype=np.uint8)
             if len(raw) > len(self._values):
                 raise ValueError(
@@ -99,28 +96,75 @@ class RAM(Memory):
                 )
             self._values[: len(raw)] = raw
 
+    def clock_pulse(self) -> None:
+        if (
+            self._out_signal is not None
+            and self._controller
+            and self._controller.getSignalState(self._name, self._out_signal)
+        ):
+            address = self._mem_reg.getValue()
+            self._master_bus.setValue(self.getValue(address), self)
+            logger.debug(
+                "%s: output 0x%02X from address %d to bus",
+                self._name, self.getValue(address), address,
+            )
+        super().clock_pulse()
+
+    def clock_inv_pulse(self) -> None:
+        if (
+            self._in_signal is not None
+            and self._controller
+            and self._controller.getSignalState(self._name, self._in_signal)
+        ):
+            address = self._mem_reg.getValue()
+            value = self._master_bus.getValue()
+            self.setValue(address, value)
+            logger.debug(
+                "%s: wrote 0x%02X to address %d from bus", self._name, value, address
+            )
+        super().clock_inv_pulse()
+
 
 class ROM(Memory):
     """
-    A RAM module - can optionially be initialised from a
-    specific file and has an associated memory register
+    ROM with an associated address register. Bus reads always use the address
+    currently held in the memory register. Contents are loaded from a file at
+    startup and cannot be written via the bus.
     """
 
     def __init__(
         self,
         name: str,
         master_bus: Bus,
-        in_signal: Signal,
         out_signal: Signal,
         size: int,
         mem_reg: Register,
         contents_file: str = "",
     ):
+        super().__init__(name, master_bus, None, out_signal, size)
+        self._mem_reg = mem_reg
 
-        super().__init__(name, master_bus, in_signal, out_signal, size)
+        if contents_file:
+            raw = np.fromfile(contents_file, dtype=np.uint8)
+            if len(raw) > len(self._values):
+                raise ValueError(
+                    f"File too large for memory ({len(raw)} > {len(self._values)} bytes)"
+                )
+            self._values[: len(raw)] = raw
 
     def setValue(self, address: int, value: int) -> None:
-        """
-        Disallow setting value on ROM
-        """
-        raise ValueError("Can't set value on ROM")
+        raise TypeError(f"{self._name}: ROM is read-only")
+
+    def clock_pulse(self) -> None:
+        if (
+            self._out_signal is not None
+            and self._controller
+            and self._controller.getSignalState(self._name, self._out_signal)
+        ):
+            address = self._mem_reg.getValue()
+            self._master_bus.setValue(self.getValue(address), self)
+            logger.debug(
+                "%s: output 0x%02X from address %d to bus",
+                self._name, self.getValue(address), address,
+            )
+        super().clock_pulse()
