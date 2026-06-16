@@ -11,8 +11,8 @@ from bus import Bus
 from clock import Clock, ClockMode
 from controller import Controller
 from flags import FlagsRegister
+from memory import RAM, Memory
 from module import Module
-from memory import Memory, RAM
 from progcounter import ProgramCounter
 from register import Register
 from signals import Signal
@@ -35,6 +35,10 @@ class RecordingModule(Module):
 
     def clock_inv_pulse(self) -> None:
         self.inv_pulse_count += 1
+
+
+def make_controller():
+    return Controller(256, 256, "", "")
 
 
 # ---------------------------------------------------------------------------
@@ -165,7 +169,7 @@ class TestClock:
 
     @pytest.fixture
     def ctrl(self):
-        return Controller()
+        return make_controller()
 
     def test_add_module(self, clk):
         m = Module("M")
@@ -212,16 +216,18 @@ class TestClock:
         class TrackedController(Controller):
             def clock_pulse(self):
                 call_order.append("ctrl_pulse")
+
             def clock_inv_pulse(self):
                 call_order.append("ctrl_inv")
 
         class TrackedModule(Module):
             def clock_pulse(self):
                 call_order.append("module_pulse")
+
             def clock_inv_pulse(self):
                 call_order.append("module_inv")
 
-        clk.addController(TrackedController())
+        clk.addController(TrackedController(256, 256, "", ""))
         clk.addModule(TrackedModule("M"))
         clk.tick()
         assert call_order == ["ctrl_pulse", "module_pulse", "ctrl_inv", "module_inv"]
@@ -234,12 +240,14 @@ class TestClock:
             def clock_pulse(self):
                 call_order.append("bus_pulse")
                 super().clock_pulse()
+
             def clock_inv_pulse(self):
                 call_order.append("bus_inv")
 
         class TrackedModule(Module):
             def clock_pulse(self):
                 call_order.append("module_pulse")
+
             def clock_inv_pulse(self):
                 call_order.append("module_inv")
 
@@ -306,7 +314,7 @@ class TestClock:
 class TestController:
     @pytest.fixture
     def ctrl(self):
-        return Controller()
+        return make_controller()
 
     def test_all_signals_start_false(self, ctrl):
         for sig in Signal:
@@ -377,7 +385,7 @@ class TestController:
 class TestRegister:
     @pytest.fixture
     def ctrl(self):
-        return Controller()
+        return make_controller()
 
     @pytest.fixture
     def bus(self):
@@ -385,7 +393,7 @@ class TestRegister:
 
     @pytest.fixture
     def reg(self, bus):
-        return Register("RegA", bus, Signal.RAIN, Signal.RAOU)
+        return Register("RegA", bus, Signal.ARGI, Signal.ARGO)
 
     def test_is_a_module(self, reg):
         assert isinstance(reg, Module)
@@ -403,38 +411,44 @@ class TestRegister:
 
     def test_setup_signals_registers_in_and_out(self, reg, ctrl):
         reg.setupSignals(ctrl)
-        assert Signal.RAIN in ctrl._registered_modules["RegA"]
-        assert Signal.RAOU in ctrl._registered_modules["RegA"]
+        assert Signal.ARGI in ctrl._registered_modules["RegA"]
+        assert Signal.ARGO in ctrl._registered_modules["RegA"]
 
     def test_clock_pulse_outputs_to_bus_when_out_signal_active(self, reg, bus, ctrl):
         reg.setupSignals(ctrl)
         reg.setValue(0xAB)
-        ctrl._signal_state[Signal.RAOU] = True
+        ctrl._signal_state[Signal.ARGO] = True
         reg.clock_pulse()
         assert bus.getValue() == 0xAB
         assert bus.getDriver() is reg
 
-    def test_clock_pulse_does_not_drive_bus_when_out_signal_inactive(self, reg, bus, ctrl):
+    def test_clock_pulse_does_not_drive_bus_when_out_signal_inactive(
+        self, reg, bus, ctrl
+    ):
         reg.setupSignals(ctrl)
         reg.setValue(0xAB)
-        ctrl._signal_state[Signal.RAOU] = False
+        ctrl._signal_state[Signal.ARGO] = False
         reg.clock_pulse()
         assert bus.getDriver() is None
 
-    def test_clock_inv_pulse_latches_from_bus_when_in_signal_active(self, reg, bus, ctrl):
+    def test_clock_inv_pulse_latches_from_bus_when_in_signal_active(
+        self, reg, bus, ctrl
+    ):
         reg.setupSignals(ctrl)
         driver = Module("Driver")
         bus.setValue(0x55, driver)
-        ctrl._signal_state[Signal.RAIN] = True
+        ctrl._signal_state[Signal.ARGI] = True
         reg.clock_inv_pulse()
         assert reg.getValue() == 0x55
 
-    def test_clock_inv_pulse_does_not_latch_when_in_signal_inactive(self, reg, bus, ctrl):
+    def test_clock_inv_pulse_does_not_latch_when_in_signal_inactive(
+        self, reg, bus, ctrl
+    ):
         reg.setupSignals(ctrl)
         reg.setValue(0x11)
         driver = Module("Driver")
         bus.setValue(0x55, driver)
-        ctrl._signal_state[Signal.RAIN] = False
+        ctrl._signal_state[Signal.ARGI] = False
         reg.clock_inv_pulse()
         assert reg.getValue() == 0x11
 
@@ -461,7 +475,7 @@ SIZE_BITS = 1024  # 128 bytes
 class TestMemory:
     @pytest.fixture
     def ctrl(self):
-        return Controller()
+        return make_controller()
 
     @pytest.fixture
     def bus(self):
@@ -534,7 +548,7 @@ class TestMemory:
 class TestALU:
     @pytest.fixture
     def ctrl(self):
-        return Controller()
+        return make_controller()
 
     @pytest.fixture
     def bus(self):
@@ -542,11 +556,11 @@ class TestALU:
 
     @pytest.fixture
     def reg_a(self, bus):
-        return Register("RegisterA", bus, Signal.RAIN, Signal.RAOU)
+        return Register("RegisterA", bus, Signal.ARGI, Signal.ARGO)
 
     @pytest.fixture
     def reg_b(self, bus):
-        return Register("RegisterB", bus, Signal.RBIN, Signal.RBOU)
+        return Register("RegisterB", bus, Signal.BRGI, Signal.BRGO)
 
     @pytest.fixture
     def alu(self, bus, reg_a, reg_b, ctrl):
@@ -620,7 +634,9 @@ class TestALU:
 
     # --- bus interaction --------------------------------------------------
 
-    def test_clock_pulse_drives_bus_when_out_asserted(self, alu, reg_a, reg_b, bus, ctrl):
+    def test_clock_pulse_drives_bus_when_out_asserted(
+        self, alu, reg_a, reg_b, bus, ctrl
+    ):
         reg_a.setValue(20)
         reg_b.setValue(22)
         ctrl._signal_state[Signal.ALUO] = True
@@ -628,7 +644,9 @@ class TestALU:
         assert bus.getValue() == 42
         assert bus.getDriver() is alu
 
-    def test_clock_pulse_does_not_drive_bus_when_out_inactive(self, alu, reg_a, reg_b, bus, ctrl):
+    def test_clock_pulse_does_not_drive_bus_when_out_inactive(
+        self, alu, reg_a, reg_b, bus, ctrl
+    ):
         reg_a.setValue(20)
         reg_b.setValue(22)
         ctrl._signal_state[Signal.ALUO] = False
@@ -652,7 +670,7 @@ class TestALU:
 class TestFlagsRegister:
     @pytest.fixture
     def ctrl(self):
-        return Controller()
+        return make_controller()
 
     @pytest.fixture
     def bus(self):
@@ -660,11 +678,11 @@ class TestFlagsRegister:
 
     @pytest.fixture
     def reg_a(self, bus):
-        return Register("RegisterA", bus, Signal.RAIN, Signal.RAOU)
+        return Register("RegisterA", bus, Signal.ARGI, Signal.ARGO)
 
     @pytest.fixture
     def reg_b(self, bus):
-        return Register("RegisterB", bus, Signal.RBIN, Signal.RBOU)
+        return Register("RegisterB", bus, Signal.BRGI, Signal.BRGO)
 
     @pytest.fixture
     def alu(self, bus, reg_a, reg_b, ctrl):
@@ -747,7 +765,7 @@ class TestRAM:
 
     @pytest.fixture
     def addr_reg(self, bus):
-        return Register("MAR", bus, Signal.MIIN, Signal.MIOU)
+        return Register("MAR", bus, Signal.MRAI, None)
 
     @pytest.fixture
     def ram(self, bus, addr_reg):
@@ -788,7 +806,15 @@ class TestRAM:
 
     def test_nonexistent_file_raises(self, bus, addr_reg):
         with pytest.raises(FileNotFoundError):
-            RAM("RAM", bus, Signal.RAMI, Signal.RAMO, 1024, addr_reg, "/no/such/file.bin")
+            RAM(
+                "RAM",
+                bus,
+                Signal.RAMI,
+                Signal.RAMO,
+                1024,
+                addr_reg,
+                "/no/such/file.bin",
+            )
 
     def test_no_file_does_not_raise(self, bus, addr_reg):
         RAM("RAM", bus, Signal.RAMI, Signal.RAMO, 1024, addr_reg, "")
@@ -815,11 +841,11 @@ class TestProgramCounter:
 
     @pytest.fixture
     def ctrl(self):
-        return Controller()
+        return make_controller()
 
     @pytest.fixture
     def pc(self, bus):
-        return ProgramCounter("PC", bus, Signal.JUMP, Signal.PCOU)
+        return ProgramCounter("PC", bus, Signal.JUMP, Signal.COUO)
 
     def test_is_a_module(self, pc):
         assert isinstance(pc, Module)
@@ -851,17 +877,17 @@ class TestProgramCounter:
         pc.clock_pulse()
         assert pc.getCount() == 0
 
-    def test_clock_pulse_outputs_to_bus_when_pcou_active(self, pc, bus, ctrl):
+    def test_clock_pulse_outputs_to_bus_when_couo_active(self, pc, bus, ctrl):
         pc.setupSignals(ctrl)
         pc.jumpTo(0x0A)
-        ctrl._signal_state[Signal.PCOU] = True
+        ctrl._signal_state[Signal.COUO] = True
         pc.clock_pulse()
         assert bus.getValue() == 0x0A
 
-    def test_clock_pulse_does_not_drive_bus_when_pcou_inactive(self, pc, bus, ctrl):
+    def test_clock_pulse_does_not_drive_bus_when_couo_inactive(self, pc, bus, ctrl):
         pc.setupSignals(ctrl)
         pc.jumpTo(0x0A)
-        ctrl._signal_state[Signal.PCOU] = False
+        ctrl._signal_state[Signal.COUO] = False
         pc.clock_pulse()
         assert bus.getDriver() is None
 
@@ -885,12 +911,12 @@ class TestProgramCounter:
     def test_clock_pulse_outputs_before_incrementing(self, pc, bus, ctrl):
         pc.setupSignals(ctrl)
         pc.jumpTo(0x07)
-        ctrl._signal_state[Signal.PCOU] = True
+        ctrl._signal_state[Signal.COUO] = True
         pc.clock_pulse()
-        assert bus.getValue() == 0x07   # value before increment
-        assert pc.getCount() == 0x08   # count after increment
+        assert bus.getValue() == 0x07  # value before increment
+        assert pc.getCount() == 0x08  # count after increment
 
-    def test_setup_signals_registers_jump_and_pcou(self, pc, ctrl):
+    def test_setup_signals_registers_jump_and_couo(self, pc, ctrl):
         pc.setupSignals(ctrl)
         assert Signal.JUMP in ctrl._registered_modules["PC"]
-        assert Signal.PCOU in ctrl._registered_modules["PC"]
+        assert Signal.COUO in ctrl._registered_modules["PC"]

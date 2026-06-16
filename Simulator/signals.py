@@ -3,74 +3,95 @@ from enum import Enum, IntFlag, auto
 
 class Signal(Enum):
     CLEA = auto()  # Clear: reset all registers to zero
-    HALT = auto()  # Halt: stop the clock
-    RAIN = auto()  # Register A In: load register A from the bus
-    RAOU = auto()  # Register A Out: drive register A onto the bus
-    RBIN = auto()  # Register B In: load register B from the bus
-    RBOU = auto()  # Register B Out: drive register B onto the bus
-    IRIN = auto()  # Instruction Register In: load the instruction register from the bus
-    IROU = (
-        auto()
-    )  # Instruction Register Out: drive the instruction register onto the bus
+    JUMP = auto()  # Jump: load the program counter from the bus
+    MROI = auto()  # Program memory register in
+    MRAI = auto()  # Ram memory register in
+    ARGI = auto()  # Register A In: load register A from the bus
+    BRGI = auto()  # Register B In: load register B from the bus
+    IRGI = auto()  # Instruction Register In: load the instruction register from the bus
+    OUTI = auto()  # Output register input (there is no output)
     RAMI = auto()  # RAM In: write the bus value into RAM at the current address
-    RAMO = auto()  # RAM Out: drive the RAM value at the current address onto the bus
-    ALUO = auto()  # ALU Out: drive the ALU result onto the bus
-    SUBT = auto()  # Subtract: ALU computes A - B instead of A + B
+    COUE = auto()  # ALU Enable -
+    COUO = auto()  # ALU Out: drive the ALU result onto the bus
     FLGI = (
         auto()
     )  # Flags In: latch the ALU carry and zero flags into the flags register
-    MIIN = (
+    HALT = auto()  # Halt: stop the clock
+    ARGO = auto()  # Register B Out: drive register B onto the bus
+    BRGO = auto()  # Register B Out: drive register B onto the bus
+    ROMO = auto()  # Output the value from the program rom
+    RAMO = auto()  # Drive the ram to the bus
+    TRES = auto()  # Step counter reset
+    ALUO = auto()  # Adder out to bus
+    IRGO = (
         auto()
-    )  # Memory Address Register In: load the memory address register from the bus
-    MIOU = (
-        auto()
-    )  # Memory Address Register Out: drive the memory address register onto the bus
-    JUMP = auto()  # Jump: load the program counter from the bus
-    PCOU = auto()  # Program Counter Out: drive the program counter value onto the bus
-    ORIN = auto()  # Output register input (there is no output)
+    )  # Instruction Register Out: drive the instruction register onto the bus
+    SUBT = auto()  # Subtract: ALU computes A - B instead of A + B
 
 
 class SignalFlags(IntFlag):
-    HALT = 0b100000000000000000000000
-    RAIN = 0b010000000000000000000000
-    RAOU = 0b001000000000000000000000
-    RBIN = 0b000100000000000000000000
-    RBOU = 0b000010000000000000000000
-    IRIN = 0b000001000000000000000000
-    IROU = 0b000000100000000000000000
-    RAMI = 0b000000010000000000000000
-    RAMO = 0b000000001000000000000000
-    ALUO = 0b000000000100000000000000
-    SUBT = 0b000000000010000000000000
-    FLGI = 0b000000000001000000000000
-    MIIN = 0b000000000000100000000000
-    MIOU = 0b000000000000010000000000
-    JUMP = 0b000000000000001000000000
-    PCOU = 0b000000000000000100000000
-    ORIN = 0b000000000000000010000000
+    CLEA = 0b000000000000000000000000
+    JUMP = 0b000000000000000000000000
+    MROI = 0b000000000000000000000000
+    MRAI = 0b000000000000000000000000
+    ARGI = 0b000000000000000000000000
+    BRGI = 0b000000000000000000000000
+    IRGI = 0b000000000000000000000000
+    OUTI = 0b000000000000000000000000
+    RAMI = 0b000000000000000000000000
+    COUE = 0b000000000000000000000000
+    COUO = 0b000000000000000000000000
+    FLGI = 0b000000000000000000000000
+    HALT = 0b000000000000000000000000
+    ARGO = 0b000000000000000000000000
+    BRGO = 0b000000000000000000000000
+    ROMO = 0b000000000000000000000000
+    RAMO = 0b000000000000000000000000
+    TRES = 0b000000000000000000000000
+    ALUO = 0b000000000000000000000000
+    IRGO = 0b000000000000000000000000
+    SUBT = 0b000000000000000000000000
 
 
 SIGNAL_MAP: dict[SignalFlags, Signal] = {
-    SignalFlags.HALT: Signal.HALT,
-    SignalFlags.RAIN: Signal.RAIN,
-    SignalFlags.RAOU: Signal.RAOU,
-    SignalFlags.RBIN: Signal.RBIN,
-    SignalFlags.RBOU: Signal.RBOU,
-    SignalFlags.IRIN: Signal.IRIN,
-    SignalFlags.IROU: Signal.IROU,
-    SignalFlags.RAMI: Signal.RAMI,
-    SignalFlags.RAMO: Signal.RAMO,
-    SignalFlags.ALUO: Signal.ALUO,
-    SignalFlags.SUBT: Signal.SUBT,
-    SignalFlags.FLGI: Signal.FLGI,
-    SignalFlags.MIIN: Signal.MIIN,
-    SignalFlags.MIOU: Signal.MIOU,
+    SignalFlags.CLEA: Signal.CLEA,
     SignalFlags.JUMP: Signal.JUMP,
-    SignalFlags.PCOU: Signal.PCOU,
-    SignalFlags.ORIN: Signal.ORIN,
+    SignalFlags.MROI: Signal.MROI,
+    SignalFlags.MRAI: Signal.MRAI,
+    SignalFlags.ARGI: Signal.ARGI,
+    SignalFlags.BRGI: Signal.BRGI,
+    SignalFlags.IRGI: Signal.IRGI,
+    SignalFlags.OUTI: Signal.OUTI,
+    SignalFlags.RAMI: Signal.RAMI,
+    SignalFlags.COUE: Signal.COUE,
+    SignalFlags.COUO: Signal.COUO,
+    SignalFlags.FLGI: Signal.FLGI,
+    SignalFlags.HALT: Signal.HALT,
+    SignalFlags.ARGO: Signal.ARGO,
+    SignalFlags.BRGO: Signal.BRGO,
+    SignalFlags.ROMO: Signal.ROMO,
+    SignalFlags.RAMO: Signal.RAMO,
+    SignalFlags.TRES: Signal.TRES,
+    SignalFlags.ALUO: Signal.ALUO,
+    SignalFlags.IRGO: Signal.IRGO,
+    SignalFlags.SUBT: Signal.SUBT,
 }
 
 
 def active_signals(state: int) -> list[Signal]:
     """Return the list of Signals whose flag bits are set in state."""
     return [sig for flag, sig in SIGNAL_MAP.items() if state & flag]
+
+
+def decode(address: int) -> int:
+    """Convert a 3-bit address (0-7) to a one-hot 8-bit value."""
+    if not (0 <= address <= 7):
+        return 0x00
+    return 1 << address
+
+
+def encode(outputs: int) -> int | None:
+    """Convert a one-hot 8-bit value to a 3-bit address. Returns None if invalid."""
+    if outputs == 0 or (outputs & (outputs - 1)) != 0:
+        return None
+    return outputs.bit_length() - 1

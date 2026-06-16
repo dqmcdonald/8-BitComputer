@@ -2,8 +2,8 @@
 
 A program counter module. Counts up on every clock tick.
 
-Outputs to the master bus on PCOU and can be loaded from
-the bus by a JUMP signal.
+Outputs to the master bus when its out_signal is asserted, and can be
+loaded from the bus by a JUMP signal.
 
 """
 
@@ -38,7 +38,7 @@ class ProgramCounter(Module):
         logger.debug("%s: jumped to %d", self._name, self._count)
 
     def clock_pulse(self) -> None:
-        if self._controller and self._controller.getSignalState(
+        if self._out_signal is not None and self._controller and self._controller.getSignalState(
             self._name, self._out_signal
         ):
             self._master_bus.setValue(self._count, self)

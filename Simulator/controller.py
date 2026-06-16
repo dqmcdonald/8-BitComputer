@@ -7,6 +7,9 @@ allow us to know what is connected to what and be able to report on it.
 """
 
 import logging
+from csv import reader
+
+import numpy as np
 
 from signals import Signal, active_signals
 
@@ -14,10 +17,30 @@ logger = logging.getLogger(__name__)
 
 
 class Controller:
-    def __init__(self) -> None:
+    def __init__(self, size1: int, size2: int, romfile1: str, romfile2: str) -> None:
+        """
+        Takes two sizes and two filenames, ont for the each of the
+        ROMs used in the controller, modelled here by Numpy arrays
+        """
         self._registered_modules = {}  # List of signals registered by module name
         self._signal_state = {sig: False for sig in Signal}
         self._signal_flags = {}
+        self._rom1 = self.readRomFile(romfile1, size1)
+        self._rom2 = self.readRomFile(romfile2, size2)
+
+    def readRomFile(self, contents_file: str, size: int):
+        """
+        Read rt
+        """
+        if len(contents_file) > 0:
+            raw = np.fromfile(contents_file, dtype=np.uint8)
+            if len(raw) > size // 8:
+                raise ValueError(
+                    f"ROM File too large for memory ({len(raw)} > {size} bytes)"
+                )
+        else:
+            raw = np.zeros(size // 8, dtype=np.uint8)
+        return raw
 
     def clear(self):
         self._signal_state = dict.fromkeys(self._signal_state, False)

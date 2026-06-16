@@ -21,6 +21,8 @@ from signals import Signal
 
 logger = logging.getLogger(__name__)
 
+K = 1024
+
 
 class Simulator:
     def __init__(self, ram_file: str = "") -> None:
@@ -34,17 +36,18 @@ class Simulator:
         Instantiate all the objects for the simulator
         """
         logger.info("Constructing simulator")
-        self._controller = Controller()
+        # TODO: pass in rom file names:
+        self._controller = Controller(256 * K, 256 * K, "", "")
         self._clock = Clock()
         self._master_bus = Bus("Master Bus")
 
         # Build registers
         self._registerA = Register(
-            "RegisterA", self._master_bus, Signal.RAIN, Signal.RAOU
+            "RegisterA", self._master_bus, Signal.ARGI, Signal.ARGO
         )
         self._modules.append(self._registerA)
         self._registerB = Register(
-            "RegisterB", self._master_bus, Signal.RBIN, Signal.RBOU
+            "RegisterB", self._master_bus, Signal.BRGI, Signal.BRGO
         )
         self._modules.append(self._registerB)
 
@@ -65,17 +68,17 @@ class Simulator:
         self._modules.append(self._flags)
 
         self._instructionReg = Register(
-            "InstructionReg", self._master_bus, Signal.IRIN, Signal.IROU
+            "InstructionReg", self._master_bus, Signal.IRGI, Signal.IRGO
         )
         self._modules.append(self._instructionReg)
 
         self._memory_add_reg = Register(
-            "MemoryAddressReg", self._master_bus, Signal.MIIN, Signal.MIOU
+            "MemoryAddressReg", self._master_bus, Signal.MRAI, None
         )
         self._modules.append(self._memory_add_reg)
 
         self._outputReg = OutputRegister(
-            "Output Register", self._master_bus, Signal.ORIN, None
+            "Output Register", self._master_bus, Signal.OUTI, None
         )
         self._modules.append(self._outputReg)
 
@@ -91,7 +94,7 @@ class Simulator:
         self._modules.append(self._ram)
 
         self._prog_counter = ProgramCounter(
-            "ProgCounter", self._master_bus, Signal.JUMP, Signal.PCOU
+            "ProgCounter", self._master_bus, Signal.JUMP, Signal.COUO
         )
         self._modules.append(self._prog_counter)
 
