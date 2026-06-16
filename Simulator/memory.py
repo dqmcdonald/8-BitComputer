@@ -151,6 +151,13 @@ class ROM(Memory):
                     f"File too large for memory ({len(raw)} > {len(self._values)} bytes)"
                 )
             self._values[: len(raw)] = raw
+            logger.info(
+                "%s: loaded %d bytes from '%s' (first bytes: %s)",
+                name, len(raw), contents_file,
+                " ".join(f"0x{b:02X}" for b in raw[:8]),
+            )
+        else:
+            logger.warning("%s: no file provided — ROM is all zeros", name)
 
     def setValue(self, address: int, value: int) -> None:
         raise TypeError(f"{self._name}: ROM is read-only")

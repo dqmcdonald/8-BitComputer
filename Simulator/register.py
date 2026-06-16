@@ -58,7 +58,7 @@ class Register(Module):
 
 class OutputRegister(Register):
     """
-    Lightweight subclass of Register that displays the current value
+    Lightweight subclass of Register that displays the value when latched.
     """
 
     def __init__(
@@ -66,6 +66,8 @@ class OutputRegister(Register):
     ):
         super().__init__(name, master_bus, in_signal, out_signal)
 
-    def clock_pulse(self) -> None:
-        super().clock_pulse()
-        print(f"*** Output: {self._value}")
+    def clock_inv_pulse(self) -> None:
+        before = self._value
+        super().clock_inv_pulse()
+        if self._value != before:
+            print(f"*** Output: {self._value}")

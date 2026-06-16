@@ -1,0 +1,82 @@
+8-Bit Computer Signal Bit Layout
+==================================
+
+24-bit control word, split into two 12-bit halves written to ROM1 and ROM2.
+
+Each half contains one HC138 decoder group (8 one-hot lines encoded to 3 bits)
+and one direct group (4 bits passed through unchanged).
+
+ROM1 byte: [B11 B10 B9 B8 | enc2 enc1 enc0]
+ROM2 byte: [B23 B22 B21 B20 | enc2 enc1 enc0]
+
+Where enc2:enc0 is the HC138 address for the active signal in that decoder group,
+or 0b000 if no signal in that group is active.
+
+Note: address 0b000 is reserved as "no signal". Bit 0 of each decoder group
+(CLEA and the unused bit 19) cannot be asserted via microcode.
+
+
+Bit Layout
+----------
+
+Bit  Signal  Group       Description
+---  ------  ----------  --------------------------------------------------
+ 0   CLEA    Decoder 1   Clear: reset all registers to zero
+             (address 0  NOTE: reserved — hardware reset only, not via microcode)
+ 1   JUMP    Decoder 1   Jump: load the program counter from the bus
+ 2   MROI    Decoder 1   Program memory register in
+ 3   MRAI    Decoder 1   RAM memory address register in
+ 4   ARGI    Decoder 1   Register A in: load register A from the bus
+ 5   BRGI    Decoder 1   Register B in: load register B from the bus
+ 6   IRGI    Decoder 1   Instruction register in: load IR from the bus
+ 7   OUTI    Decoder 1   Output register in: latch output register from the bus
+
+ 8   RAMI    Direct 1    RAM in: write the bus value into RAM at current address
+ 9   COUE    Direct 1    Counter enable: advance the program counter
+10   COUO    Direct 1    Counter out: drive the program counter onto the bus
+11   FLGI    Direct 1    Flags in: latch the ALU carry and zero flags
+
+12   ARGO    Decoder 2   Register A out: drive register A onto the bus
+             (address 1)
+13   BRGO    Decoder 2   Register B out: drive register B onto the bus
+             (address 2)
+14   ROMO    Decoder 2   ROM out: drive the program ROM onto the bus
+             (address 3)
+15   RAMO    Decoder 2   RAM out: drive the RAM onto the bus
+             (address 4)
+16   TRES    Decoder 2   T-state reset: reset the microcode step counter to 0
+             (address 5)
+17   ALUO    Decoder 2   ALU out: drive the ALU result onto the bus
+             (address 6)
+18   IRGO    Decoder 2   Instruction register out: drive IR onto the bus
+             (address 7)
+19   -       Decoder 2   Unused (address 0 reserved as no-signal)
+
+20   HALT    Direct 2    Halt: stop the clock
+21   SUBT    Direct 2    Subtract: ALU computes A - B instead of A + B
+22   -       Direct 2    Unused
+23   -       Direct 2    Unused
+
+
+ROM Byte Encoding
+-----------------
+
+For a 24-bit control word:
+
+  ROM1 = (bits[11:8] << 3) | encode(bits[7:0])
+  ROM2 = (bits[23:20] << 3) | encode(bits[19:12])
+
+Where encode() converts a one-hot 8-bit value to a 3-bit HC138 address.
+If no signal is active in a decoder group, encode() returns 0 (no-signal sentinel).
+
+Decoding in the controller:
+
+  enc_lower    = ROM1 & 0x07
+  lower_direct = (ROM1 >> 3) & 0x0F
+  enc_upper    = ROM2 & 0x07
+  upper_direct = (ROM2 >> 3) & 0x0F
+
+  bits[7:0]   = decode(enc_lower)  if enc_lower  != 0 else 0
+  bits[11:8]  = lower_direct
+  bits[19:12] = decode(enc_upper)  if enc_upper  != 0 else 0
+  bits[23:20] = upper_direct

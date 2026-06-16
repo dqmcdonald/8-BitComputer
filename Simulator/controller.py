@@ -7,11 +7,11 @@ allow us to know what is connected to what and be able to report on it.
 """
 
 import logging
-from csv import reader
+from typing import Callable
 
 import numpy as np
 
-from signals import Signal, active_signals
+from signals import SIGNAL_MAP, Signal, decode
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +24,10 @@ class Controller:
         """
         self._registered_modules = {}  # List of signals registered by module name
         self._signal_state = {sig: False for sig in Signal}
-        self._signal_flags = {}
         self._rom1 = self.readRomFile(romfile1, size1)
         self._rom2 = self.readRomFile(romfile2, size2)
+        self._t_state: int = 0
+        self._instruction_source: Callable[[], int] | None = None
 
     def readRomFile(self, contents_file: str, size: int):
         """
@@ -79,14 +80,65 @@ class Controller:
         logger.debug("'%s' queried signal '%s' -> %s", module_name, signal.name, state)
         return state
 
-    def clock_pulse(self):
-        logger.debug("Controller: clock pulse")
-        self.clear()  # all signals → False
-        # Need to get active signals from the microcode here:
+    def setInstructionSource(self, source: Callable[[], int]) -> None:
+        """Register a callable that returns the current instruction register value."""
+        self._instruction_source = source
 
-    #        for sig in active_signals(0b100000000000000000000000):
-    #            logger.debug(f"Controller: turning on signal {sig.name}")
-    #            self._signal_state[sig] = True
+    def clock_pulse(self):
+        self.clear()
+
+        if self._instruction_source is None:
+            logger.debug("Controller: no instruction source — signals cleared")
+            return
+
+        instruction = self._instruction_source() & 0x1F
+        address = (instruction << 3) | self._t_state
+
+        rom1_byte = int(self._rom1[address])
+        rom2_byte = int(self._rom2[address])
+
+        logger.debug(
+            "Controller: t=%d instr=0x%02X addr=%d  ROM1=0x%02X ROM2=0x%02X",
+            self._t_state, instruction, address, rom1_byte, rom2_byte,
+        )
+
+        enc_lower    = rom1_byte & 0x07
+        lower_direct = (rom1_byte >> 3) & 0x0F
+        enc_upper    = rom2_byte & 0x07
+        upper_direct = (rom2_byte >> 3) & 0x0F
+
+        # enc=0 means no signal in this decoder group (not signal 0)
+        lower_onehot = decode(enc_lower) if enc_lower != 0 else 0
+        upper_onehot = decode(enc_upper) if enc_upper != 0 else 0
+
+        control_word = (
+            lower_onehot
+            | (lower_direct << 8)
+            | (upper_onehot << 12)
+            | (upper_direct << 20)
+        )
+
+        active = []
+        for flag, sig in SIGNAL_MAP.items():
+            if control_word & int(flag):
+                self._signal_state[sig] = True
+                active.append(sig.name)
+
+        if active:
+            logger.info(
+                "Controller: t=%d instr=0x%02X  active signals: %s",
+                self._t_state, instruction, ", ".join(active),
+            )
+        else:
+            logger.debug(
+                "Controller: t=%d instr=0x%02X  no signals active",
+                self._t_state, instruction,
+            )
 
     def clock_inv_pulse(self):
-        logger.debug("Controller: clock inv pulse")
+        if self._signal_state[Signal.TRES]:
+            self._t_state = 0
+            logger.info("Controller: t_state reset to 0 (TRES)")
+        else:
+            self._t_state = (self._t_state + 1) & 0x07
+            logger.debug("Controller: t_state now %d", self._t_state)

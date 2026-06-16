@@ -25,19 +25,30 @@ K = 1024
 
 
 class Simulator:
-    def __init__(self, ram_file: str = "", prog_rom_file: str = "") -> None:
+    def __init__(
+        self,
+        ram_file: str = "",
+        prog_rom_file: str = "",
+        rom1_file: str = "rom1.bin",
+        rom2_file: str = "rom2.bin",
+    ) -> None:
         self._modules = []
-        self.constructSimulator(ram_file, prog_rom_file)
+        self.constructSimulator(ram_file, prog_rom_file, rom1_file, rom2_file)
         self.setupClock()
         self.setupSignals()
 
-    def constructSimulator(self, ram_file: str = "", prog_rom_file: str = "") -> None:
+    def constructSimulator(
+        self,
+        ram_file: str = "",
+        prog_rom_file: str = "",
+        rom1_file: str = "rom1.bin",
+        rom2_file: str = "rom2.bin",
+    ) -> None:
         """
         Instantiate all the objects for the simulator
         """
         logger.info("Constructing simulator")
-        # TODO: pass in rom file names:
-        self._controller = Controller(256 * K, 256 * K, "", "")
+        self._controller = Controller(256 * K, 256 * K, rom1_file, rom2_file)
         self._clock = Clock()
         self._master_bus = Bus("Master Bus")
 
@@ -118,6 +129,10 @@ class Simulator:
         )
         self._modules.append(self._prog_counter)
 
+        self._controller.setInstructionSource(
+            lambda: self._instructionReg.getValue()
+        )
+
     def setupClock(self) -> None:
         self._clock.addBus(self._master_bus)
         self._clock.addController(self._controller)
@@ -148,6 +163,9 @@ class Simulator:
         if self._clock._clock_mode == ClockMode.SINGLE_STEP:
             while True:
                 self._clock.tick()
+                if self._controller.getSignalState("Clock", Signal.HALT):
+                    logger.info("Simulator halted (HALT signal)")
+                    break
                 response = input("\nEnter to step, 'q' to quit: ").strip().lower()
                 if response == "q":
                     logger.info("Simulator stopped by user")
@@ -187,12 +205,37 @@ if __name__ == "__main__":
         help="Binary file to load into program ROM at startup",
     )
     parser.add_argument(
+        "--rom1",
+        default="rom1.bin",
+        metavar="FILE",
+        help="Microcode ROM 1 file (default: rom1.bin)",
+    )
+    parser.add_argument(
+        "--rom2",
+        default="rom2.bin",
+        metavar="FILE",
+        help="Microcode ROM 2 file (default: rom2.bin)",
+    )
+    parser.add_argument(
         "--debug",
         "-d",
         action="store_true",
         help="Enable DEBUG-level logging (default: INFO)",
     )
     args = parser.parse_args()
+
+    import os
+    errors = []
+    for flag, path in [
+        ("--prog-rom", args.prog_rom),
+        ("--ram",      args.ram),
+        ("--rom1",     args.rom1),
+        ("--rom2",     args.rom2),
+    ]:
+        if path and not os.path.exists(path):
+            errors.append(f"  {flag}: '{path}' not found")
+    if errors:
+        parser.error("File(s) not found:\n" + "\n".join(errors))
 
     logging.basicConfig(
         level=logging.DEBUG if args.debug else logging.INFO,
@@ -203,6 +246,11 @@ if __name__ == "__main__":
         ClockMode.SINGLE_STEP if args.mode == "single" else ClockMode.CONTINUOUS
     )
 
-    sim = Simulator(ram_file=args.ram, prog_rom_file=args.prog_rom)
+    sim = Simulator(
+        ram_file=args.ram,
+        prog_rom_file=args.prog_rom,
+        rom1_file=args.rom1,
+        rom2_file=args.rom2,
+    )
     sim.setClockProps(args.speed, clock_mode)
     sim.run()

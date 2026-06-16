@@ -376,6 +376,48 @@ class TestController:
         ctrl._signal_state[sig] = True
         assert ctrl.getSignalState("ALU", sig) is True
 
+    def test_t_state_starts_at_zero(self, ctrl):
+        assert ctrl._t_state == 0
+
+    def test_clock_inv_pulse_advances_t_state(self, ctrl):
+        ctrl.clock_inv_pulse()
+        assert ctrl._t_state == 1
+
+    def test_clock_inv_pulse_wraps_t_state_at_8(self, ctrl):
+        ctrl._t_state = 7
+        ctrl.clock_inv_pulse()
+        assert ctrl._t_state == 0
+
+    def test_clock_inv_pulse_resets_t_state_when_tres_active(self, ctrl):
+        ctrl._t_state = 5
+        ctrl._signal_state[Signal.TRES] = True
+        ctrl.clock_inv_pulse()
+        assert ctrl._t_state == 0
+
+    def test_clock_pulse_sets_signals_from_rom(self, ctrl):
+        # Encode T1 = ROMO | IRGI | COUE manually and inject into ROM
+        # IRGI=bit6 → enc_lower=6, COUE=bit9 → lower_direct=0b0010=2 → ROM1=(2<<3)|6=22
+        # ROMO=bit14 → bit2 of upper group → encode(4)=2 → ROM2=(0<<3)|2=2
+        ctrl._rom1[0] = 22  # instruction=0, t_state=0 → address=0
+        ctrl._rom2[0] = 2
+        ctrl.setInstructionSource(lambda: 0)
+        ctrl.clock_pulse()
+        assert ctrl._signal_state[Signal.IRGI] is True
+        assert ctrl._signal_state[Signal.COUE] is True
+        assert ctrl._signal_state[Signal.ROMO] is True
+        assert ctrl._signal_state[Signal.JUMP] is False
+
+    def test_clock_pulse_clears_before_setting(self, ctrl):
+        ctrl._signal_state[Signal.ARGI] = True  # stale signal from previous cycle
+        ctrl.setInstructionSource(lambda: 0)    # ROM is all zeros → no signals
+        ctrl.clock_pulse()
+        assert ctrl._signal_state[Signal.ARGI] is False
+
+    def test_clock_pulse_without_instruction_source_clears_only(self, ctrl):
+        ctrl._signal_state[Signal.ARGI] = True
+        ctrl.clock_pulse()  # no instruction source set
+        assert ctrl._signal_state[Signal.ARGI] is False
+
 
 # ---------------------------------------------------------------------------
 # Register

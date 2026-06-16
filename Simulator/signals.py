@@ -11,46 +11,47 @@ class Signal(Enum):
     IRGI = auto()  # Instruction Register In: load the instruction register from the bus
     OUTI = auto()  # Output register input (there is no output)
     RAMI = auto()  # RAM In: write the bus value into RAM at the current address
-    COUE = auto()  # ALU Enable -
-    COUO = auto()  # PC out = program counter out to the bus
-    FLGI = (
-        auto()
-    )  # Flags In: latch the ALU carry and zero flags into the flags register
-    HALT = auto()  # Halt: stop the clock
-    ARGO = auto()  # Register B Out: drive register B onto the bus
+    COUE = auto()  # Counter enable: advance the program counter
+    COUO = auto()  # Counter out: drive the program counter onto the bus
+    FLGI = auto()  # Flags In: latch the ALU carry and zero flags into the flags register
+    ARGO = auto()  # Register A Out: drive register A onto the bus
     BRGO = auto()  # Register B Out: drive register B onto the bus
     ROMO = auto()  # Output the value from the program rom
     RAMO = auto()  # Drive the ram to the bus
     TRES = auto()  # Step counter reset
     ALUO = auto()  # Adder out to bus
-    IRGO = (
-        auto()
-    )  # Instruction Register Out: drive the instruction register onto the bus
+    IRGO = auto()  # Instruction Register Out: drive the instruction register onto the bus
+    HALT = auto()  # Halt: stop the clock
     SUBT = auto()  # Subtract: ALU computes A - B instead of A + B
 
 
 class SignalFlags(IntFlag):
-    CLEA = 0b000000000000000000000000
-    JUMP = 0b000000000000000000000000
-    MROI = 0b000000000000000000000000
-    MRAI = 0b000000000000000000000000
-    ARGI = 0b000000000000000000000000
-    BRGI = 0b000000000000000000000000
-    IRGI = 0b000000000000000000000000
-    OUTI = 0b000000000000000000000000
-    RAMI = 0b000000000000000000000000
-    COUE = 0b000000000000000000000000
-    COUO = 0b000000000000000000000000
-    FLGI = 0b000000000000000000000000
-    HALT = 0b000000000000000000000000
-    ARGO = 0b000000000000000000000000
-    BRGO = 0b000000000000000000000000
-    ROMO = 0b000000000000000000000000
-    RAMO = 0b000000000000000000000000
-    TRES = 0b000000000000000000000000
-    ALUO = 0b000000000000000000000000
-    IRGO = 0b000000000000000000000000
-    SUBT = 0b000000000000000000000000
+    # Decoder group 1 (bits 0-7): one-hot via HC138, address 1-7 usable (0 = no signal)
+    CLEA = 0b000000000000000000000001  # bit  0 — not used in microcode (hardware reset only)
+    JUMP = 0b000000000000000000000010  # bit  1
+    MROI = 0b000000000000000000000100  # bit  2
+    MRAI = 0b000000000000000000001000  # bit  3
+    ARGI = 0b000000000000000000010000  # bit  4
+    BRGI = 0b000000000000000000100000  # bit  5
+    IRGI = 0b000000000000000001000000  # bit  6
+    OUTI = 0b000000000000000010000000  # bit  7
+    # Direct group 1 (bits 8-11)
+    RAMI = 0b000000000000000100000000  # bit  8
+    COUE = 0b000000000000001000000000  # bit  9
+    COUO = 0b000000000000010000000000  # bit 10
+    FLGI = 0b000000000000100000000000  # bit 11
+    # Decoder group 2 (bits 12-19): one-hot via HC138, address 1-7 usable (0 = no signal)
+    ARGO = 0b000000000001000000000000  # bit 12
+    BRGO = 0b000000000010000000000000  # bit 13
+    ROMO = 0b000000000100000000000000  # bit 14
+    RAMO = 0b000000001000000000000000  # bit 15
+    TRES = 0b000000010000000000000000  # bit 16
+    ALUO = 0b000000100000000000000000  # bit 17
+    IRGO = 0b000001000000000000000000  # bit 18
+    # (bit 19 unused — decoder address 0 reserved as no-signal)
+    # Direct group 2 (bits 20-23)
+    HALT = 0b000100000000000000000000  # bit 20
+    SUBT = 0b001000000000000000000000  # bit 21
 
 
 SIGNAL_MAP: dict[SignalFlags, Signal] = {
