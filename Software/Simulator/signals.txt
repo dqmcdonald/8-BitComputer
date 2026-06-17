@@ -13,7 +13,7 @@ Where enc2:enc0 is the HC138 address for the active signal in that decoder group
 or 0b000 if no signal in that group is active.
 
 Note: address 0b000 is reserved as "no signal". Bit 0 of each decoder group
-(CLEA and the unused bit 19) cannot be asserted via microcode.
+(CLEA for decoder 1, and bit 12 for decoder 2) cannot be asserted via microcode.
 
 
 Bit Layout
@@ -36,21 +36,21 @@ Bit  Signal  Group       Description
 10   COUO    Direct 1    Counter out: drive the program counter onto the bus
 11   FLGI    Direct 1    Flags in: latch the ALU carry and zero flags
 
-12   ARGO    Decoder 2   Register A out: drive register A onto the bus
+12   -       Decoder 2   Unused (address 0 reserved as no-signal)
+13   ARGO    Decoder 2   Register A out: drive register A onto the bus
              (address 1)
-13   BRGO    Decoder 2   Register B out: drive register B onto the bus
+14   BRGO    Decoder 2   Register B out: drive register B onto the bus
              (address 2)
-14   ROMO    Decoder 2   ROM out: drive the program ROM onto the bus
+15   ROMO    Decoder 2   ROM out: drive the program ROM onto the bus
              (address 3)
-15   RAMO    Decoder 2   RAM out: drive the RAM onto the bus
+16   RAMO    Decoder 2   RAM out: drive the RAM onto the bus
              (address 4)
-16   TRES    Decoder 2   T-state reset: reset the microcode step counter to 0
+17   TRES    Decoder 2   T-state reset: reset the microcode step counter to 0
              (address 5)
-17   ALUO    Decoder 2   ALU out: drive the ALU result onto the bus
+18   ALUO    Decoder 2   ALU out: drive the ALU result onto the bus
              (address 6)
-18   IRGO    Decoder 2   Instruction register out: drive IR onto the bus
+19   IRGO    Decoder 2   Instruction register out: drive IR onto the bus
              (address 7)
-19   -       Decoder 2   Unused (address 0 reserved as no-signal)
 
 20   HALT    Direct 2    Halt: stop the clock
 21   SUBT    Direct 2    Subtract: ALU computes A - B instead of A + B
