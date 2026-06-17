@@ -43,7 +43,10 @@ from instructions import InstructionSet  # noqa: E402
 _HAS_OPERAND: frozenset[InstructionSet] = frozenset({
     InstructionSet.LDA,
     InstructionSet.LDB,
-    InstructionSet.LDI,
+    InstructionSet.LDAI,
+    InstructionSet.LDBI,
+    InstructionSet.ADDI,
+    InstructionSet.SUBI,
     InstructionSet.STA,
     InstructionSet.STB,
     InstructionSet.JMP,

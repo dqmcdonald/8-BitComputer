@@ -46,6 +46,8 @@ class ALU(Module):
         self._reg_b = reg_b
         self._out_signal = out_signal
         self._sub_signal = sub_signal
+        self._cached_carry = False
+        self._cached_zero = False
 
     def setupSignals(self, controller: Controller) -> None:
         # The base class registers the bus output-enable (out_signal). The
@@ -87,18 +89,18 @@ class ALU(Module):
         return result
 
     def carryFlag(self) -> bool:
-        _, carry, _ = self._compute()
-        return carry
+        return self._cached_carry
 
     def zeroFlag(self) -> bool:
-        _, _, zero = self._compute()
-        return zero
+        return self._cached_zero
 
     def clock_pulse(self) -> None:
+        result, carry, zero = self._compute()
+        self._cached_carry = carry
+        self._cached_zero = zero
         if self._controller and self._controller.getSignalState(
             self.getName(), self._out_signal
         ):
-            result, carry, zero = self._compute()
             self._master_bus.setValue(result, self)
             logger.debug(
                 "%s: output 0x%02X to bus (carry=%d zero=%d)",

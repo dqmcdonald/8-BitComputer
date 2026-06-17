@@ -41,14 +41,14 @@ class SignalFlags(IntFlag):
     COUO = 0b000000000000010000000000  # bit 10
     FLGI = 0b000000000000100000000000  # bit 11
     # Decoder group 2 (bits 12-19): one-hot via HC138, address 1-7 usable (0 = no signal)
-    ARGO = 0b000000000001000000000000  # bit 12
-    BRGO = 0b000000000010000000000000  # bit 13
-    ROMO = 0b000000000100000000000000  # bit 14
-    RAMO = 0b000000001000000000000000  # bit 15
-    TRES = 0b000000010000000000000000  # bit 16
-    ALUO = 0b000000100000000000000000  # bit 17
-    IRGO = 0b000001000000000000000000  # bit 18
-    # (bit 19 unused — decoder address 0 reserved as no-signal)
+    # bit 12 is decoder address 0 — reserved as no-signal (not assigned)
+    ARGO = 0b000000000010000000000000  # bit 13
+    BRGO = 0b000000000100000000000000  # bit 14
+    ROMO = 0b000000001000000000000000  # bit 15
+    RAMO = 0b000000010000000000000000  # bit 16
+    TRES = 0b000000100000000000000000  # bit 17
+    ALUO = 0b000001000000000000000000  # bit 18
+    IRGO = 0b000010000000000000000000  # bit 19
     # Direct group 2 (bits 20-23)
     HALT = 0b000100000000000000000000  # bit 20
     SUBT = 0b001000000000000000000000  # bit 21

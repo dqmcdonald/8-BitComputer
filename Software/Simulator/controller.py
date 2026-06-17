@@ -11,6 +11,7 @@ from typing import Callable
 
 import numpy as np
 
+from instructions import InstructionSet
 from signals import SIGNAL_MAP, Signal, decode
 
 logger = logging.getLogger(__name__)
@@ -104,9 +105,14 @@ class Controller:
         rom1_byte = int(self._rom1[address])
         rom2_byte = int(self._rom2[address])
 
+        try:
+            instr_name = InstructionSet(instruction).name
+        except ValueError:
+            instr_name = "???"
+
         logger.debug(
-            "Controller: t=%d instr=0x%02X flags=%d addr=%d  ROM1=0x%02X ROM2=0x%02X",
-            self._t_state, instruction, flags, address, rom1_byte, rom2_byte,
+            "Controller: t=%d instr=0x%02X (%s) flags=%d addr=%d  ROM1=0x%02X ROM2=0x%02X",
+            self._t_state, instruction, instr_name, flags, address, rom1_byte, rom2_byte,
         )
 
         enc_lower    = rom1_byte & 0x07
@@ -133,13 +139,13 @@ class Controller:
 
         if active:
             logger.info(
-                "Controller: t=%d instr=0x%02X  active signals: %s",
-                self._t_state, instruction, ", ".join(active),
+                "Controller: t=%d instr=0x%02X (%s)  active signals: %s",
+                self._t_state, instruction, instr_name, ", ".join(active),
             )
         else:
             logger.debug(
-                "Controller: t=%d instr=0x%02X  no signals active",
-                self._t_state, instruction,
+                "Controller: t=%d instr=0x%02X (%s)  no signals active",
+                self._t_state, instruction, instr_name,
             )
 
     def clock_inv_pulse(self):

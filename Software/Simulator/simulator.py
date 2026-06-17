@@ -255,7 +255,7 @@ if __name__ == "__main__":
         parser.error("File(s) not found:\n" + "\n".join(errors))
 
     logging.basicConfig(
-        level=logging.DEBUG if args.debug else logging.INFO,
+        level=logging.DEBUG if args.debug else logging.WARNING,
         format="%(levelname)-8s %(name)s: %(message)s",
     )
 

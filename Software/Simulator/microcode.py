@@ -40,7 +40,7 @@ UCODE_TEMPLATE: list[list[int]] = [
     [  T0,  T1,  T0,  LO,                      SF.RAMO|SF.BRGI,        TR,   0,  0  ],  # 0x02 LDB  - Load B from RAM[operand]
     [  T0,  T1,  SF.ALUO|SF.ARGI|SF.FLGI,     TR,                      0,    0,  0,  0  ],  # 0x03 ADD  - A = A + B, latch flags
     [  T0,  T1,  SF.ALUO|SF.ARGI|SF.FLGI|SF.SUBT, TR,                  0,    0,  0,  0  ],  # 0x04 SUB  - A = A - B, latch flags
-    [  T0,  T1,  T0,  SF.ROMO|SF.ARGI|SF.COUE, TR,                     0,    0,  0  ],  # 0x05 LDI  - Load A with immediate operand
+    [  T0,  T1,  T0,  SF.ROMO|SF.ARGI|SF.COUE, TR,                     0,    0,  0  ],  # 0x05 LDAI - Load A with immediate operand
     [  T0,  T1,  T0,  LO,                      SF.ARGO|SF.RAMI,        TR,   0,  0  ],  # 0x06 STA  - RAM[operand] = A
     [  T0,  T1,  T0,  LO,                      SF.BRGO|SF.RAMI,        TR,   0,  0  ],  # 0x07 STB  - RAM[operand] = B
     [  T0,  T1,  T0,  SF.ROMO|SF.JUMP,         TR,                     0,    0,  0  ],  # 0x08 JMP  - PC = operand
@@ -48,9 +48,9 @@ UCODE_TEMPLATE: list[list[int]] = [
     [  T0,  T1,  T0,  SF.COUE,                 TR,                     0,    0,  0  ],  # 0x0A JMZ  - Jump on zero  (default: skip operand)
     [  T0,  T1,  SF.ARGO|SF.OUTI,  TR,  0,  0,  0,  0  ],  # 0x0B OUT  - Display contents of Register A
     [  T0,  T1,  SF.HALT,  TR,  0,  0,  0,  0  ],  # 0x0C HLT  - Stop the clock
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0D (undefined)
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0E (undefined)
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0F (undefined)
+    [  T0,  T1,  T0,  SF.ROMO|SF.BRGI|SF.COUE, TR,                     0,    0,  0  ],  # 0x0D LDBI - Load B with immediate operand
+    [  T0,  T1,  T0,  SF.ROMO|SF.BRGI|SF.COUE, SF.ALUO|SF.ARGI|SF.FLGI,         TR,  0,  0  ],  # 0x0E ADDI - A = A + immediate (clobbers B)
+    [  T0,  T1,  T0,  SF.ROMO|SF.BRGI|SF.COUE, SF.ALUO|SF.ARGI|SF.FLGI|SF.SUBT, TR,  0,  0  ],  # 0x0F SUBI - A = A - immediate (clobbers B)
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x10 (undefined)
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x11 (undefined)
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x12 (undefined)
