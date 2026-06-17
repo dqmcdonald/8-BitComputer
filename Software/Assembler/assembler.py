@@ -35,7 +35,7 @@ import os
 import sys
 
 # Import InstructionSet from the sibling Simulator directory
-_SIM_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'Simulator')
+_SIM_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'Simulator')
 sys.path.insert(0, _SIM_DIR)
 from instructions import InstructionSet  # noqa: E402
 
