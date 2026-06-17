@@ -1,0 +1,22 @@
+; EXPECT: 1 1 2 3 5 8 13 21 34 55 89 144 233
+; Fibonacci sequence until the next value would exceed 255.
+; Stops when curr >= 144 (since 144+89=233≤255 but 233+144=377>255).
+
+let prev = 1
+let curr = 1
+let next = 0
+
+print prev
+print curr
+
+while curr < 144
+    next = prev + curr
+    print next
+    prev = curr
+    curr = next
+end
+
+; One more step: curr is now 144, prev is 89
+; next = 89 + 144 = 233, which fits
+next = prev + curr
+print next

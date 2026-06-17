@@ -1,0 +1,27 @@
+; EXPECT: 2 3 5 7 11 13 17 19 23 29
+; Find all primes from 2 to 29 using trial division.
+; Modulo is implemented via repeated subtraction.
+
+let n = 2
+let d = 0
+let r = 0
+let is_prime = 0
+
+while n < 30
+    is_prime = 1
+    d = 2
+    while d < n
+        r = n
+        while r >= d
+            r = r - d
+        end
+        if r == 0
+            is_prime = 0
+        end
+        d = d + 1
+    end
+    if is_prime == 1
+        print n
+    end
+    n = n + 1
+end

@@ -1,0 +1,6 @@
+; EXPECT: 42
+; Multiply 6 × 7 via repeated addition.
+let a = 6
+let b = 7
+let result = a * b
+print result

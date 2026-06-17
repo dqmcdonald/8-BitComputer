@@ -1,0 +1,33 @@
+; EXPECT: 1 0 5 10
+; Test if/else and comparisons.
+
+let x = 10
+let y = 5
+let zero = 0
+let one = 1
+
+; if x > y → print 1, else print 0
+if x > y
+    print one
+else
+    print zero
+end
+
+; if y > x → print 1, else print 0
+if y > x
+    print one
+else
+    print zero
+end
+
+; while loop counts down from 5 to 1 (print only when == 5 or == 0)
+let i = y
+while i != 0
+    if i == y
+        print i     ; prints 5
+    end
+    i = i - 1
+end
+
+; print x (should be unchanged at 10)
+print x
