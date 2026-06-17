@@ -35,6 +35,10 @@ class FlagsRegister(Module):
     def getZero(self) -> bool:
         return self._zero
 
+    def getFlags(self) -> int:
+        """Return 2-bit flag state: bit1=zero, bit0=carry."""
+        return (int(self._zero) << 1) | int(self._carry)
+
     def clear(self) -> None:
         self._carry = False
         self._zero = False

@@ -17,24 +17,35 @@ from signals import encode
 
 T0 = SF.COUO | SF.MROI  # Counter out to bus, into ROM mem register
 T1 = SF.ROMO | SF.IRGI | SF.COUE  # Prog Rom Out,
+T3 = SF.IRGO | SF.MROI
 TR = SF.TRES
 
+# Flag state indices: bits are [zero, carry], so carry=bit0, zero=bit1
+FLAGS_Z0C0 = 0  # zero=0, carry=0
+FLAGS_Z0C1 = 1  # zero=0, carry=1
+FLAGS_Z1C0 = 2  # zero=1, carry=0
+FLAGS_Z1C1 = 3  # zero=1, carry=1
+
+# Jump opcode indices (must match InstructionSet values)
+_JMC = 0x09
+_JMZ = 0x0A
+
 # fmt: off
-microcode: list[list[int]] = [
+UCODE_TEMPLATE: list[list[int]] = [
     #  T0  T1  T2  T3  T4  T5  T6  T7
-    [  T0,  T1,  TR,  0,  0,  0,  0,  0  ],  # 0x00 NOP
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x01 LDA  - Load into Register A
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x02 LDB  - Load into Register B
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x03 ADD  - Add A and B, store result in A
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x04 STA  - Store Register A into RAM
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x05 STB  - Store Register B into RAM
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x06 JMP  - Jump to address
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x07 JMC  - Jump on carry
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x08 JMZ  - Jump on zero
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x09 OUT  - Display contents of Register A
-    [  T0,  T1,  SF.HALT,  TR,  0,  0,  0,  0  ],  # 0x0A HLT  - Stop the clock
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0B (undefined)
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0C (undefined)
+    [  T0,  T1,  TR,                        0,                      0,  0,  0,  0  ],  # 0x00 NOP
+    [  T0,  T1,  T3,  SF.ROMO|SF.ARGI,      TR,                     0,  0,  0  ],  # 0x01 LDA  - Load into Register A
+    [  T0,  T1,  T3,  SF.ROMO|SF.BRGI,      TR,                     0,  0,  0  ],  # 0x02 LDB  - Load into Register B
+    [  T0,  T1,  T3,  SF.ROMO|SF.BRGI,      SF.ALUO|SF.ARGI,       TR,  0,  0  ],  # 0x03 ADD  - Add A and B, store result in A
+    [  T0,  T1,  T3,  SF.ROMO|SF.BRGI,      SF.ALUO|SF.ARGI|SF.SUBT, TR, 0,  0  ],  # 0x04 SUB  - Subtract B from A, store result in A
+    [  T0,  T1,  SF.IRGO|SF.ARGI,  TR,  0,  0,  0,  0  ],  # 0x05 LDI  - Load immediate value into A
+    [  T0,  T1,  T3,  SF.ARGO|SF.RAMI,      TR,                     0,  0,  0  ],  # 0x06 STA  - Store Register A into RAM
+    [  T0,  T1,  T3,  SF.BRGO|SF.RAMI,      TR,                     0,  0,  0  ],  # 0x07 STB  - Store Register B into RAM
+    [  T0,  T1,  SF.IRGO|SF.JUMP,  TR,  0,  0,  0,  0  ],  # 0x08 JMP  - Jump to address
+    [  T0,  T1,  0,   TR,  0,  0,  0,  0  ],  # 0x09 JMC  - Jump on carry (default: no jump)
+    [  T0,  T1,  0,   TR,  0,  0,  0,  0  ],  # 0x0A JMZ  - Jump on zero  (default: no jump)
+    [  T0,  T1,  SF.ARGO|SF.OUTI,  TR,  0,  0,  0,  0  ],  # 0x0B OUT  - Display contents of Register A
+    [  T0,  T1,  SF.HALT,  TR,  0,  0,  0,  0  ],  # 0x0C HLT  - Stop the clock
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0D (undefined)
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0E (undefined)
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0F (undefined)
@@ -58,6 +69,31 @@ microcode: list[list[int]] = [
 # fmt: on
 
 
+def _build_microcode() -> list[list[list[int]]]:
+    """Build the 4×32×8 microcode table (flag_state × instruction × t-state).
+
+    Start with four identical copies of UCODE_TEMPLATE, then override T2 of
+    JMC/JMZ in the flag variants where the condition is met.
+    """
+    import copy
+    mc = [copy.deepcopy(UCODE_TEMPLATE) for _ in range(4)]
+
+    jump_t2 = int(SF.IRGO | SF.JUMP)
+
+    # JMC fires when carry is set (C=1): flag indices 1 and 3
+    for fi in (FLAGS_Z0C1, FLAGS_Z1C1):
+        mc[fi][_JMC][2] = jump_t2
+
+    # JMZ fires when zero is set (Z=1): flag indices 2 and 3
+    for fi in (FLAGS_Z1C0, FLAGS_Z1C1):
+        mc[fi][_JMZ][2] = jump_t2
+
+    return mc
+
+
+microcode: list[list[list[int]]] = _build_microcode()
+
+
 def _encode_word(word: int) -> tuple[int, int]:
     """Split a 24-bit control word into two ROM bytes.
 
@@ -76,17 +112,23 @@ def _encode_word(word: int) -> tuple[int, int]:
 
 
 def write_roms(rom1_file: str = "rom1.bin", rom2_file: str = "rom2.bin") -> None:
-    """Encode the microcode array and write it to two ROM binary files."""
-    if any(len(row) != 8 for row in microcode):
-        bad = [i for i, row in enumerate(microcode) if len(row) != 8]
-        raise ValueError(f"Microcode rows with wrong length (expected 8): {bad}")
+    """Encode the microcode table and write it to two ROM binary files.
 
+    10-bit ROM address: [flags(9:8) | instruction(7:3) | t_state(2:0)]
+    giving 4 × 32 × 8 = 1024 entries per ROM file.
+    """
     rom1, rom2 = [], []
-    for row in microcode:
-        for word in row:
-            b1, b2 = _encode_word(int(word))
-            rom1.append(b1)
-            rom2.append(b2)
+    for flag_state in range(4):
+        for instr in range(32):
+            if len(microcode[flag_state][instr]) != 8:
+                raise ValueError(
+                    f"Microcode row [{flag_state}][{instr}] has wrong length "
+                    f"(expected 8, got {len(microcode[flag_state][instr])})"
+                )
+            for word in microcode[flag_state][instr]:
+                b1, b2 = _encode_word(int(word))
+                rom1.append(b1)
+                rom2.append(b2)
 
     np.array(rom1, dtype=np.uint8).tofile(rom1_file)
     np.array(rom2, dtype=np.uint8).tofile(rom2_file)

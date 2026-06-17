@@ -132,6 +132,9 @@ class Simulator:
         self._controller.setInstructionSource(
             lambda: self._instructionReg.getValue()
         )
+        self._controller.setFlagsSource(
+            lambda: self._flags.getFlags()
+        )
 
     def setupClock(self) -> None:
         self._clock.addBus(self._master_bus)

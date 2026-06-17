@@ -28,6 +28,7 @@ class Controller:
         self._rom2 = self.readRomFile(romfile2, size2)
         self._t_state: int = 0
         self._instruction_source: Callable[[], int] | None = None
+        self._flags_source: Callable[[], int] | None = None
 
     def readRomFile(self, contents_file: str, size: int):
         """
@@ -84,6 +85,10 @@ class Controller:
         """Register a callable that returns the current instruction register value."""
         self._instruction_source = source
 
+    def setFlagsSource(self, source: Callable[[], int]) -> None:
+        """Register a callable that returns the 2-bit flag state (bit1=zero, bit0=carry)."""
+        self._flags_source = source
+
     def clock_pulse(self):
         self.clear()
 
@@ -91,15 +96,17 @@ class Controller:
             logger.debug("Controller: no instruction source — signals cleared")
             return
 
-        instruction = self._instruction_source() & 0x1F
-        address = (instruction << 3) | self._t_state
+        instruction = self._instruction_source() & 0x1F  # 5-bit opcode
+        flags = self._flags_source() & 0x03 if self._flags_source else 0  # 2-bit flag state
+        # 10-bit ROM address: [flags(9:8) | instruction(7:3) | t_state(2:0)]
+        address = (flags << 8) | (instruction << 3) | self._t_state
 
         rom1_byte = int(self._rom1[address])
         rom2_byte = int(self._rom2[address])
 
         logger.debug(
-            "Controller: t=%d instr=0x%02X addr=%d  ROM1=0x%02X ROM2=0x%02X",
-            self._t_state, instruction, address, rom1_byte, rom2_byte,
+            "Controller: t=%d instr=0x%02X flags=%d addr=%d  ROM1=0x%02X ROM2=0x%02X",
+            self._t_state, instruction, flags, address, rom1_byte, rom2_byte,
         )
 
         enc_lower    = rom1_byte & 0x07
