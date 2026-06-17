@@ -99,21 +99,20 @@ microcode: list[list[list[int]]] = _build_microcode()
 
 
 def _encode_word(word: int) -> tuple[int, int]:
-    """Split a 24-bit control word into two ROM bytes matching the hardware layout.
+    """Split a control word into two ROM bytes matching the hardware layout.
 
     ROM1: [HALT | FLGI | COUO | COUE | RAMI | enc2:enc0]  (bits 7:3:2:1:0)
     ROM2: [SUBT | enc2:enc0]
     """
-    lower_decoder = word & 0xFF           # bits 0-7:  decoder group 1 one-hot
-    lower_direct  = (word >> 8) & 0x0F   # bits 8-11: RAMI, COUE, COUO, FLGI
-    halt_bit      = (word >> 12) & 0x01  # bit 12:    HALT → ROM1 bit 7
-    upper_decoder = (word >> 12) & 0xFE  # bits 12-19, bit 0 masked so HALT isn't encoded
-    upper_direct  = (word >> 20) & 0x0F  # bits 20-23: SUBT, ...
+    lower_decoder = word & 0xFF           # bits 0-7:   decoder group 1 one-hot
+    lower_direct  = (word >> 8) & 0x1F   # bits 8-12:  RAMI, COUE, COUO, FLGI, HALT
+    upper_decoder = (word >> 13) & 0xFF  # bits 13-20: decoder group 2 (bit 13 = Y0 reserved)
+    upper_direct  = (word >> 21) & 0x1F  # bits 21+:   SUBT, ...
 
     enc_lower = encode(lower_decoder) or 0
     enc_upper = encode(upper_decoder) or 0
 
-    return (halt_bit << 7) | (lower_direct << 3) | enc_lower, (upper_direct << 3) | enc_upper
+    return (lower_direct << 3) | enc_lower, (upper_direct << 3) | enc_upper
 
 
 def write_roms(rom1_file: str = "rom1.bin", rom2_file: str = "rom2.bin") -> None:

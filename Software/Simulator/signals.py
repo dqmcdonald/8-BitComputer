@@ -40,18 +40,19 @@ class SignalFlags(IntFlag):
     COUE = 0b000000000000001000000000  # bit  9
     COUO = 0b000000000000010000000000  # bit 10
     FLGI = 0b000000000000100000000000  # bit 11
-    # Decoder group 2 (bits 12-19): one-hot via HC138, address 1-7 usable (0 = no signal)
-    # HALT occupies the no-signal slot (bit 12 / address 0) and is routed directly to ROM1 bit 7
+    # Direct group 1 continued (bits 12) → ROM1 bit 7
     HALT = 0b000000000001000000000000  # bit 12 → ROM1 bit 7
-    ARGO = 0b000000000010000000000000  # bit 13
-    BRGO = 0b000000000100000000000000  # bit 14
-    ROMO = 0b000000001000000000000000  # bit 15
-    RAMO = 0b000000010000000000000000  # bit 16
-    TRES = 0b000000100000000000000000  # bit 17
-    ALUO = 0b000001000000000000000000  # bit 18
-    IRGO = 0b000010000000000000000000  # bit 19
-    # Direct group 2 (bits 20-23) → ROM2 bits 3-6
-    SUBT = 0b000100000000000000000000  # bit 20 → ROM2 bit 3
+    # Decoder group 2 (bits 13-20): one-hot via HC138, address 1-7 usable (0 = no signal)
+    # bit 13 = Y0 = reserved no-signal slot (never set in microcode)
+    ARGO = 0b000000000100000000000000  # bit 14 → Y1
+    BRGO = 0b000000001000000000000000  # bit 15 → Y2
+    ROMO = 0b000000010000000000000000  # bit 16 → Y3
+    RAMO = 0b000000100000000000000000  # bit 17 → Y4
+    TRES = 0b000001000000000000000000  # bit 18 → Y5
+    ALUO = 0b000010000000000000000000  # bit 19 → Y6
+    IRGO = 0b000100000000000000000000  # bit 20 → Y7
+    # Direct group 2 (bits 21+) → ROM2 bits 3+
+    SUBT = 0b001000000000000000000000  # bit 21 → ROM2 bit 3
 
 
 SIGNAL_MAP: dict[SignalFlags, Signal] = {

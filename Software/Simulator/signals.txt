@@ -4,7 +4,7 @@
 24-bit control word, split across two ROM bytes (ROM1 and ROM2).
 
 Each ROM byte contains one HC138 decoder group (8 one-hot lines encoded to 3 bits)
-and one direct group (bits passed through unchanged).
+and one direct group (up to 5 bits passed through unchanged).
 
 ROM1 byte: [HALT | FLGI | COUO | COUE | RAMI | enc2 enc1 enc0]
             bit7   bit6   bit5   bit4   bit3   bit2  bit1  bit0
@@ -16,8 +16,8 @@ Where enc2:enc0 is the HC138 address for the active signal in that decoder group
 or 0b000 if no signal in that group is active.
 
 Note: address 0b000 is reserved as "no signal" in each decoder group.
-HALT is special: it occupies the no-signal slot (bit 12) of decoder group 2
-and is routed directly to ROM1 bit 7, so it never conflicts with real decoder signals.
+Bit 13 of the control word is the reserved Y0 slot of decoder group 2 and is
+never set in microcode.
 
 
 Bit Layout
@@ -39,41 +39,42 @@ Bit  Signal  Group       ROM Byte    Description
  9   COUE    Direct 1    ROM1 bit 4  Counter enable: advance the program counter
 10   COUO    Direct 1    ROM1 bit 5  Counter out: drive the program counter onto the bus
 11   FLGI    Direct 1    ROM1 bit 6  Flags in: latch the ALU carry and zero flags
+12   HALT    Direct 1    ROM1 bit 7  Halt: stop the clock
 
-12   HALT    Special     ROM1 bit 7  Halt: stop the clock
-             (occupies the no-signal slot of decoder 2; routed directly to ROM1 bit 7)
-13   ARGO    Decoder 2   ROM2 enc    Register A out: drive register A onto the bus
+13   -       Decoder 2   (reserved)  Y0 of decoder 2 — no-signal sentinel, never used
+14   ARGO    Decoder 2   ROM2 enc    Register A out: drive register A onto the bus
              (address 1)
-14   BRGO    Decoder 2   ROM2 enc    Register B out: drive register B onto the bus
+15   BRGO    Decoder 2   ROM2 enc    Register B out: drive register B onto the bus
              (address 2)
-15   ROMO    Decoder 2   ROM2 enc    ROM out: drive the program ROM onto the bus
+16   ROMO    Decoder 2   ROM2 enc    ROM out: drive the program ROM onto the bus
              (address 3)
-16   RAMO    Decoder 2   ROM2 enc    RAM out: drive the RAM onto the bus
+17   RAMO    Decoder 2   ROM2 enc    RAM out: drive the RAM onto the bus
              (address 4)
-17   TRES    Decoder 2   ROM2 enc    T-state reset: reset the microcode step counter to 0
+18   TRES    Decoder 2   ROM2 enc    T-state reset: reset the microcode step counter to 0
              (address 5)
-18   ALUO    Decoder 2   ROM2 enc    ALU out: drive the ALU result onto the bus
+19   ALUO    Decoder 2   ROM2 enc    ALU out: drive the ALU result onto the bus
              (address 6)
-19   IRGO    Decoder 2   ROM2 enc    Instruction register out: drive IR onto the bus
+20   IRGO    Decoder 2   ROM2 enc    Instruction register out: drive IR onto the bus
              (address 7)
 
-20   SUBT    Direct 2    ROM2 bit 3  Subtract: ALU computes A - B instead of A + B
-21   -       Direct 2    ROM2 bit 4  Unused
-22   -       Direct 2    ROM2 bit 5  Unused
-23   -       Direct 2    ROM2 bit 6  Unused
+21   SUBT    Direct 2    ROM2 bit 3  Subtract: ALU computes A - B instead of A + B
+22   -       Direct 2    ROM2 bit 4  Unused
+23   -       Direct 2    ROM2 bit 5  Unused
+24   -       Direct 2    ROM2 bit 6  Unused
+25   -       Direct 2    ROM2 bit 7  Unused
 
 
 ROM Byte Encoding
 -----------------
 
-For a 24-bit control word:
+For a control word:
 
-  halt_bit      = (word >> 12) & 0x01
-  upper_decoder = (word >> 12) & 0xFE   # bits 12-19, bit 0 masked (HALT handled separately)
-  lower_direct  = (word >> 8)  & 0x0F   # bits 8-11: RAMI, COUE, COUO, FLGI
+  lower_direct  = (word >> 8)  & 0x1F   # bits 8-12:  RAMI, COUE, COUO, FLGI, HALT
+  upper_decoder = (word >> 13) & 0xFF   # bits 13-20: Y0(reserved), Y1-Y7
+  upper_direct  = (word >> 21) & 0x1F   # bits 21+:   SUBT, ...
 
-  ROM1 = (halt_bit << 7) | (lower_direct << 3) | encode(word & 0xFF)
-  ROM2 = ((word >> 20) & 0x0F) << 3    | encode(upper_decoder)
+  ROM1 = (lower_direct << 3) | encode(word & 0xFF)
+  ROM2 = (upper_direct << 3) | encode(upper_decoder)
 
 Where encode() converts a one-hot 8-bit value to a 3-bit HC138 address.
 If no signal is active in a decoder group, encode() returns 0 (no-signal sentinel).
@@ -81,12 +82,11 @@ If no signal is active in a decoder group, encode() returns 0 (no-signal sentine
 Decoding in the controller:
 
   enc_lower    = ROM1 & 0x07
-  lower_direct = (ROM1 >> 3) & 0x0F
-  halt_bit     = (ROM1 >> 7) & 0x01
+  lower_direct = (ROM1 >> 3) & 0x1F    # 5 bits: RAMI, COUE, COUO, FLGI, HALT
   enc_upper    = ROM2 & 0x07
-  upper_direct = (ROM2 >> 3) & 0x0F
+  upper_direct = (ROM2 >> 3) & 0x1F
 
   bits[7:0]   = decode(enc_lower)  if enc_lower  != 0 else 0
-  bits[11:8]  = lower_direct
-  bits[19:12] = (halt_bit | decode(enc_upper)) if enc_upper != 0 else halt_bit
-  bits[23:20] = upper_direct
+  bits[12:8]  = lower_direct
+  bits[20:13] = decode(enc_upper)  if enc_upper  != 0 else 0
+  bits[25:21] = upper_direct
