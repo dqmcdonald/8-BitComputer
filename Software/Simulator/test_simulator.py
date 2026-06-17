@@ -397,9 +397,9 @@ class TestController:
     def test_clock_pulse_sets_signals_from_rom(self, ctrl):
         # Encode T1 = ROMO | IRGI | COUE manually and inject into ROM
         # IRGI=bit6 → enc_lower=6, COUE=bit9 → lower_direct=0b0010=2 → ROM1=(2<<3)|6=22
-        # ROMO=bit14 → bit2 of upper group → encode(4)=2 → ROM2=(0<<3)|2=2
+        # ROMO=bit16 → bit3 of upper group (upper starts at bit13) → encode(8)=3 → ROM2=(0<<3)|3=3
         ctrl._rom1[0] = 22  # instruction=0, t_state=0 → address=0
-        ctrl._rom2[0] = 2
+        ctrl._rom2[0] = 3
         ctrl.setInstructionSource(lambda: 0)
         ctrl.clock_pulse()
         assert ctrl._signal_state[Signal.IRGI] is True
@@ -621,6 +621,7 @@ class TestALU:
         assert Signal.SUBT in ctrl._registered_modules["ALU"]
 
     def test_initial_value_is_zero(self, alu):
+        alu.clock_pulse()
         assert alu.getValue() == 0
         assert alu.zeroFlag() is True
         assert alu.carryFlag() is False
@@ -637,6 +638,7 @@ class TestALU:
     def test_add_wraps_and_sets_carry(self, alu, reg_a, reg_b):
         reg_a.setValue(200)
         reg_b.setValue(100)
+        alu.clock_pulse()
         assert alu.getValue() == (300 & 0xFF)  # 44
         assert alu.carryFlag() is True
         assert alu.zeroFlag() is False
@@ -644,6 +646,7 @@ class TestALU:
     def test_add_to_zero_sets_carry_and_zero(self, alu, reg_a, reg_b):
         reg_a.setValue(0xFF)
         reg_b.setValue(0x01)
+        alu.clock_pulse()
         assert alu.getValue() == 0x00
         assert alu.carryFlag() is True
         assert alu.zeroFlag() is True
@@ -654,6 +657,7 @@ class TestALU:
         self._set_sub(ctrl, True)
         reg_a.setValue(10)
         reg_b.setValue(3)
+        alu.clock_pulse()
         assert alu.getValue() == 7
         assert alu.carryFlag() is True  # no borrow when A >= B
         assert alu.zeroFlag() is False
@@ -670,6 +674,7 @@ class TestALU:
         self._set_sub(ctrl, True)
         reg_a.setValue(42)
         reg_b.setValue(42)
+        alu.clock_pulse()
         assert alu.getValue() == 0
         assert alu.carryFlag() is True
         assert alu.zeroFlag() is True
@@ -748,17 +753,19 @@ class TestFlagsRegister:
         assert flags.getCarry() is False
         assert flags.getZero() is False
 
-    def test_latches_carry_and_zero_when_asserted(self, flags, reg_a, reg_b, ctrl):
+    def test_latches_carry_and_zero_when_asserted(self, flags, alu, reg_a, reg_b, ctrl):
         reg_a.setValue(0xFF)
         reg_b.setValue(0x01)  # sum 0x00 -> carry and zero
+        alu.clock_pulse()
         ctrl._signal_state[Signal.FLGI] = True
         flags.clock_inv_pulse()
         assert flags.getCarry() is True
         assert flags.getZero() is True
 
-    def test_latches_carry_without_zero(self, flags, reg_a, reg_b, ctrl):
+    def test_latches_carry_without_zero(self, flags, alu, reg_a, reg_b, ctrl):
         reg_a.setValue(200)
         reg_b.setValue(100)  # sum 44 -> carry, not zero
+        alu.clock_pulse()
         ctrl._signal_state[Signal.FLGI] = True
         flags.clock_inv_pulse()
         assert flags.getCarry() is True
@@ -772,9 +779,10 @@ class TestFlagsRegister:
         assert flags.getCarry() is False
         assert flags.getZero() is False
 
-    def test_flags_hold_until_next_load(self, flags, reg_a, reg_b, ctrl):
+    def test_flags_hold_until_next_load(self, flags, alu, reg_a, reg_b, ctrl):
         reg_a.setValue(200)
         reg_b.setValue(100)
+        alu.clock_pulse()
         ctrl._signal_state[Signal.FLGI] = True
         flags.clock_inv_pulse()
         # Change the ALU inputs but do not assert FLGI; flags must hold.
