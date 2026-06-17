@@ -101,8 +101,15 @@ class SimulatorGUI:
         handler = _TextHandler(self._log_text)
         handler.setFormatter(logging.Formatter("%(name)s: %(message)s"))
         handler.setLevel(logging.INFO)
-        logging.getLogger().addHandler(handler)
-        logging.getLogger().setLevel(logging.INFO)
+        root = logging.getLogger()
+        # Pin any pre-existing handlers (e.g. the StreamHandler from basicConfig)
+        # to WARNING so that raising the root level to INFO below does not cause
+        # INFO messages to spill onto the terminal.
+        for h in root.handlers:
+            if h.level < logging.WARNING:
+                h.setLevel(logging.WARNING)
+        root.addHandler(handler)
+        root.setLevel(logging.INFO)
 
     # ------------------------------------------------------------------
     # Refresh
