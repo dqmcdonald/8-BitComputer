@@ -1,61 +1,66 @@
 8-Bit Computer Signal Bit Layout
 ==================================
 
-24-bit control word, split into two 12-bit halves written to ROM1 and ROM2.
+24-bit control word, split across two ROM bytes (ROM1 and ROM2).
 
-Each half contains one HC138 decoder group (8 one-hot lines encoded to 3 bits)
-and one direct group (4 bits passed through unchanged).
+Each ROM byte contains one HC138 decoder group (8 one-hot lines encoded to 3 bits)
+and one direct group (bits passed through unchanged).
 
-ROM1 byte: [B11 B10 B9 B8 | enc2 enc1 enc0]
-ROM2 byte: [B23 B22 B21 B20 | enc2 enc1 enc0]
+ROM1 byte: [HALT | FLGI | COUO | COUE | RAMI | enc2 enc1 enc0]
+            bit7   bit6   bit5   bit4   bit3   bit2  bit1  bit0
+
+ROM2 byte: [SUBT | enc2 enc1 enc0]
+            bit3   bit2  bit1  bit0
 
 Where enc2:enc0 is the HC138 address for the active signal in that decoder group,
 or 0b000 if no signal in that group is active.
 
-Note: address 0b000 is reserved as "no signal". Bit 0 of each decoder group
-(CLEA for decoder 1, and bit 12 for decoder 2) cannot be asserted via microcode.
+Note: address 0b000 is reserved as "no signal" in each decoder group.
+HALT is special: it occupies the no-signal slot (bit 12) of decoder group 2
+and is routed directly to ROM1 bit 7, so it never conflicts with real decoder signals.
 
 
 Bit Layout
 ----------
 
-Bit  Signal  Group       Description
----  ------  ----------  --------------------------------------------------
- 0   CLEA    Decoder 1   Clear: reset all registers to zero
+Bit  Signal  Group       ROM Byte    Description
+---  ------  ----------  ----------  --------------------------------------------------
+ 0   CLEA    Decoder 1   ROM1 enc    Clear: reset all registers to zero
              (address 0  NOTE: reserved — hardware reset only, not via microcode)
- 1   JUMP    Decoder 1   Jump: load the program counter from the bus
- 2   MROI    Decoder 1   Program memory register in
- 3   MRAI    Decoder 1   RAM memory address register in
- 4   ARGI    Decoder 1   Register A in: load register A from the bus
- 5   BRGI    Decoder 1   Register B in: load register B from the bus
- 6   IRGI    Decoder 1   Instruction register in: load IR from the bus
- 7   OUTI    Decoder 1   Output register in: latch output register from the bus
+ 1   JUMP    Decoder 1   ROM1 enc    Jump: load the program counter from the bus
+ 2   MROI    Decoder 1   ROM1 enc    Program memory register in
+ 3   MRAI    Decoder 1   ROM1 enc    RAM memory address register in
+ 4   ARGI    Decoder 1   ROM1 enc    Register A in: load register A from the bus
+ 5   BRGI    Decoder 1   ROM1 enc    Register B in: load register B from the bus
+ 6   IRGI    Decoder 1   ROM1 enc    Instruction register in: load IR from the bus
+ 7   OUTI    Decoder 1   ROM1 enc    Output register in: latch output register from the bus
 
- 8   RAMI    Direct 1    RAM in: write the bus value into RAM at current address
- 9   COUE    Direct 1    Counter enable: advance the program counter
-10   COUO    Direct 1    Counter out: drive the program counter onto the bus
-11   FLGI    Direct 1    Flags in: latch the ALU carry and zero flags
+ 8   RAMI    Direct 1    ROM1 bit 3  RAM in: write the bus value into RAM at current address
+ 9   COUE    Direct 1    ROM1 bit 4  Counter enable: advance the program counter
+10   COUO    Direct 1    ROM1 bit 5  Counter out: drive the program counter onto the bus
+11   FLGI    Direct 1    ROM1 bit 6  Flags in: latch the ALU carry and zero flags
 
-12   -       Decoder 2   Unused (address 0 reserved as no-signal)
-13   ARGO    Decoder 2   Register A out: drive register A onto the bus
+12   HALT    Special     ROM1 bit 7  Halt: stop the clock
+             (occupies the no-signal slot of decoder 2; routed directly to ROM1 bit 7)
+13   ARGO    Decoder 2   ROM2 enc    Register A out: drive register A onto the bus
              (address 1)
-14   BRGO    Decoder 2   Register B out: drive register B onto the bus
+14   BRGO    Decoder 2   ROM2 enc    Register B out: drive register B onto the bus
              (address 2)
-15   ROMO    Decoder 2   ROM out: drive the program ROM onto the bus
+15   ROMO    Decoder 2   ROM2 enc    ROM out: drive the program ROM onto the bus
              (address 3)
-16   RAMO    Decoder 2   RAM out: drive the RAM onto the bus
+16   RAMO    Decoder 2   ROM2 enc    RAM out: drive the RAM onto the bus
              (address 4)
-17   TRES    Decoder 2   T-state reset: reset the microcode step counter to 0
+17   TRES    Decoder 2   ROM2 enc    T-state reset: reset the microcode step counter to 0
              (address 5)
-18   ALUO    Decoder 2   ALU out: drive the ALU result onto the bus
+18   ALUO    Decoder 2   ROM2 enc    ALU out: drive the ALU result onto the bus
              (address 6)
-19   IRGO    Decoder 2   Instruction register out: drive IR onto the bus
+19   IRGO    Decoder 2   ROM2 enc    Instruction register out: drive IR onto the bus
              (address 7)
 
-20   HALT    Direct 2    Halt: stop the clock
-21   SUBT    Direct 2    Subtract: ALU computes A - B instead of A + B
-22   -       Direct 2    Unused
-23   -       Direct 2    Unused
+20   SUBT    Direct 2    ROM2 bit 3  Subtract: ALU computes A - B instead of A + B
+21   -       Direct 2    ROM2 bit 4  Unused
+22   -       Direct 2    ROM2 bit 5  Unused
+23   -       Direct 2    ROM2 bit 6  Unused
 
 
 ROM Byte Encoding
@@ -63,8 +68,12 @@ ROM Byte Encoding
 
 For a 24-bit control word:
 
-  ROM1 = (bits[11:8] << 3) | encode(bits[7:0])
-  ROM2 = (bits[23:20] << 3) | encode(bits[19:12])
+  halt_bit      = (word >> 12) & 0x01
+  upper_decoder = (word >> 12) & 0xFE   # bits 12-19, bit 0 masked (HALT handled separately)
+  lower_direct  = (word >> 8)  & 0x0F   # bits 8-11: RAMI, COUE, COUO, FLGI
+
+  ROM1 = (halt_bit << 7) | (lower_direct << 3) | encode(word & 0xFF)
+  ROM2 = ((word >> 20) & 0x0F) << 3    | encode(upper_decoder)
 
 Where encode() converts a one-hot 8-bit value to a 3-bit HC138 address.
 If no signal is active in a decoder group, encode() returns 0 (no-signal sentinel).
@@ -73,10 +82,11 @@ Decoding in the controller:
 
   enc_lower    = ROM1 & 0x07
   lower_direct = (ROM1 >> 3) & 0x0F
+  halt_bit     = (ROM1 >> 7) & 0x01
   enc_upper    = ROM2 & 0x07
   upper_direct = (ROM2 >> 3) & 0x0F
 
   bits[7:0]   = decode(enc_lower)  if enc_lower  != 0 else 0
   bits[11:8]  = lower_direct
-  bits[19:12] = decode(enc_upper)  if enc_upper  != 0 else 0
+  bits[19:12] = (halt_bit | decode(enc_upper)) if enc_upper != 0 else halt_bit
   bits[23:20] = upper_direct
