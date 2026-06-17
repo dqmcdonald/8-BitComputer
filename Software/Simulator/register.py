@@ -35,6 +35,14 @@ class Register(Module):
         self._value = value & 0xFF
         logger.debug("%s: value set to 0x%02X", self._name, self._value)
 
+    def getState(self) -> dict:
+        state = super().getState()
+        state["value"] = self.getValue()
+        return state
+
+    def reset(self) -> None:
+        self.setValue(0)
+
     def clock_pulse(self) -> None:
         if (
             self._out_signal

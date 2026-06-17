@@ -44,6 +44,16 @@ class FlagsRegister(Module):
         self._zero = False
         logger.debug("%s: cleared", self._name)
 
+    def getState(self) -> dict:
+        state = super().getState()
+        state["value"] = self.getFlags()
+        state["carry"] = self._carry
+        state["zero"] = self._zero
+        return state
+
+    def reset(self) -> None:
+        self.clear()
+
     def clock_inv_pulse(self) -> None:
         if self._controller and self._controller.getSignalState(
             self.getName(), self._in_signal

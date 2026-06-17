@@ -148,6 +148,19 @@ class Controller:
                 self._t_state, instruction, instr_name,
             )
 
+    def getConnections(self) -> dict:
+        """Return a copy of the module→signals registration map."""
+        return {name: list(sigs) for name, sigs in self._registered_modules.items()}
+
+    def getSignalStates(self) -> dict:
+        """Return a copy of the current signal-state dict."""
+        return dict(self._signal_state)
+
+    def reset(self) -> None:
+        self.clear()
+        self._t_state = 0
+        logger.debug("Controller: reset")
+
     def clock_inv_pulse(self):
         if self._signal_state[Signal.TRES]:
             self._t_state = 0

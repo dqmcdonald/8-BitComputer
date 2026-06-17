@@ -63,9 +63,30 @@ class Clock:
         self._controller = controller
         logger.info("Controller registered with clock")
 
+    def getMode(self) -> ClockMode:
+        return self._clock_mode
+
     def setSpeed(self, speed: float) -> None:
         self._clock_speed = speed
         logger.info("Clock speed set to %gHz", speed)
+
+    def isHalted(self) -> bool:
+        if self._controller is None:
+            return False
+        return self._controller.getSignalState("Clock", Signal.HALT)
+
+    def getState(self) -> dict:
+        return {
+            "name": "Clock",
+            "tick_count": self._tick_count,
+            "mode": self._clock_mode,
+            "speed": self._clock_speed,
+            "halted": self.isHalted(),
+        }
+
+    def reset(self) -> None:
+        self._tick_count = 0
+        logger.debug("Clock: tick count reset")
 
     def setSingleStepMode(self) -> None:
         self._clock_mode = ClockMode.SINGLE_STEP

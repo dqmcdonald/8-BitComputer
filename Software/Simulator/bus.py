@@ -62,3 +62,12 @@ class Bus(Module):
         logger.debug("%s: cleared", self._name)
         self._value = 0
         self._driver = None
+
+    def getState(self) -> dict:
+        driver = self._driver
+        return {
+            "name": self._name,
+            "value": self._value,
+            "driver": driver.getName() if driver is not None else None,
+            "signals": {},
+        }

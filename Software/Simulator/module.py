@@ -33,3 +33,14 @@ class Module:
         if self._in_signal is not None or self._out_signal is not None:
             logger.info("%s: registered for signals '%s' (in) and '%s' (out)",
                         self._name, self._in_signal, self._out_signal)
+
+    def getState(self) -> dict:
+        signals = {}
+        if self._controller is not None:
+            states = self._controller.getSignalStates()
+            for sig in self._controller.getConnections().get(self._name, []):
+                signals[sig.name] = states[sig]
+        return {"name": self._name, "value": 0, "signals": signals}
+
+    def reset(self) -> None:
+        pass

@@ -8,4 +8,5 @@ analysis/
 *-design-review.md
 datasheets
 Software/*/__pycache__/*
+Software/Simulator/gui/__pycache__/*
 Software/*/*.bin

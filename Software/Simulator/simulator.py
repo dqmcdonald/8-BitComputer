@@ -161,9 +161,29 @@ class Simulator:
 
         self._clock.setSpeed(speed)
 
+    def getModules(self) -> list:
+        return list(self._modules)
+
+    def getBus(self) -> "Bus":
+        return self._master_bus
+
+    def getClock(self) -> "Clock":
+        return self._clock
+
+    def getController(self) -> "Controller":
+        return self._controller
+
+    def reset(self) -> None:
+        self._clock.reset()
+        self._master_bus.clear()
+        self._controller.reset()
+        for m in self._modules:
+            m.reset()
+        logger.info("Simulator reset")
+
     def run(self) -> None:
         logger.info("Simulator running")
-        if self._clock._clock_mode == ClockMode.SINGLE_STEP:
+        if self._clock.getMode() == ClockMode.SINGLE_STEP:
             while True:
                 self._clock.tick()
                 if self._controller.getSignalState("Clock", Signal.HALT):
@@ -239,6 +259,12 @@ if __name__ == "__main__":
             "Can be given multiple times."
         ),
     )
+    parser.add_argument(
+        "--gui",
+        "-g",
+        action="store_true",
+        help="Launch the graphical user interface",
+    )
     args = parser.parse_args()
 
     import os
@@ -262,15 +288,23 @@ if __name__ == "__main__":
     for module_name in args.debug_module:
         logging.getLogger(module_name).setLevel(logging.DEBUG)
 
-    clock_mode = (
-        ClockMode.SINGLE_STEP if args.mode == "single" else ClockMode.CONTINUOUS
-    )
-
     sim = Simulator(
         ram_file=args.ram,
         prog_rom_file=args.prog_rom,
         rom1_file=args.rom1,
         rom2_file=args.rom2,
     )
-    sim.setClockProps(args.speed, clock_mode)
-    sim.run()
+
+    if args.gui:
+        import tkinter as tk
+        from gui.app import SimulatorGUI
+        root = tk.Tk()
+        root.geometry("900x640")
+        SimulatorGUI(root, sim)
+        root.mainloop()
+    else:
+        clock_mode = (
+            ClockMode.SINGLE_STEP if args.mode == "single" else ClockMode.CONTINUOUS
+        )
+        sim.setClockProps(args.speed, clock_mode)
+        sim.run()

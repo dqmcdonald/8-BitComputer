@@ -94,6 +94,11 @@ class ALU(Module):
     def zeroFlag(self) -> bool:
         return self._cached_zero
 
+    def getState(self) -> dict:
+        state = super().getState()
+        state["value"] = self.getValue()
+        return state
+
     def clock_pulse(self) -> None:
         result, carry, zero = self._compute()
         self._cached_carry = carry

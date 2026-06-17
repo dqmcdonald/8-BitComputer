@@ -50,6 +50,11 @@ class ProgramCounter(Module):
         super().setupSignals(controller)
         controller.registerForSignal(self._name, self._enable_signal)
 
+    def getState(self) -> dict:
+        state = super().getState()
+        state["value"] = self.getCount()
+        return state
+
     def clock_pulse(self) -> None:
         if (
             self._out_signal is not None

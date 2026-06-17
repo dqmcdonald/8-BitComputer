@@ -16,6 +16,7 @@ from module import Module
 from progcounter import ProgramCounter
 from register import Register
 from signals import Signal
+from simulator import Simulator
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -1104,3 +1105,269 @@ class TestProgramCounter:
         assert Signal.JUMP in ctrl._registered_modules["PC"]
         assert Signal.COUO in ctrl._registered_modules["PC"]
         assert Signal.COUE in ctrl._registered_modules["PC"]
+
+    def test_get_state_returns_count(self, pc, ctrl):
+        pc.setupSignals(ctrl)
+        pc.jumpTo(0x42)
+        state = pc.getState()
+        assert state["value"] == 0x42
+        assert state["name"] == "PC"
+
+
+# ---------------------------------------------------------------------------
+# getState / getConnections / getSignalStates / reset — Phase 1 API
+# ---------------------------------------------------------------------------
+
+
+class TestControllerPhase1:
+    @pytest.fixture
+    def ctrl(self):
+        return make_controller()
+
+    def test_get_connections_returns_copy(self, ctrl):
+        ctrl.registerForSignal("M", Signal.ARGI)
+        conns = ctrl.getConnections()
+        assert Signal.ARGI in conns["M"]
+        conns["M"].clear()
+        assert Signal.ARGI in ctrl._registered_modules["M"]
+
+    def test_get_signal_states_returns_copy(self, ctrl):
+        states = ctrl.getSignalStates()
+        assert set(states.keys()) == set(Signal)
+        states[Signal.ARGI] = True
+        assert ctrl._signal_state[Signal.ARGI] is False
+
+    def test_controller_reset_clears_signals_and_t_state(self, ctrl):
+        ctrl._signal_state[Signal.ARGI] = True
+        ctrl._t_state = 5
+        ctrl.reset()
+        assert ctrl._signal_state[Signal.ARGI] is False
+        assert ctrl._t_state == 0
+
+
+class TestClockPhase1:
+    @pytest.fixture
+    def clk(self):
+        return Clock()
+
+    @pytest.fixture
+    def ctrl(self):
+        return make_controller()
+
+    def test_is_halted_returns_false_without_controller(self, clk):
+        assert clk.isHalted() is False
+
+    def test_is_halted_returns_false_when_halt_not_asserted(self, clk, ctrl):
+        clk.setupSignals(ctrl)
+        assert clk.isHalted() is False
+
+    def test_is_halted_returns_true_when_halt_asserted(self, clk, ctrl):
+        clk.setupSignals(ctrl)
+        ctrl._signal_state[Signal.HALT] = True
+        assert clk.isHalted() is True
+
+    def test_get_mode_returns_current_mode(self, clk):
+        assert clk.getMode() == ClockMode.CONTINUOUS
+        clk.setSingleStepMode()
+        assert clk.getMode() == ClockMode.SINGLE_STEP
+
+    def test_get_state_keys(self, clk, ctrl):
+        clk.setupSignals(ctrl)
+        state = clk.getState()
+        assert state["name"] == "Clock"
+        assert state["tick_count"] == 0
+        assert state["mode"] == ClockMode.CONTINUOUS
+        assert state["halted"] is False
+
+    def test_get_state_tick_count_increments(self, clk, ctrl):
+        clk.setupSignals(ctrl)
+        clk.tick()
+        clk.tick()
+        assert clk.getState()["tick_count"] == 2
+
+    def test_reset_clears_tick_count(self, clk, ctrl):
+        clk.setupSignals(ctrl)
+        clk.tick()
+        clk.tick()
+        clk.reset()
+        assert clk.getState()["tick_count"] == 0
+
+
+class TestModulePhase1:
+    def test_get_state_without_controller(self):
+        m = Module("X")
+        state = m.getState()
+        assert state["name"] == "X"
+        assert state["value"] == 0
+        assert state["signals"] == {}
+
+    def test_get_state_with_controller(self):
+        ctrl = make_controller()
+        m = Module("X")
+        m._in_signal = Signal.ARGI
+        m.setupSignals(ctrl)
+        state = m.getState()
+        assert "ARGI" in state["signals"]
+        assert state["signals"]["ARGI"] is False
+
+    def test_get_state_signal_reflects_asserted_state(self):
+        ctrl = make_controller()
+        m = Module("X")
+        m._in_signal = Signal.ARGI
+        m.setupSignals(ctrl)
+        ctrl._signal_state[Signal.ARGI] = True
+        state = m.getState()
+        assert state["signals"]["ARGI"] is True
+
+    def test_reset_is_noop(self):
+        Module("X").reset()
+
+
+class TestBusPhase1:
+    def test_get_state_initial(self):
+        bus = Bus("TestBus")
+        state = bus.getState()
+        assert state["name"] == "TestBus"
+        assert state["value"] == 0
+        assert state["driver"] is None
+
+    def test_get_state_with_driver(self):
+        bus = Bus("TestBus")
+        mod = Module("Driver")
+        bus.setValue(0xAB, mod)
+        state = bus.getState()
+        assert state["value"] == 0xAB
+        assert state["driver"] == "Driver"
+
+    def test_get_state_driver_clears_after_clock_pulse(self):
+        bus = Bus("TestBus")
+        mod = Module("Driver")
+        bus.setValue(0xAB, mod)
+        bus.clock_pulse()
+        assert bus.getState()["driver"] is None
+
+
+class TestRegisterPhase1:
+    def test_get_state_value(self):
+        bus = Bus()
+        reg = Register("R", bus, Signal.ARGI, Signal.ARGO)
+        reg.setValue(0x55)
+        state = reg.getState()
+        assert state["value"] == 0x55
+        assert state["name"] == "R"
+
+    def test_reset_clears_value(self):
+        bus = Bus()
+        reg = Register("R", bus, Signal.ARGI, Signal.ARGO)
+        reg.setValue(0xFF)
+        reg.reset()
+        assert reg.getValue() == 0
+
+
+class TestALUPhase1:
+    def test_get_state_value(self):
+        bus = Bus()
+        ctrl = make_controller()
+        reg_a = Register("RegisterA", bus, Signal.ARGI, Signal.ARGO)
+        reg_b = Register("RegisterB", bus, Signal.BRGI, Signal.BRGO)
+        alu = ALU("ALU", bus, reg_a, reg_b, Signal.ALUO, Signal.SUBT)
+        alu.setupSignals(ctrl)
+        reg_a.setValue(3)
+        reg_b.setValue(4)
+        state = alu.getState()
+        assert state["value"] == 7
+        assert state["name"] == "ALU"
+
+
+class TestFlagsPhase1:
+    def test_get_state_fields(self):
+        bus = Bus()
+        ctrl = make_controller()
+        reg_a = Register("RegisterA", bus, Signal.ARGI, Signal.ARGO)
+        reg_b = Register("RegisterB", bus, Signal.BRGI, Signal.BRGO)
+        alu = ALU("ALU", bus, reg_a, reg_b, Signal.ALUO, Signal.SUBT)
+        alu.setupSignals(ctrl)
+        flags = FlagsRegister("Flags", alu, Signal.FLGI)
+        flags.setupSignals(ctrl)
+        reg_a.setValue(0xFF)
+        reg_b.setValue(0x01)
+        alu.clock_pulse()
+        ctrl._signal_state[Signal.FLGI] = True
+        flags.clock_inv_pulse()
+        state = flags.getState()
+        assert state["carry"] is True
+        assert state["zero"] is True
+        assert state["value"] == 0b11
+
+    def test_flags_reset(self):
+        bus = Bus()
+        ctrl = make_controller()
+        reg_a = Register("RegisterA", bus, Signal.ARGI, Signal.ARGO)
+        reg_b = Register("RegisterB", bus, Signal.BRGI, Signal.BRGO)
+        alu = ALU("ALU", bus, reg_a, reg_b, Signal.ALUO, Signal.SUBT)
+        alu.setupSignals(ctrl)
+        flags = FlagsRegister("Flags", alu, Signal.FLGI)
+        flags.setupSignals(ctrl)
+        reg_a.setValue(0xFF)
+        reg_b.setValue(0x01)
+        alu.clock_pulse()
+        ctrl._signal_state[Signal.FLGI] = True
+        flags.clock_inv_pulse()
+        flags.reset()
+        assert flags.getCarry() is False
+        assert flags.getZero() is False
+
+
+# ---------------------------------------------------------------------------
+# Simulator public accessors and reset
+# ---------------------------------------------------------------------------
+
+
+class TestSimulatorPhase1:
+    @pytest.fixture
+    def sim(self):
+        return Simulator()
+
+    def test_get_modules_returns_list(self, sim):
+        modules = sim.getModules()
+        assert isinstance(modules, list)
+        assert len(modules) > 0
+
+    def test_get_modules_returns_copy(self, sim):
+        modules = sim.getModules()
+        modules.clear()
+        assert len(sim.getModules()) > 0
+
+    def test_get_bus_is_bus(self, sim):
+        from bus import Bus
+        assert isinstance(sim.getBus(), Bus)
+
+    def test_get_clock_is_clock(self, sim):
+        assert isinstance(sim.getClock(), Clock)
+
+    def test_get_controller_is_controller(self, sim):
+        assert isinstance(sim.getController(), Controller)
+
+    def test_reset_clears_registers(self, sim):
+        reg_a = sim.getModules()[0]
+        reg_a.setValue(0xAB)
+        sim.reset()
+        assert reg_a.getValue() == 0
+
+    def test_reset_clears_tick_count(self, sim):
+        sim.getClock().tick()
+        sim.reset()
+        assert sim.getClock().getState()["tick_count"] == 0
+
+    def test_reset_clears_bus(self, sim):
+        bus = sim.getBus()
+        driver = Module("Fake")
+        bus.setValue(0x42, driver)
+        sim.reset()
+        assert bus.getValue() == 0
+        assert bus.getDriver() is None
+
+    def test_reset_clears_controller_signals(self, sim):
+        sim.getController()._signal_state[Signal.ARGI] = True
+        sim.reset()
+        assert sim.getController()._signal_state[Signal.ARGI] is False
