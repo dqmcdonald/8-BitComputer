@@ -223,7 +223,21 @@ if __name__ == "__main__":
         "--debug",
         "-d",
         action="store_true",
-        help="Enable DEBUG-level logging (default: INFO)",
+        help="Enable DEBUG-level logging for all modules",
+    )
+    parser.add_argument(
+        "--debug-module",
+        "-D",
+        action="append",
+        metavar="MODULE",
+        default=[],
+        help=(
+            "Enable DEBUG logging for a specific module "
+            "(e.g. -D controller -D memory). "
+            "Valid names: alu, bus, clock, controller, flags, memory, "
+            "module, progcounter, register, simulator. "
+            "Can be given multiple times."
+        ),
     )
     args = parser.parse_args()
 
@@ -244,6 +258,9 @@ if __name__ == "__main__":
         level=logging.DEBUG if args.debug else logging.INFO,
         format="%(levelname)-8s %(name)s: %(message)s",
     )
+
+    for module_name in args.debug_module:
+        logging.getLogger(module_name).setLevel(logging.DEBUG)
 
     clock_mode = (
         ClockMode.SINGLE_STEP if args.mode == "single" else ClockMode.CONTINUOUS
