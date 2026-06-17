@@ -117,6 +117,7 @@ class Controller:
 
         enc_lower    = rom1_byte & 0x07
         lower_direct = (rom1_byte >> 3) & 0x0F
+        halt_bit     = (rom1_byte >> 7) & 0x01
         enc_upper    = rom2_byte & 0x07
         upper_direct = (rom2_byte >> 3) & 0x0F
 
@@ -127,7 +128,7 @@ class Controller:
         control_word = (
             lower_onehot
             | (lower_direct << 8)
-            | (upper_onehot << 12)
+            | ((halt_bit | upper_onehot) << 12)
             | (upper_direct << 20)
         )
 
