@@ -7,5 +7,5 @@ R2
 analysis/
 *-design-review.md
 datasheets
-Simulator/__pycache__/*
-Simulator/*.bin
+Software/*/__pycache__/*
+Software/*/*.bin
