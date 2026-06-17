@@ -529,7 +529,7 @@ def main():
 
             r = subprocess.run(
                 [sys.executable, simulator,
-                 '--prog-rom', bin_path,
+                 bin_path,
                  '--rom1', rom1, '--rom2', rom2,
                  '--speed', str(args.speed)],
                 capture_output=True, text=True, timeout=30,

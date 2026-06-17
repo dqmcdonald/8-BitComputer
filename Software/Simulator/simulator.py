@@ -221,18 +221,16 @@ if __name__ == "__main__":
         help="Clock speed in Hz (default: 1.0)",
     )
     parser.add_argument(
+        "prog_rom",
+        metavar="PROG_ROM",
+        help="Binary file to load into program ROM",
+    )
+    parser.add_argument(
         "--ram",
         "-r",
         default="",
         metavar="FILE",
         help="Binary file to load into RAM at startup",
-    )
-    parser.add_argument(
-        "--prog-rom",
-        "-p",
-        default="",
-        metavar="FILE",
-        help="Binary file to load into program ROM at startup",
     )
     parser.add_argument(
         "--rom1",
@@ -277,7 +275,7 @@ if __name__ == "__main__":
     import os
     errors = []
     for flag, path in [
-        ("--prog-rom", args.prog_rom),
+        ("prog_rom",   args.prog_rom),
         ("--ram",      args.ram),
         ("--rom1",     args.rom1),
         ("--rom2",     args.rom2),

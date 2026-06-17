@@ -2,7 +2,7 @@
 SimulatorGUI — main application window.
 
 Run with:
-    python -m gui.app [--ram FILE] [--prog-rom FILE] [--rom1 FILE] [--rom2 FILE]
+    python -m gui.app PROG_ROM [--ram FILE] [--rom1 FILE] [--rom2 FILE]
 """
 
 import logging
@@ -137,10 +137,11 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="8-Bit Computer Simulator GUI")
-    parser.add_argument("--ram",      default="", metavar="FILE")
-    parser.add_argument("--prog-rom", default="", metavar="FILE")
-    parser.add_argument("--rom1",     default="rom1.bin", metavar="FILE")
-    parser.add_argument("--rom2",     default="rom2.bin", metavar="FILE")
+    parser.add_argument("prog_rom", metavar="PROG_ROM",
+                        help="Binary file to load into program ROM")
+    parser.add_argument("--ram",  default="", metavar="FILE")
+    parser.add_argument("--rom1", default="rom1.bin", metavar="FILE")
+    parser.add_argument("--rom2", default="rom2.bin", metavar="FILE")
     args = parser.parse_args()
 
     root = tk.Tk()

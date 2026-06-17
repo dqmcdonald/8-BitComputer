@@ -49,7 +49,7 @@ def run_test(asm_file: str) -> tuple[bool, str]:
 
         result = subprocess.run(
             [sys.executable, SIMULATOR,
-             '--prog-rom', bin_file,
+             bin_file,
              '--mode', 'continuous',
              '--speed', CLOCK_SPEED],
             capture_output=True, text=True, timeout=15,

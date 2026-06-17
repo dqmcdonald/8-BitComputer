@@ -15,7 +15,7 @@ python compiler.py tests/test_01_multiply.hll --run
 # Compile to assembly only
 python compiler.py myprogram.hll -o myprogram.asm
 
-# Run all tests
+# Run all compiler tests (compile → assemble → simulate each .hll file)
 python run_tests.py
 ```
 
@@ -169,6 +169,7 @@ against the expected list.
 | `test_01_multiply.hll` | `*` operator (6 × 7 = 42) |
 | `test_02_conditionals.hll` | `if`/`else`, `>`, `==`, `while` |
 | `test_03_fibonacci.hll` | Fibonacci sequence via `+` and `while` |
+| `test_04_primes.hll` | Primes 2–29 via trial division (triple nested loop, modulo via repeated subtraction) |
 
 ---
 

@@ -30,10 +30,10 @@ pip install numpy
 
 # Assemble a program and run it
 python ../Assembler/assembler.py tests/test_08_countdown.asm -o prog.bin
-python simulator.py --prog-rom prog.bin --speed 10
+python simulator.py prog.bin --speed 10
 
 # Launch the GUI
-python simulator.py --gui --prog-rom prog.bin
+python simulator.py prog.bin --gui
 ```
 
 ---
@@ -41,12 +41,13 @@ python simulator.py --gui --prog-rom prog.bin
 ## Running the simulator
 
 ```
-python simulator.py [options]
+python simulator.py PROG_ROM [options]
 ```
+
+`PROG_ROM` is required — a flat binary produced by the assembler.
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--prog-rom FILE` / `-p` | *(none)* | Binary program to load into program ROM |
 | `--ram FILE` / `-r` | *(none)* | Binary image to preload into RAM |
 | `--rom1 FILE` | `rom1.bin` | Microcode ROM 1 |
 | `--rom2 FILE` | `rom2.bin` | Microcode ROM 2 |
@@ -63,7 +64,7 @@ In **single-step** mode the simulator pauses after each tick and waits for Enter
 ### Example: inspect the fetch cycle
 
 ```bash
-python simulator.py --prog-rom prog.bin --mode single --debug-module controller
+python simulator.py prog.bin --mode single --debug-module controller
 ```
 
 ---
@@ -71,9 +72,9 @@ python simulator.py --prog-rom prog.bin --mode single --debug-module controller
 ## Graphical interface
 
 ```bash
-python -m gui.app [--prog-rom FILE] [--ram FILE] [--rom1 FILE] [--rom2 FILE]
+python -m gui.app PROG_ROM [--ram FILE] [--rom1 FILE] [--rom2 FILE]
 # or equivalently:
-python simulator.py --gui --prog-rom prog.bin
+python simulator.py prog.bin --gui
 ```
 
 The GUI window has three areas:
@@ -108,7 +109,7 @@ Python `logging` output at INFO level, scrolling.
 ## Assembler
 
 The assembler lives at `../Assembler/assembler.py` and produces a flat binary
-suitable for `--prog-rom`.
+suitable for passing as `PROG_ROM` to the simulator.
 
 ```bash
 python ../Assembler/assembler.py SOURCE.asm [-o OUTPUT.bin] [-l]
@@ -370,6 +371,7 @@ the simulator at high speed, captures output, and compares.
 | `test_08_countdown.asm` | Full loop: countdown 10→1 |
 | `test_09_data_init.asm` | `.data` section, RAM initialisation |
 | `test_10_cmp.asm` | CMP, CMPI |
+| `test_11_fibonacci.asm` | Fibonacci sequence via carry-checked addition |
 
 ---
 

@@ -67,7 +67,7 @@ def run_test(hll_file: str) -> tuple[bool, str]:
         # Simulate
         r = subprocess.run(
             [sys.executable, SIMULATOR,
-             '--prog-rom', bin_path,
+             bin_path,
              '--rom1', ROM1, '--rom2', ROM2,
              '--speed', CLOCK_SPEED],
             capture_output=True, text=True, timeout=15,
