@@ -15,10 +15,10 @@ import numpy as np
 from signals import SignalFlags as SF
 from signals import encode
 
-T0 = SF.COUO | SF.MROI  # Counter out to bus, into ROM mem register
-T1 = SF.ROMO | SF.IRGI | SF.COUE  # Prog Rom Out,
-T3 = SF.IRGO | SF.MROI
-TR = SF.TRES
+T0 = SF.COUO | SF.MROI             # Fetch: PC → ProgROM addr reg
+T1 = SF.ROMO | SF.IRGI | SF.COUE  # Fetch: ROM[PC] → IR, PC++
+LO = SF.ROMO | SF.MRAI | SF.COUE  # Load operand: ROM[PC] → MAR, PC++
+TR = SF.TRES                        # Reset t-state counter
 
 # Flag state indices: bits are [zero, carry], so carry=bit0, zero=bit1
 FLAGS_Z0C0 = 0  # zero=0, carry=0
@@ -30,20 +30,22 @@ FLAGS_Z1C1 = 3  # zero=1, carry=1
 _JMC = 0x09
 _JMZ = 0x0A
 
+# Instructions with an operand byte use T0 again at T2 to re-fetch PC into
+# ProgROMReg, then consume the operand byte at T3 before the operation at T4.
 # fmt: off
 UCODE_TEMPLATE: list[list[int]] = [
-    #  T0  T1  T2  T3  T4  T5  T6  T7
-    [  T0,  T1,  TR,                        0,                      0,  0,  0,  0  ],  # 0x00 NOP
-    [  T0,  T1,  T3,  SF.ROMO|SF.ARGI,      TR,                     0,  0,  0  ],  # 0x01 LDA  - Load into Register A
-    [  T0,  T1,  T3,  SF.ROMO|SF.BRGI,      TR,                     0,  0,  0  ],  # 0x02 LDB  - Load into Register B
-    [  T0,  T1,  T3,  SF.ROMO|SF.BRGI,      SF.ALUO|SF.ARGI,       TR,  0,  0  ],  # 0x03 ADD  - Add A and B, store result in A
-    [  T0,  T1,  T3,  SF.ROMO|SF.BRGI,      SF.ALUO|SF.ARGI|SF.SUBT, TR, 0,  0  ],  # 0x04 SUB  - Subtract B from A, store result in A
-    [  T0,  T1,  SF.IRGO|SF.ARGI,  TR,  0,  0,  0,  0  ],  # 0x05 LDI  - Load immediate value into A
-    [  T0,  T1,  T3,  SF.ARGO|SF.RAMI,      TR,                     0,  0,  0  ],  # 0x06 STA  - Store Register A into RAM
-    [  T0,  T1,  T3,  SF.BRGO|SF.RAMI,      TR,                     0,  0,  0  ],  # 0x07 STB  - Store Register B into RAM
-    [  T0,  T1,  SF.IRGO|SF.JUMP,  TR,  0,  0,  0,  0  ],  # 0x08 JMP  - Jump to address
-    [  T0,  T1,  0,   TR,  0,  0,  0,  0  ],  # 0x09 JMC  - Jump on carry (default: no jump)
-    [  T0,  T1,  0,   TR,  0,  0,  0,  0  ],  # 0x0A JMZ  - Jump on zero  (default: no jump)
+    #  T0   T1   T2   T3                      T4                       T5   T6  T7
+    [  T0,  T1,  TR,  0,                       0,                       0,   0,  0  ],  # 0x00 NOP
+    [  T0,  T1,  T0,  LO,                      SF.RAMO|SF.ARGI,        TR,   0,  0  ],  # 0x01 LDA  - Load A from RAM[operand]
+    [  T0,  T1,  T0,  LO,                      SF.RAMO|SF.BRGI,        TR,   0,  0  ],  # 0x02 LDB  - Load B from RAM[operand]
+    [  T0,  T1,  SF.ALUO|SF.ARGI|SF.FLGI,     TR,                      0,    0,  0,  0  ],  # 0x03 ADD  - A = A + B, latch flags
+    [  T0,  T1,  SF.ALUO|SF.ARGI|SF.FLGI|SF.SUBT, TR,                  0,    0,  0,  0  ],  # 0x04 SUB  - A = A - B, latch flags
+    [  T0,  T1,  T0,  SF.ROMO|SF.ARGI|SF.COUE, TR,                     0,    0,  0  ],  # 0x05 LDI  - Load A with immediate operand
+    [  T0,  T1,  T0,  LO,                      SF.ARGO|SF.RAMI,        TR,   0,  0  ],  # 0x06 STA  - RAM[operand] = A
+    [  T0,  T1,  T0,  LO,                      SF.BRGO|SF.RAMI,        TR,   0,  0  ],  # 0x07 STB  - RAM[operand] = B
+    [  T0,  T1,  T0,  SF.ROMO|SF.JUMP,         TR,                     0,    0,  0  ],  # 0x08 JMP  - PC = operand
+    [  T0,  T1,  T0,  SF.COUE,                 TR,                     0,    0,  0  ],  # 0x09 JMC  - Jump on carry (default: skip operand)
+    [  T0,  T1,  T0,  SF.COUE,                 TR,                     0,    0,  0  ],  # 0x0A JMZ  - Jump on zero  (default: skip operand)
     [  T0,  T1,  SF.ARGO|SF.OUTI,  TR,  0,  0,  0,  0  ],  # 0x0B OUT  - Display contents of Register A
     [  T0,  T1,  SF.HALT,  TR,  0,  0,  0,  0  ],  # 0x0C HLT  - Stop the clock
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x0D (undefined)
@@ -72,21 +74,23 @@ UCODE_TEMPLATE: list[list[int]] = [
 def _build_microcode() -> list[list[list[int]]]:
     """Build the 4×32×8 microcode table (flag_state × instruction × t-state).
 
-    Start with four identical copies of UCODE_TEMPLATE, then override T2 of
-    JMC/JMZ in the flag variants where the condition is met.
+    Start with four identical copies of UCODE_TEMPLATE, then override T3 of
+    JMC/JMZ in the flag variants where the condition is met.  The default T3
+    for both is COUE (advance PC past the unused operand byte); when the
+    condition fires it becomes ROMO|JUMP (load PC from the operand byte).
     """
     import copy
     mc = [copy.deepcopy(UCODE_TEMPLATE) for _ in range(4)]
 
-    jump_t2 = int(SF.IRGO | SF.JUMP)
+    jump_t3 = int(SF.ROMO | SF.JUMP)
 
     # JMC fires when carry is set (C=1): flag indices 1 and 3
     for fi in (FLAGS_Z0C1, FLAGS_Z1C1):
-        mc[fi][_JMC][2] = jump_t2
+        mc[fi][_JMC][3] = jump_t3
 
     # JMZ fires when zero is set (Z=1): flag indices 2 and 3
     for fi in (FLAGS_Z1C0, FLAGS_Z1C1):
-        mc[fi][_JMZ][2] = jump_t2
+        mc[fi][_JMZ][3] = jump_t3
 
     return mc
 
