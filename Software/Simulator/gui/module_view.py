@@ -1,16 +1,19 @@
 """
 ModuleView — canvas items for one module: box, name, 8 LEDs, hex/dec, signal badges.
+Pass use_seven_seg=True to replace the LED/value area with a 4-digit 7-segment display.
 """
 
 import tkinter as tk
 
 from .led import LED
+from .seven_seg import SevenSegDisplay
 
 _BOX_FILL    = "#0d1a0d"
 _BOX_OUTLINE = "#336633"
 _NAME_COLOR  = "#88aa88"
 _HEX_COLOR   = "#00ff88"
 _DEC_COLOR   = "#008844"
+_ANNOT_COLOR = "#aaddff"
 _SIG_OFF     = "#334433"
 _SIG_ON      = "#22ee22"
 
@@ -23,6 +26,9 @@ class ModuleView:
         x2: int, y2: int,
         name: str,
         signal_names: tuple[str, ...] = (),
+        led_on_color: str | None = None,
+        led_off_color: str | None = None,
+        use_seven_seg: bool = False,
     ):
         self._canvas = canvas
         self._y_mid = (y1 + y2) // 2
@@ -43,31 +49,47 @@ class ModuleView:
             font=("Courier", 9, "bold"), anchor="center",
         )
 
-        # 8 LEDs — spacing scales with box width
-        pad_x = max(10, box_w // 10)
-        led_area = box_w - 2 * pad_x
-        led_spacing = led_area // 7
-        led_r = max(4, min(8, led_spacing // 3))
-        led_x0 = x1 + pad_x
-        led_y = y1 + 34
-        self._leds = [
-            LED(canvas, led_x0 + i * led_spacing, led_y, led_r)
-            for i in range(8)
-        ]
+        self._seven_seg: SevenSegDisplay | None = None
 
-        # Hex + decimal
-        self._hex_id = canvas.create_text(
-            cx - 22, y1 + 55,
-            text="0x00", fill=_HEX_COLOR,
-            font=("Courier", 10, "bold"), anchor="center",
-        )
-        self._dec_id = canvas.create_text(
-            cx + 24, y1 + 55,
-            text="0", fill=_DEC_COLOR,
-            font=("Courier", 10), anchor="center",
+        if use_seven_seg:
+            self._leds = []
+            self._hex_id = None
+            self._dec_id = None
+            self._seven_seg = SevenSegDisplay(canvas, cx, y1 + 22)
+        else:
+            # 8 LEDs — spacing scales with box width
+            pad_x = max(10, box_w // 10)
+            led_area = box_w - 2 * pad_x
+            led_spacing = led_area // 7
+            led_r = max(4, min(8, led_spacing // 3))
+            led_x0 = x1 + pad_x
+            led_y = y1 + 32
+            self._leds = [
+                LED(canvas, led_x0 + i * led_spacing, led_y, led_r,
+                    on_color=led_on_color, off_color=led_off_color)
+                for i in range(8)
+            ]
+
+            # Hex + decimal
+            self._hex_id = canvas.create_text(
+                cx - 22, y1 + 50,
+                text="0x00", fill=_HEX_COLOR,
+                font=("Courier", 10, "bold"), anchor="center",
+            )
+            self._dec_id = canvas.create_text(
+                cx + 24, y1 + 50,
+                text="0", fill=_DEC_COLOR,
+                font=("Courier", 10), anchor="center",
+            )
+
+        # Annotation line (e.g. mnemonic for instruction register)
+        self._annot_id = canvas.create_text(
+            cx, y1 + 65,
+            text="", fill=_ANNOT_COLOR,
+            font=("Courier", 9, "italic"), anchor="center",
         )
 
-        # Signal badges — one coloured name per registered signal, bottom of box
+        # Signal badges — bottom of box
         self._sig_ids: dict[str, int] = {}
         if signal_names:
             badge_spacing = min(46, (box_w - 12) // len(signal_names))
@@ -96,10 +118,17 @@ class ModuleView:
         value &= 0xFF
         for i, led in enumerate(self._leds):
             led.set(bool((value >> (7 - i)) & 1))
-        self._canvas.itemconfig(self._hex_id, text=f"0x{value:02X}")
-        self._canvas.itemconfig(self._dec_id, text=str(value))
+        if self._hex_id is not None:
+            self._canvas.itemconfig(self._hex_id, text=f"0x{value:02X}")
+        if self._dec_id is not None:
+            self._canvas.itemconfig(self._dec_id, text=str(value))
+        if self._seven_seg is not None:
+            self._seven_seg.set_value(value)
 
     def update_signals(self, states: dict[str, bool]) -> None:
         for sig_name, item_id in self._sig_ids.items():
             on = states.get(sig_name, False)
             self._canvas.itemconfig(item_id, fill=_SIG_ON if on else _SIG_OFF)
+
+    def set_annotation(self, text: str) -> None:
+        self._canvas.itemconfig(self._annot_id, text=text)

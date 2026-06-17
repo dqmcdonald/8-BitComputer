@@ -38,6 +38,7 @@ class Register(Module):
     def getState(self) -> dict:
         state = super().getState()
         state["value"] = self.getValue()
+        state["kind"] = "register"
         return state
 
     def reset(self) -> None:
@@ -74,8 +75,17 @@ class OutputRegister(Register):
     ):
         super().__init__(name, master_bus, in_signal, out_signal)
 
+    def getState(self) -> dict:
+        state = super().getState()
+        state["kind"] = "output"
+        return state
+
     def clock_inv_pulse(self) -> None:
-        before = self._value
+        latched = (
+            self._in_signal
+            and self._controller
+            and self._controller.getSignalState(self.getName(), self._in_signal)
+        )
         super().clock_inv_pulse()
-        if self._value != before:
+        if latched:
             print(f"*** Output: {self._value}")

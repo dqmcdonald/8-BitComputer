@@ -173,6 +173,13 @@ class Simulator:
     def getController(self) -> "Controller":
         return self._controller
 
+    def getProgramBytes(self, n: int = 256) -> list[int]:
+        """Return the first n bytes of the program ROM."""
+        return [int(self._prog_rom.getValue(i)) for i in range(min(n, self._prog_rom.size()))]
+
+    def getProgramCounter(self) -> int:
+        return self._prog_counter.getCount()
+
     def reset(self) -> None:
         self._clock.reset()
         self._master_bus.clear()

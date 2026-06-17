@@ -96,6 +96,12 @@ class RAM(Memory):
                 )
             self._values[: len(raw)] = raw
 
+    def getState(self) -> dict:
+        state = super().getState()
+        state["kind"] = "memory"
+        state["value"] = self.getValue(self._mem_reg.getValue())
+        return state
+
     def clock_pulse(self) -> None:
         if (
             self._out_signal is not None
@@ -158,6 +164,12 @@ class ROM(Memory):
             )
         else:
             logger.warning("%s: no file provided — ROM is all zeros", name)
+
+    def getState(self) -> dict:
+        state = super().getState()
+        state["kind"] = "memory"
+        state["value"] = self.getValue(self._mem_reg.getValue())
+        return state
 
     def setValue(self, address: int, value: int) -> None:
         raise TypeError(f"{self._name}: ROM is read-only")

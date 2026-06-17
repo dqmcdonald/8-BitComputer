@@ -148,6 +148,9 @@ class Controller:
                 self._t_state, instruction, instr_name,
             )
 
+    def getTState(self) -> int:
+        return self._t_state
+
     def getConnections(self) -> dict:
         """Return a copy of the module→signals registration map."""
         return {name: list(sigs) for name, sigs in self._registered_modules.items()}

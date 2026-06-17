@@ -36,6 +36,8 @@ class ClockPanel(tk.LabelFrame):
         self._pulse_led.grid(row=0, column=0, sticky="w", padx=(0, 4))
         self._tick_label = tk.Label(self, text="Tick: 0", anchor="w")
         self._tick_label.grid(row=0, column=1, sticky="w")
+        self._tstate_label = tk.Label(self, text="T: 0", anchor="w", fg="#88aaff")
+        self._tstate_label.grid(row=0, column=2, sticky="w", padx=(8, 0))
 
         # Mode
         self._mode_var = tk.IntVar(value=ClockMode.CONTINUOUS)
@@ -153,3 +155,5 @@ class ClockPanel(tk.LabelFrame):
         tick = state["tick_count"]
         self._tick_label.configure(text=f"Tick: {tick}")
         self._pulse_led.configure(fg="#22ee22" if tick % 2 else "#0d2e0d")
+        t = self._sim.getController().getTState()
+        self._tstate_label.configure(text=f"T: {t}")

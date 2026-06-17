@@ -53,6 +53,7 @@ class ProgramCounter(Module):
     def getState(self) -> dict:
         state = super().getState()
         state["value"] = self.getCount()
+        state["kind"] = "counter"
         return state
 
     def clock_pulse(self) -> None:

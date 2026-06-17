@@ -47,6 +47,7 @@ class FlagsRegister(Module):
     def getState(self) -> dict:
         state = super().getState()
         state["value"] = self.getFlags()
+        state["kind"] = "flags"
         state["carry"] = self._carry
         state["zero"] = self._zero
         return state

@@ -40,7 +40,7 @@ class Module:
             states = self._controller.getSignalStates()
             for sig in self._controller.getConnections().get(self._name, []):
                 signals[sig.name] = states[sig]
-        return {"name": self._name, "value": 0, "signals": signals}
+        return {"name": self._name, "value": 0, "kind": "module", "signals": signals}
 
     def reset(self) -> None:
         pass

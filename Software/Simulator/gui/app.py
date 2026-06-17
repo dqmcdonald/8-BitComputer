@@ -12,6 +12,7 @@ import gui  # ensure sys.path is set up
 from simulator import Simulator
 from gui.clock_panel import ClockPanel
 from gui.diagram import DiagramCanvas
+from gui.disassembler import DisassemblerWindow
 from gui.signal_panel import SignalPanel
 
 
@@ -41,6 +42,7 @@ class SimulatorGUI:
         self.root = root
         self.sim = sim
         self.root.title("8-Bit Computer Simulator")
+        self._listing_win: DisassemblerWindow | None = None
         self._build_ui()
         self._attach_logging()
         self.refresh_all()
@@ -74,6 +76,10 @@ class SimulatorGUI:
         self._clock_panel = ClockPanel(right, self.sim, self.root, self.refresh_all)
         self._clock_panel.pack(fill="x", padx=2, pady=2)
 
+        tk.Button(right, text="Listing…", command=self._toggle_listing).pack(
+            fill="x", padx=4, pady=(0, 4)
+        )
+
         self._signal_panel = SignalPanel(right, self.sim)
         self._signal_panel.pack(fill="both", expand=True, padx=2, pady=(2, 2))
 
@@ -102,11 +108,25 @@ class SimulatorGUI:
     # Refresh
     # ------------------------------------------------------------------
 
+    def _toggle_listing(self):
+        if self._listing_win is not None:
+            self._listing_win._close()
+        else:
+            self._listing_win = DisassemblerWindow(
+                self.root, self.sim,
+                on_close=self._on_listing_closed,
+            )
+
+    def _on_listing_closed(self):
+        self._listing_win = None
+
     def refresh_all(self):
         """Called after every tick to update all displayed state."""
         self._diagram.refresh()
         self._clock_panel.refresh()
         self._signal_panel.refresh()
+        if self._listing_win is not None:
+            self._listing_win.refresh()
 
 
 # ---------------------------------------------------------------------------
