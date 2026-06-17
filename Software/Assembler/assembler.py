@@ -58,6 +58,7 @@ _HAS_OPERAND: frozenset[InstructionSet] = frozenset({
     InstructionSet.JMP,
     InstructionSet.JMC,
     InstructionSet.JMZ,
+    InstructionSet.CMPI,
 })
 
 _OPCODE_MAP: dict[str, InstructionSet] = {i.name: i for i in InstructionSet}

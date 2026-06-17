@@ -23,4 +23,6 @@ class InstructionSet(IntEnum):
     JMC = 0b01001  # Jump on carry
     JMZ = 0b01010  # Jump on zero
     OUT = 0b01011  # Display the contents of register A
-    HLT = 0b01100  # Stop the clock (and the program)
+    HLT  = 0b01100  # Stop the clock (and the program)
+    CMP  = 0b10000  # Compare A and B (A-B), set flags, leave A unchanged
+    CMPI = 0b10001  # Compare A with immediate value, set flags, leave A unchanged

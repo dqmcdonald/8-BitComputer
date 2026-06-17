@@ -51,8 +51,8 @@ UCODE_TEMPLATE: list[list[int]] = [
     [  T0,  T1,  T0,  SF.ROMO|SF.BRGI|SF.COUE, TR,                     0,    0,  0  ],  # 0x0D LDBI - Load B with immediate operand
     [  T0,  T1,  T0,  SF.ROMO|SF.BRGI|SF.COUE, SF.ALUO|SF.ARGI|SF.FLGI,         TR,  0,  0  ],  # 0x0E ADDI - A = A + immediate (clobbers B)
     [  T0,  T1,  T0,  SF.ROMO|SF.BRGI|SF.COUE, SF.ALUO|SF.ARGI|SF.FLGI|SF.SUBT, TR,  0,  0  ],  # 0x0F SUBI - A = A - immediate (clobbers B)
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x10 (undefined)
-    [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x11 (undefined)
+    [  T0,  T1,  SF.FLGI|SF.SUBT,                TR,  0,  0,  0,  0  ],  # 0x10 CMP  - set flags from A-B, leave A unchanged
+    [  T0,  T1,  T0,  SF.ROMO|SF.BRGI|SF.COUE, SF.FLGI|SF.SUBT, TR,  0,  0  ],  # 0x11 CMPI - set flags from A-immediate, leave A unchanged
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x12 (undefined)
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x13 (undefined)
     [  T0,  T1,  0,  0,  0,  0,  0,  0  ],  # 0x14 (undefined)
