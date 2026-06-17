@@ -13,33 +13,39 @@ Operands:
     Binary:     0b00101010
     Label ref:  LOOP
 
-Raw data bytes can appear after a label without an opcode:
-    VALUE:  0x0A
+Sections:
+    .code   — instructions and inline data bytes (default if omitted)
+    .data   — named variables with initial values
+
+When a .data section is present the assembler emits an initialization preamble
+at the start of the ROM that stores each variable's value into RAM before
+jumping to the first .code instruction.  This works identically on hardware
+and in the simulator; no separate RAM image file is required.
 
 Example:
-    ; Count down from 10 and halt
-            LDB  ONE        ; B = 1 (for subtraction)
-    START:  LDA  COUNT      ; A = RAM[COUNT]
-    LOOP:   OUT             ; display A
-            SUB             ; A = A - B
-            JMZ  DONE       ; if zero, halt
-            STA  COUNT      ; RAM[COUNT] = A
+    .code
+            LDB  ONE        ; B = 1
+            LDA  COUNT      ; A = RAM[COUNT]
+    LOOP:   OUT
+            SUB
+            JMZ  DONE
+            STA  COUNT
             JMP  LOOP
     DONE:   HLT
-    COUNT:  0x0A            ; data: initial count = 10
-    ONE:    0x01            ; data: constant 1
+
+    .data
+    COUNT:  10
+    ONE:    1
 """
 
 import argparse
 import os
 import sys
 
-# Import InstructionSet from the sibling Simulator directory
 _SIM_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'Simulator')
 sys.path.insert(0, _SIM_DIR)
 from instructions import InstructionSet  # noqa: E402
 
-# Instructions that require a following operand byte
 _HAS_OPERAND: frozenset[InstructionSet] = frozenset({
     InstructionSet.LDA,
     InstructionSet.LDB,
@@ -54,7 +60,6 @@ _HAS_OPERAND: frozenset[InstructionSet] = frozenset({
     InstructionSet.JMZ,
 })
 
-# Map uppercase opcode name → InstructionSet member
 _OPCODE_MAP: dict[str, InstructionSet] = {i.name: i for i in InstructionSet}
 
 
@@ -63,7 +68,6 @@ _OPCODE_MAP: dict[str, InstructionSet] = {i.name: i for i in InstructionSet}
 # ---------------------------------------------------------------------------
 
 def _parse_int(token: str) -> int:
-    """Parse a numeric literal: decimal, 0x/$ hex, or 0b binary."""
     t = token.strip()
     if t.startswith(('0x', '0X')):
         return int(t, 16)
@@ -75,12 +79,15 @@ def _parse_int(token: str) -> int:
 
 
 def _is_label_ref(token: str) -> bool:
-    """Return True if token looks like a label (not a numeric literal)."""
     return token[0].isalpha() or token[0] == '_'
 
 
+def _is_section(line: str) -> bool:
+    return line.upper() in ('.CODE', '.DATA')
+
+
 # ---------------------------------------------------------------------------
-# Core assembler — two passes
+# Core assembler — two passes with optional .data section
 # ---------------------------------------------------------------------------
 
 def assemble(source: str) -> tuple[bytes, list[str]]:
@@ -88,36 +95,42 @@ def assemble(source: str) -> tuple[bytes, list[str]]:
 
     Returns (binary, errors).  If errors is non-empty the binary is partial
     and should not be used.
+
+    When the source contains a .data section an initialization preamble is
+    prepended to the ROM: one LDAI+STA pair per variable, then a JMP to the
+    first .code instruction.
     """
     errors: list[str] = []
 
-    # Each item is one of:
-    #   ('op',   address, InstructionSet, operand_token|None, line_num, raw_line)
-    #   ('data', address, int_value,      None,               line_num, raw_line)
-    items: list[tuple] = []
-    labels: dict[str, int] = {}
-    address = 0
+    # Separate item lists for the two sections
+    code_items: list[tuple] = []
+    data_decls: list[tuple] = []  # (value, line_num, raw_line)
+
+    code_labels: dict[str, int] = {}  # name -> address within code (before preamble)
+    data_labels: dict[str, int] = {}  # name -> index in data_decls
+
+    current_section = 'code'
+    code_addr = 0
 
     # ------------------------------------------------------------------
-    # Pass 1: tokenise, assign addresses, collect labels
+    # Pass 1: tokenise, assign code addresses, collect data declarations
     # ------------------------------------------------------------------
     for line_num, raw_line in enumerate(source.splitlines(), 1):
         line = raw_line.split(';')[0].strip()
         if not line:
             continue
 
+        if _is_section(line):
+            current_section = line[1:].lower()
+            continue
+
         # Extract optional label prefix
+        label = None
         if ':' in line:
             label_part, _, rest = line.partition(':')
             label_part = label_part.strip()
             if label_part and all(c.isalnum() or c == '_' for c in label_part):
-                if label_part in labels:
-                    errors.append(
-                        f"line {line_num}: duplicate label '{label_part}'\n"
-                        f"    > {raw_line.strip()}"
-                    )
-                else:
-                    labels[label_part] = address
+                label = label_part
                 line = rest.strip()
             else:
                 errors.append(
@@ -126,14 +139,23 @@ def assemble(source: str) -> tuple[bytes, list[str]]:
                 )
                 continue
 
+        if label:
+            if label in code_labels or label in data_labels:
+                errors.append(
+                    f"line {line_num}: duplicate label '{label}'\n"
+                    f"    > {raw_line.strip()}"
+                )
+            elif current_section == 'code':
+                code_labels[label] = code_addr
+            else:
+                data_labels[label] = len(data_decls)
+
         if not line:
             continue  # label-only line
 
-        tokens = line.split()
-        first = tokens[0].upper()
-
-        if first not in _OPCODE_MAP:
-            # Try to treat it as a raw data byte
+        # ---- .data section ----
+        if current_section == 'data':
+            tokens = line.split()
             try:
                 value = _parse_int(tokens[0])
                 if not 0 <= value <= 255:
@@ -142,8 +164,29 @@ def assemble(source: str) -> tuple[bytes, list[str]]:
                         f"    > {raw_line.strip()}"
                     )
                 else:
-                    items.append(('data', address, value, None, line_num, raw_line))
-                    address += 1
+                    data_decls.append((value, line_num, raw_line))
+            except ValueError:
+                errors.append(
+                    f"line {line_num}: invalid data value '{tokens[0]}'\n"
+                    f"    > {raw_line.strip()}"
+                )
+            continue
+
+        # ---- .code section ----
+        tokens = line.split()
+        first = tokens[0].upper()
+
+        if first not in _OPCODE_MAP:
+            try:
+                value = _parse_int(tokens[0])
+                if not 0 <= value <= 255:
+                    errors.append(
+                        f"line {line_num}: data value {value} out of range 0-255\n"
+                        f"    > {raw_line.strip()}"
+                    )
+                else:
+                    code_items.append(('raw', code_addr, value, line_num, raw_line))
+                    code_addr += 1
             except ValueError:
                 errors.append(
                     f"line {line_num}: unknown opcode '{tokens[0]}'\n"
@@ -159,39 +202,70 @@ def assemble(source: str) -> tuple[bytes, list[str]]:
                 f"line {line_num}: '{first}' requires an operand\n"
                 f"    > {raw_line.strip()}"
             )
-            address += 2  # keep address tracking sensible
+            code_addr += 2
             continue
         if not needs_operand and len(tokens) > 1:
             errors.append(
                 f"line {line_num}: '{first}' takes no operand (got '{tokens[1]}')\n"
                 f"    > {raw_line.strip()}"
             )
-            address += 1
+            code_addr += 1
             continue
 
         operand = tokens[1] if needs_operand else None
-        items.append(('op', address, instr, operand, line_num, raw_line))
-        address += 2 if needs_operand else 1
+        code_items.append(('op', code_addr, instr, operand, line_num, raw_line))
+        code_addr += 2 if needs_operand else 1
 
     if errors:
         return b'', errors
 
     # ------------------------------------------------------------------
-    # Pass 2: emit bytes, resolve label references
+    # Compute layout
+    # ------------------------------------------------------------------
+    has_data = bool(data_decls)
+    # Preamble: one LDAI+STA pair per variable, then JMP to code start
+    preamble_size = len(data_decls) * 4 + 2 if has_data else 0
+    data_start = preamble_size + code_addr
+
+    if data_start + len(data_decls) > 256:
+        errors.append(
+            f"Program too large: requires {data_start + len(data_decls)} bytes, "
+            f"exceeding the 8-bit address space (256 bytes)"
+        )
+        return b'', errors
+
+    # Build unified label table with final ROM/RAM addresses
+    labels: dict[str, int] = {}
+    for name, addr in code_labels.items():
+        labels[name] = addr + preamble_size
+    for name, idx in data_labels.items():
+        labels[name] = data_start + idx
+
+    # ------------------------------------------------------------------
+    # Pass 2: emit bytes
     # ------------------------------------------------------------------
     output: list[int] = []
 
-    for item in items:
-        kind = item[0]
+    # Preamble: LDAI <value>; STA <ram_addr>  for each data variable, then JMP
+    if has_data:
+        for i, (value, _, _) in enumerate(data_decls):
+            ram_addr = data_start + i
+            output.append(int(InstructionSet.LDAI))
+            output.append(value)
+            output.append(int(InstructionSet.STA))
+            output.append(ram_addr)
+        output.append(int(InstructionSet.JMP))
+        output.append(preamble_size)  # jump to first code instruction
 
-        if kind == 'data':
-            _, addr, value, _, line_num, raw_line = item
+    # Code items
+    for item in code_items:
+        if item[0] == 'raw':
+            _, addr, value, line_num, raw_line = item
             output.append(value)
             continue
 
-        # kind == 'op'
         _, addr, instr, operand, line_num, raw_line = item
-        output.append(instr.value)
+        output.append(int(instr))
 
         if operand is not None:
             if _is_label_ref(operand):
@@ -230,31 +304,93 @@ def assemble(source: str) -> tuple[bytes, list[str]]:
                     )
                     output.append(0)
 
-    return bytes(output), errors
+    # Data placeholder bytes at data_start (zero — values are in RAM after preamble runs)
+    for _ in data_decls:
+        output.append(0)
+
+    if errors:
+        return b'', errors
+
+    return bytes(output), []
+
+
+# ---------------------------------------------------------------------------
+# Listing
+# ---------------------------------------------------------------------------
+
+def _count_data_decls(source: str) -> int:
+    """Count declared variables in the .data section."""
+    count = 0
+    in_data = False
+    for line in source.splitlines():
+        stripped = line.split(';')[0].strip()
+        if _is_section(stripped):
+            in_data = stripped.upper() == '.DATA'
+            continue
+        if not in_data or not stripped:
+            continue
+        content = stripped.partition(':')[2].strip() if ':' in stripped else stripped
+        if content:
+            count += 1
+    return count
 
 
 def listing(source: str, binary: bytes) -> str:
     """Return a formatted listing: address, bytes, source line."""
-    lines: list[str] = []
-    address = 0
+    data_count = _count_data_decls(source)
+    preamble_size = data_count * 4 + 2 if data_count > 0 else 0
+
+    out: list[str] = []
     binary_pos = 0
+    address = 0
+
+    # Show auto-generated preamble
+    if preamble_size > 0:
+        out.append('; --- auto-generated initialization preamble ---')
+        while binary_pos < preamble_size:
+            b = binary[binary_pos]
+            try:
+                op = InstructionSet(b)
+                if op in _HAS_OPERAND:
+                    op_byte = binary[binary_pos + 1]
+                    out.append(f'{address:04X}: {b:02X} {op_byte:02X}    {op.name} {op_byte}')
+                    address += 2
+                    binary_pos += 2
+                else:
+                    out.append(f'{address:04X}: {b:02X}       {op.name}')
+                    address += 1
+                    binary_pos += 1
+            except ValueError:
+                out.append(f'{address:04X}: {b:02X}')
+                address += 1
+                binary_pos += 1
+        out.append('')
+
+    # Walk source: show code lines with addresses, collect .data lines for end
+    data_source_lines: list[str] = []
+    in_data = False
 
     for raw_line in source.splitlines():
         stripped = raw_line.split(';')[0].strip()
 
-        # Work out how many bytes this line produced
+        if _is_section(stripped):
+            in_data = stripped.upper() == '.DATA'
+            out.append(f'          {raw_line}')
+            continue
+
+        if in_data:
+            data_source_lines.append(raw_line)
+            continue
+
+        # Determine byte count for this source line
         nbytes = 0
         if stripped:
-            line = stripped
-            if ':' in line:
-                _, _, line = line.partition(':')
-                line = line.strip()
-            if line:
-                tokens = line.split()
+            code_line = stripped.partition(':')[2].strip() if ':' in stripped else stripped
+            if code_line:
+                tokens = code_line.split()
                 first = tokens[0].upper()
                 if first in _OPCODE_MAP:
-                    instr = _OPCODE_MAP[first]
-                    nbytes = 2 if instr in _HAS_OPERAND else 1
+                    nbytes = 2 if _OPCODE_MAP[first] in _HAS_OPERAND else 1
                 else:
                     try:
                         _parse_int(tokens[0])
@@ -264,13 +400,34 @@ def listing(source: str, binary: bytes) -> str:
 
         if nbytes:
             byte_str = ' '.join(f'{binary[binary_pos + i]:02X}' for i in range(nbytes))
-            lines.append(f'{address:04X}: {byte_str:<8}  {raw_line}')
+            out.append(f'{address:04X}: {byte_str:<8}  {raw_line}')
             address += nbytes
             binary_pos += nbytes
         else:
-            lines.append(f'          {raw_line}')
+            out.append(f'          {raw_line}')
 
-    return '\n'.join(lines)
+    # Show .data declarations with their RAM addresses
+    if data_source_lines:
+        out.append('')
+        out.append('; --- .data variables (RAM addresses, initialized by preamble) ---')
+        for raw_line in data_source_lines:
+            stripped = raw_line.split(';')[0].strip()
+            content = stripped.partition(':')[2].strip() if ':' in stripped else stripped
+            has_value = False
+            if content:
+                try:
+                    _parse_int(content.split()[0])
+                    has_value = True
+                except ValueError:
+                    pass
+            if has_value:
+                out.append(f'{address:04X}: 00        {raw_line}')
+                address += 1
+                binary_pos += 1
+            else:
+                out.append(f'          {raw_line}')
+
+    return '\n'.join(out)
 
 
 # ---------------------------------------------------------------------------
