@@ -1,8 +1,11 @@
 /* Microcode Uploader for 8-Bit Computer
-   Uses 3x 74HC595 Shift Registers to program a AT28C256 EEPROM. 
+   Uses 3x 74HC595 Shift Registers to program a AT28C256 EEPROM.
      The address and data are shifted onto the registers using pins 11, 12 and 8
+     (address1 = low byte A0-A7, address2 = high byte A8-A14, then the data byte).
 
-     Pin 4 is pulsed HIGH for 1us to complete the write of the EEProm - there is a 10ms delay for this as well.
+     Pin 4 (WE) is pulsed LOW for 1us to trigger the write. The AT28C256 byte
+     write cycle (tWC) is up to 10ms, so we wait 10ms after each write before
+     starting the next one.
 
   Quentin McDonald
   January 2025
@@ -12,7 +15,7 @@
 #define DATA_PIN 11                 // Data pin for shift registers
 #define CLOCK_PIN 12                // Clock pin for shift registers
 #define LATCH_PIN 8                 // Latch pin for shift registers
-#define EEPROM_WRITE_PIN 4          // Pulse HIGH 1us for Write
+#define EEPROM_WRITE_PIN 4          // Pulse LOW 1us to trigger Write
 #define EEPROM_OUTPUT_ENABLE_PIN 3  // Turn high during this process
 
 void write_data(byte address1, byte address2, byte data) {
@@ -24,11 +27,14 @@ void write_data(byte address1, byte address2, byte data) {
   shiftOut(DATA_PIN, CLOCK_PIN, MSBFIRST, data);
   digitalWrite(LATCH_PIN, HIGH);
 
-  // Pulse Write enable to do write
+  // Pulse Write enable LOW to trigger the write (write occurs on rising edge)
   digitalWrite(EEPROM_WRITE_PIN, LOW);
   delayMicroseconds(1);
   digitalWrite(EEPROM_WRITE_PIN, HIGH);
-  delayMicroseconds(20);
+
+  // Wait for the byte-write cycle to complete (AT28C256 tWC is up to 10ms).
+  // The data lines aren't read back, so we can't use data polling here.
+  delay(10);
 }
 
 void setup() {
@@ -45,20 +51,11 @@ void setup() {
   digitalWrite(EEPROM_OUTPUT_ENABLE_PIN, HIGH);  // Turn off output enable
 
   delay(500);
-
-  for (int i = 0; i < 255; i++) {
-    byte a = byte(i);
-    byte d = byte(i);
-    write_data(a, a, d);
-  }
-
-  delay(500);
-
 }
 
 void loop() {
 
-  if (Serial.available() > 1) {
+  if (Serial.available() >= 3) {
 
     byte add1 = Serial.read();
     byte add2 = Serial.read();
@@ -67,6 +64,5 @@ void loop() {
     write_data(add1, add2, data);
 
     Serial.write(0x55);
-    delay(20);
   }
 }
