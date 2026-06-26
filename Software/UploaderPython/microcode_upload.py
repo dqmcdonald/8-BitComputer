@@ -16,13 +16,82 @@ import sys
 import time
 
 import serial
+from serial.tools import list_ports
 
 ACK = b"\x55"
 
+# Substrings that identify a likely Arduino serial port. macOS exposes USB
+# CDC devices as /dev/tty.usbmodem* or /dev/tty.usbserial*; on Linux they
+# show up as /dev/ttyACM* or /dev/ttyUSB*. We also match common vendor names.
+PORT_HINTS = ("usbmodem", "usbserial", "ttyacm", "ttyusb", "arduino")
 
-def upload(rom_path: str, port: str, baud: int) -> None:
+
+def detect_port() -> str:
+    """Return the device path of the single likely Arduino port.
+
+    Raises RuntimeError if zero or more than one candidate is found so the
+    user can disambiguate with --port.
+    """
+    candidates = []
+    for p in list_ports.comports():
+        haystack = " ".join(
+            str(s).lower() for s in (p.device, p.description, p.manufacturer)
+        )
+        if any(hint in haystack for hint in PORT_HINTS):
+            candidates.append(p)
+
+    if not candidates:
+        raise RuntimeError(
+            "No Arduino serial port found. Plug in the uploader or pass --port."
+        )
+    if len(candidates) > 1:
+        listing = "\n".join(f"  {p.device} ({p.description})" for p in candidates)
+        raise RuntimeError(
+            "Multiple serial ports found; choose one with --port:\n" + listing
+        )
+    return candidates[0].device
+
+
+def print_table(data: bytes, binary: bool = False) -> None:
+    """Print a dump-style table of the data with the starting address on the
+    left of each row.
+
+    Hex mode (default) shows 16 bytes per row with an ASCII gutter. Binary
+    mode shows 8 bytes per row, each as 8 bits -- more useful for microcode
+    where every bit is a separate control signal.
+    """
+    if binary:
+        width = 8
+        print("addr   " + " ".join(f"{c:^8}" for c in range(width)))
+        print("-" * (7 + width * 9))
+        for offset in range(0, len(data), width):
+            chunk = data[offset : offset + width]
+            bin_part = " ".join(f"{b:08b}" for b in chunk)
+            print(f"{offset:#06x} {bin_part}")
+        return
+
+    width = 16
+    print("addr   " + " ".join(f"{c:02x}" for c in range(width)))
+    print("-" * (7 + width * 3))
+    for offset in range(0, len(data), width):
+        chunk = data[offset : offset + width]
+        hex_part = " ".join(f"{b:02x}" for b in chunk)
+        ascii_part = "".join(chr(b) if 32 <= b < 127 else "." for b in chunk)
+        print(f"{offset:#06x} {hex_part:<{width * 3 - 1}}  {ascii_part}")
+
+
+def upload(
+    rom_path: str,
+    port: str,
+    baud: int,
+    verbose: bool = False,
+    binary: bool = False,
+) -> None:
     with open(rom_path, "rb") as f:
         data = f.read()
+
+    if verbose:
+        print_table(data, binary=binary)
 
     print(f"Uploading {len(data)} bytes from {rom_path} to {port} @ {baud} baud")
 
@@ -51,8 +120,8 @@ def main() -> int:
     parser.add_argument("rom", help="ROM image to upload (e.g. rom1.bin)")
     parser.add_argument(
         "--port",
-        default="/dev/tty.usbmodem14101",
-        help="Serial port of the Arduino (default: %(default)s)",
+        default=None,
+        help="Serial port of the Arduino (default: auto-detect)",
     )
     parser.add_argument(
         "--baud",
@@ -60,10 +129,26 @@ def main() -> int:
         default=9600,
         help="Baud rate (default: %(default)s)",
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Print a table of the uploaded data before uploading",
+    )
+    parser.add_argument(
+        "-b",
+        "--binary",
+        action="store_true",
+        help="With --verbose, show each byte as binary (per-bit control "
+        "signals) instead of hex/ASCII",
+    )
     args = parser.parse_args()
 
     try:
-        upload(args.rom, args.port, args.baud)
+        port = args.port or detect_port()
+        if args.port is None:
+            print(f"Auto-detected port: {port}")
+        upload(args.rom, port, args.baud, args.verbose, args.binary)
     except (OSError, serial.SerialException, RuntimeError) as exc:
         print(f"\nError: {exc}", file=sys.stderr)
         return 1
