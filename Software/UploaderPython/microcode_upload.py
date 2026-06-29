@@ -4,8 +4,12 @@ The ROM images are produced by Simulator/microcode.py (rom1.bin / rom2.bin),
 each a 1024-byte image addressed as [flags(9:8) | instr(7:3) | t_state(2:0)].
 There are two ROMs, so run this once per ROM file (and per EEPROM).
 
-For each byte the Arduino expects three bytes -- low address, high address,
-data -- and replies with 0x55 once the write completes.
+The Arduino speaks a small binary protocol:
+    'W' <addr_lo> <addr_hi> <data>  writes a byte and replies 0x55 (ACK)
+    'R' <addr_lo> <addr_hi>         replies with the single data byte
+
+After uploading, the contents are read back and compared against the image
+to verify the write (disable with --no-verify).
 
 Example:
     python microcode_upload.py rom1.bin --port /dev/tty.usbmodem14101
@@ -19,6 +23,17 @@ import serial
 from serial.tools import list_ports
 
 ACK = b"\x55"
+WRITE_CMD = b"W"
+READ_CMD = b"R"
+
+# Cap how many per-byte mismatches we print during verification so a wholesale
+# failure (e.g. nothing written) doesn't flood the terminal with 1024 lines.
+MAX_MISMATCHES_SHOWN = 16
+
+
+def _addr_bytes(addr: int) -> bytes:
+    """Return the low/high address bytes for a 15-bit EEPROM address."""
+    return bytes([addr & 0xFF, (addr >> 8) & 0xFF])
 
 # Substrings that identify a likely Arduino serial port. macOS exposes USB
 # CDC devices as /dev/tty.usbmodem* or /dev/tty.usbserial*; on Linux they
@@ -80,12 +95,42 @@ def print_table(data: bytes, binary: bool = False) -> None:
         print(f"{offset:#06x} {hex_part:<{width * 3 - 1}}  {ascii_part}")
 
 
+def verify(ser: serial.Serial, data: bytes) -> None:
+    """Read the EEPROM back and compare it against the uploaded image.
+
+    Raises RuntimeError if any byte differs or a read times out.
+    """
+    print("Verifying")
+    mismatches = []
+    for addr, expected in enumerate(data):
+        ser.write(READ_CMD + _addr_bytes(addr))
+        resp = ser.read(1)
+        if len(resp) != 1:
+            raise RuntimeError(f"Verify timed out at address {addr:#06x}")
+        got = resp[0]
+        if got != expected:
+            mismatches.append((addr, expected, got))
+        if addr % 32 == 0:
+            print(".", end="", flush=True)
+
+    if mismatches:
+        print()
+        for addr, expected, got in mismatches[:MAX_MISMATCHES_SHOWN]:
+            print(f"  {addr:#06x}: wrote {expected:#04x}, read {got:#04x}")
+        if len(mismatches) > MAX_MISMATCHES_SHOWN:
+            print(f"  ... and {len(mismatches) - MAX_MISMATCHES_SHOWN} more")
+        raise RuntimeError(f"Verification failed: {len(mismatches)} byte(s) differ")
+
+    print("\nVerification OK")
+
+
 def upload(
     rom_path: str,
     port: str,
     baud: int,
     verbose: bool = False,
     binary: bool = False,
+    do_verify: bool = True,
 ) -> None:
     with open(rom_path, "rb") as f:
         data = f.read()
@@ -102,7 +147,7 @@ def upload(
         ser.reset_input_buffer()
 
         for addr, byte in enumerate(data):
-            ser.write(bytes([addr & 0xFF, (addr >> 8) & 0xFF, byte]))
+            ser.write(WRITE_CMD + _addr_bytes(addr) + bytes([byte]))
             resp = ser.read()
             if resp != ACK:
                 raise RuntimeError(
@@ -112,7 +157,10 @@ def upload(
             if addr % 32 == 0:
                 print(".", end="", flush=True)
 
-    print("\nDone")
+        print("\nDone")
+
+        if do_verify:
+            verify(ser, data)
 
 
 def main() -> int:
@@ -126,7 +174,7 @@ def main() -> int:
     parser.add_argument(
         "--baud",
         type=int,
-        default=9600,
+        default=115200,
         help="Baud rate (default: %(default)s)",
     )
     parser.add_argument(
@@ -142,13 +190,19 @@ def main() -> int:
         help="With --verbose, show each byte as binary (per-bit control "
         "signals) instead of hex/ASCII",
     )
+    parser.add_argument(
+        "--no-verify",
+        dest="verify",
+        action="store_false",
+        help="Skip reading the EEPROM back to verify after uploading",
+    )
     args = parser.parse_args()
 
     try:
         port = args.port or detect_port()
         if args.port is None:
             print(f"Auto-detected port: {port}")
-        upload(args.rom, port, args.baud, args.verbose, args.binary)
+        upload(args.rom, port, args.baud, args.verbose, args.binary, args.verify)
     except (OSError, serial.SerialException, RuntimeError) as exc:
         print(f"\nError: {exc}", file=sys.stderr)
         return 1
