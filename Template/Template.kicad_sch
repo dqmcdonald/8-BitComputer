@@ -3350,6 +3350,26 @@
 			(embedded_fonts no)
 		)
 	)
+	(text "LSB (B0)"
+		(exclude_from_sim no)
+		(at 248.666 152.654 0)
+		(effects
+			(font
+				(size 3.81 3.81)
+			)
+		)
+		(uuid "e61407bb-8d9f-4d82-bc3c-9d9f3994e1a5")
+	)
+	(text "MSB (B7)"
+		(exclude_from_sim no)
+		(at 249.174 72.39 0)
+		(effects
+			(font
+				(size 3.81 3.81)
+			)
+		)
+		(uuid "fb05efac-210e-4125-a5df-cb52d5e0555a")
+	)
 	(junction
 		(at 280.67 118.11)
 		(diameter 0)
