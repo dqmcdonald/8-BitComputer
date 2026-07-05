@@ -5259,6 +5259,121 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "power:PWR_FLAG"
+			(power global)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "#FLG"
+				(at 0 1.905 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "PWR_FLAG"
+				(at 0 3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Special symbol for telling ERC where power comes from"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "flag power"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "PWR_FLAG_0_0"
+				(pin power_out line
+					(at 0 0 90)
+					(length 0)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "PWR_FLAG_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 1.27) (xy -1.016 1.905) (xy 0 2.54) (xy 1.016 1.905) (xy 0 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
 	(junction
 		(at 236.22 25.4)
@@ -5285,10 +5400,22 @@
 		(uuid "3d4f2519-8320-47fb-9ff9-1661ee2e2cff")
 	)
 	(junction
+		(at 106.68 163.83)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "48201967-a3ff-4199-bc1a-f153f832d514")
+	)
+	(junction
 		(at 44.45 181.61)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "58824c0a-0772-41ac-aad8-0e020bc3430a")
+	)
+	(junction
+		(at 24.13 27.94)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6c88fb8e-1b68-4381-af2b-5d4b1d590151")
 	)
 	(junction
 		(at 280.67 106.68)
@@ -5327,10 +5454,22 @@
 		(uuid "a5edfc08-5f39-49ab-8bbe-b4a860bd3b66")
 	)
 	(junction
+		(at 22.86 31.75)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ae56b90e-3296-45a9-9902-6b221ec6c406")
+	)
+	(junction
 		(at 280.67 140.97)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "aee8825e-79b5-4aea-ac58-185987a95df8")
+	)
+	(junction
+		(at 107.95 167.64)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e2f3919a-6552-4072-839f-10293bf46cb3")
 	)
 	(junction
 		(at 280.67 118.11)
@@ -5487,6 +5626,16 @@
 			(type default)
 		)
 		(uuid "0fd314aa-60c4-44d0-8015-3e1492c60bb5")
+	)
+	(wire
+		(pts
+			(xy 107.95 171.45) (xy 109.22 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0fdaf396-49a4-4733-a4fd-1b93835b4c48")
 	)
 	(wire
 		(pts
@@ -5970,7 +6119,7 @@
 	)
 	(wire
 		(pts
-			(xy 21.59 31.75) (xy 24.13 31.75)
+			(xy 21.59 31.75) (xy 22.86 31.75)
 		)
 		(stroke
 			(width 0)
@@ -6290,6 +6439,16 @@
 	)
 	(wire
 		(pts
+			(xy 24.13 17.78) (xy 31.75 17.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6d548e3b-957f-4d82-a436-106b3d7e7ebf")
+	)
+	(wire
+		(pts
 			(xy 49.53 43.18) (xy 52.07 43.18)
 		)
 		(stroke
@@ -6450,6 +6609,16 @@
 	)
 	(wire
 		(pts
+			(xy 107.95 167.64) (xy 107.95 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "80c8d86d-cccd-434f-b891-89f7433c18d3")
+	)
+	(wire
+		(pts
 			(xy 151.13 57.15) (xy 157.48 57.15)
 		)
 		(stroke
@@ -6510,7 +6679,7 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 167.64) (xy 109.22 167.64)
+			(xy 105.41 167.64) (xy 107.95 167.64)
 		)
 		(stroke
 			(width 0)
@@ -6557,6 +6726,16 @@
 			(type default)
 		)
 		(uuid "8ef30624-201b-4d16-9d22-371374816d99")
+	)
+	(wire
+		(pts
+			(xy 22.86 31.75) (xy 24.13 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8f7858e3-beeb-44a0-acef-2b136e70140e")
 	)
 	(wire
 		(pts
@@ -6820,6 +6999,16 @@
 	)
 	(wire
 		(pts
+			(xy 106.68 163.83) (xy 106.68 173.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a8360b79-77c4-4833-855c-d36ff12003e8")
+	)
+	(wire
+		(pts
 			(xy 40.64 181.61) (xy 44.45 181.61)
 		)
 		(stroke
@@ -7080,6 +7269,16 @@
 	)
 	(wire
 		(pts
+			(xy 107.95 167.64) (xy 109.22 167.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6950804-9814-4d23-a09c-4f91fbdca2fb")
+	)
+	(wire
+		(pts
 			(xy 151.13 149.86) (xy 151.13 139.7)
 		)
 		(stroke
@@ -7200,6 +7399,16 @@
 	)
 	(wire
 		(pts
+			(xy 22.86 31.75) (xy 22.86 15.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cf6f5843-ecfc-4266-915a-0228e8499b3c")
+	)
+	(wire
+		(pts
 			(xy 21.59 85.09) (xy 24.13 85.09)
 		)
 		(stroke
@@ -7247,6 +7456,16 @@
 			(type default)
 		)
 		(uuid "d47ec5de-bc6b-419b-a9b5-f05d975cb1de")
+	)
+	(wire
+		(pts
+			(xy 22.86 15.24) (xy 31.75 15.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d775558e-c37e-4c02-b2a4-25e63fd48bac")
 	)
 	(wire
 		(pts
@@ -7380,13 +7599,23 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 163.83) (xy 109.22 163.83)
+			(xy 105.41 163.83) (xy 106.68 163.83)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "e774909e-6aab-4f32-8736-efc4257baffc")
+	)
+	(wire
+		(pts
+			(xy 106.68 163.83) (xy 109.22 163.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e8319bb4-7ac6-4f20-ab82-1c871b2916bd")
 	)
 	(wire
 		(pts
@@ -7407,6 +7636,16 @@
 			(type default)
 		)
 		(uuid "ebbcfc97-4c88-4158-832d-c99ceb3aaf00")
+	)
+	(wire
+		(pts
+			(xy 24.13 27.94) (xy 24.13 17.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ec1a7d96-8007-439f-9f24-0e2581ad6db1")
 	)
 	(wire
 		(pts
@@ -7510,6 +7749,16 @@
 	)
 	(wire
 		(pts
+			(xy 106.68 173.99) (xy 109.22 173.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f31deb0a-4488-495f-935d-adc507f4a85f")
+	)
+	(wire
+		(pts
 			(xy 105.41 53.34) (xy 109.22 53.34)
 		)
 		(stroke
@@ -7568,7 +7817,7 @@
 		)
 		(uuid "fef3f27a-13f3-41d8-934f-32b1808bebce")
 	)
-	(global_label "+5V"
+	(global_label "5V"
 		(shape input)
 		(at 40.64 181.61 180)
 		(fields_autoplaced yes)
@@ -7580,7 +7829,7 @@
 		)
 		(uuid "0167d6d7-095a-41c4-a669-3e1db9b5d6db")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 33.7843 181.61 0)
+			(at 35.3567 181.61 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -7978,7 +8227,7 @@
 	)
 	(global_label "SUM6"
 		(shape input)
-		(at 257.81 140.97 180)
+		(at 257.81 83.82 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -7988,7 +8237,7 @@
 		)
 		(uuid "1583d4c1-b203-453f-8091-a3007b59f456")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 249.6239 140.97 0)
+			(at 249.6239 83.82 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8122,7 +8371,7 @@
 	)
 	(global_label "SUM0"
 		(shape input)
-		(at 257.81 72.39 180)
+		(at 257.81 152.4 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -8132,7 +8381,7 @@
 		)
 		(uuid "1834306c-09cd-42d7-8d86-b820f3212ee8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 249.6239 72.39 0)
+			(at 249.6239 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8192,7 +8441,7 @@
 			)
 		)
 	)
-	(global_label "LBBus6"
+	(global_label "LBB6"
 		(shape input)
 		(at 133.35 86.36 180)
 		(fields_autoplaced yes)
@@ -8204,7 +8453,7 @@
 		)
 		(uuid "1a15306e-c040-49ae-9794-df4a82c7bfe2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 123.4101 86.36 0)
+			(at 125.5872 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8264,7 +8513,7 @@
 			)
 		)
 	)
-	(global_label "LABus1"
+	(global_label "LBA1"
 		(shape input)
 		(at 158.75 116.84 180)
 		(fields_autoplaced yes)
@@ -8276,7 +8525,7 @@
 		)
 		(uuid "1cdfd136-4838-43b1-9ef7-d31ed184cec1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 148.9915 116.84 0)
+			(at 151.1686 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8744,7 +8993,7 @@
 			)
 		)
 	)
-	(global_label "LBBus4"
+	(global_label "LBB4"
 		(shape input)
 		(at 133.35 57.15 180)
 		(fields_autoplaced yes)
@@ -8756,7 +9005,7 @@
 		)
 		(uuid "352fb8d4-7fa9-423d-8f59-978251612ece")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 123.4101 57.15 0)
+			(at 125.5872 57.15 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8864,7 +9113,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "5V"
 		(shape input)
 		(at 40.64 189.23 180)
 		(fields_autoplaced yes)
@@ -8876,7 +9125,7 @@
 		)
 		(uuid "3bc550a8-3eee-49cc-b572-0b74de459ee7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 33.7843 189.23 0)
+			(at 35.3567 189.23 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9226,7 +9475,7 @@
 	)
 	(global_label "SUM2"
 		(shape input)
-		(at 257.81 95.25 180)
+		(at 257.81 129.54 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -9236,7 +9485,7 @@
 		)
 		(uuid "4c070eed-7043-47aa-94e6-5869fb3ca743")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 249.6239 95.25 0)
+			(at 249.6239 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9250,7 +9499,7 @@
 	)
 	(global_label "SUM7"
 		(shape input)
-		(at 257.81 152.4 180)
+		(at 257.81 72.39 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -9260,7 +9509,7 @@
 		)
 		(uuid "4d78489c-7eab-4b97-b1c1-051d6413e947")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 249.6239 152.4 0)
+			(at 249.6239 72.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9296,7 +9545,7 @@
 			)
 		)
 	)
-	(global_label "LBBus1"
+	(global_label "LBB1"
 		(shape input)
 		(at 135.89 152.4 180)
 		(fields_autoplaced yes)
@@ -9308,7 +9557,31 @@
 		)
 		(uuid "4efca586-fbbe-4fa8-8599-6755c29e9d97")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 125.9501 152.4 0)
+			(at 128.1272 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
+	(global_label "~{ADDO}"
+		(shape input)
+		(at 223.52 62.23 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "4f11e768-05d2-4480-adca-244fad0dc63b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 215.5757 62.23 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9322,7 +9595,7 @@
 	)
 	(global_label "SUM1"
 		(shape input)
-		(at 257.81 83.82 180)
+		(at 257.81 140.97 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -9332,7 +9605,7 @@
 		)
 		(uuid "4f1b00c6-6e95-43ef-8396-661947c067ea")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 249.6239 83.82 0)
+			(at 249.6239 140.97 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9464,7 +9737,7 @@
 			)
 		)
 	)
-	(global_label "LBBus7"
+	(global_label "LBB7"
 		(shape input)
 		(at 133.35 100.33 180)
 		(fields_autoplaced yes)
@@ -9476,7 +9749,7 @@
 		)
 		(uuid "55e33c9d-9339-4905-ad12-100b41c35482")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 123.4101 100.33 0)
+			(at 125.5872 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9658,7 +9931,7 @@
 	)
 	(global_label "SUM5"
 		(shape input)
-		(at 257.81 129.54 180)
+		(at 257.81 95.25 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -9668,7 +9941,7 @@
 		)
 		(uuid "5daa655a-1be6-4b90-bfbc-da87f671eb15")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 249.6239 129.54 0)
+			(at 249.6239 95.25 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9800,7 +10073,7 @@
 			)
 		)
 	)
-	(global_label "LBBus0"
+	(global_label "LBB0"
 		(shape input)
 		(at 135.89 137.16 180)
 		(fields_autoplaced yes)
@@ -9812,7 +10085,7 @@
 		)
 		(uuid "6580cd83-cdfc-49d2-8341-01b7e76c3059")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 125.9501 137.16 0)
+			(at 128.1272 137.16 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10256,7 +10529,7 @@
 			)
 		)
 	)
-	(global_label "LBBus2"
+	(global_label "LBB2"
 		(shape input)
 		(at 135.89 167.64 180)
 		(fields_autoplaced yes)
@@ -10268,7 +10541,7 @@
 		)
 		(uuid "81b2bcef-97ff-4b3e-be6c-4cbc1477cb63")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 125.9501 167.64 0)
+			(at 128.1272 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10448,7 +10721,7 @@
 			)
 		)
 	)
-	(global_label "LABus2"
+	(global_label "LBA2"
 		(shape input)
 		(at 158.75 121.92 180)
 		(fields_autoplaced yes)
@@ -10460,7 +10733,7 @@
 		)
 		(uuid "880726f9-34c2-45bb-af72-5c4b1bd931ae")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 148.9915 121.92 0)
+			(at 151.1686 121.92 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10690,7 +10963,7 @@
 	)
 	(global_label "SUM3"
 		(shape input)
-		(at 257.81 106.68 180)
+		(at 257.81 118.11 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -10700,7 +10973,7 @@
 		)
 		(uuid "91b7ab60-fd8f-483c-b557-151036d019b5")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 249.6239 106.68 0)
+			(at 249.6239 118.11 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10928,7 +11201,7 @@
 			)
 		)
 	)
-	(global_label "LABus0"
+	(global_label "LBA0"
 		(shape input)
 		(at 158.75 111.76 180)
 		(fields_autoplaced yes)
@@ -10940,7 +11213,7 @@
 		)
 		(uuid "9b4a2543-c88c-486a-b781-c1be7b463dbe")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 148.9915 111.76 0)
+			(at 151.1686 111.76 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11144,7 +11417,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "5V"
 		(shape input)
 		(at 190.5 90.17 0)
 		(fields_autoplaced yes)
@@ -11156,7 +11429,7 @@
 		)
 		(uuid "a4eaeb0a-a51e-4242-9a3f-0c242b6e55d1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 197.3557 90.17 0)
+			(at 195.7833 90.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11336,7 +11609,7 @@
 			)
 		)
 	)
-	(global_label "LABus6"
+	(global_label "LBA6"
 		(shape input)
 		(at 157.48 44.45 180)
 		(fields_autoplaced yes)
@@ -11348,7 +11621,7 @@
 		)
 		(uuid "af1e7d87-cd9c-4247-be4a-818c71e9da36")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 147.7215 44.45 0)
+			(at 149.8986 44.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11528,7 +11801,7 @@
 			)
 		)
 	)
-	(global_label "LABus4"
+	(global_label "LBA4"
 		(shape input)
 		(at 157.48 34.29 180)
 		(fields_autoplaced yes)
@@ -11540,7 +11813,7 @@
 		)
 		(uuid "b7ea9f28-4403-4036-9684-cb3c5b4c2cf4")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 147.7215 34.29 0)
+			(at 149.8986 34.29 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11696,7 +11969,7 @@
 			)
 		)
 	)
-	(global_label "LABus5"
+	(global_label "LBA5"
 		(shape input)
 		(at 157.48 39.37 180)
 		(fields_autoplaced yes)
@@ -11708,7 +11981,7 @@
 		)
 		(uuid "bfecae56-f9cd-4c70-a780-7ca3ae1d540e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 147.7215 39.37 0)
+			(at 149.8986 39.37 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11720,7 +11993,7 @@
 			)
 		)
 	)
-	(global_label "LABus7"
+	(global_label "LBA7"
 		(shape input)
 		(at 157.48 49.53 180)
 		(fields_autoplaced yes)
@@ -11732,7 +12005,7 @@
 		)
 		(uuid "c210d894-23e9-4c62-9f10-4142f90885d7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 147.7215 49.53 0)
+			(at 149.8986 49.53 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11842,7 +12115,7 @@
 	)
 	(global_label "SUM4"
 		(shape input)
-		(at 257.81 118.11 180)
+		(at 257.81 106.68 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11852,7 +12125,7 @@
 		)
 		(uuid "c6b732f0-885c-4db4-9c1c-26a82762bcac")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 249.6239 118.11 0)
+			(at 249.6239 106.68 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11864,7 +12137,7 @@
 			)
 		)
 	)
-	(global_label "LBBus3"
+	(global_label "LBB3"
 		(shape input)
 		(at 137.16 182.88 180)
 		(fields_autoplaced yes)
@@ -11876,7 +12149,7 @@
 		)
 		(uuid "c7407322-11c5-4dfa-bd01-95f811dd2368")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 127.2201 182.88 0)
+			(at 129.3972 182.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11912,7 +12185,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "5V"
 		(shape input)
 		(at 236.22 20.32 0)
 		(fields_autoplaced yes)
@@ -11924,7 +12197,7 @@
 		)
 		(uuid "cbf6c479-1ff7-4866-972b-dd089b593cfa")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 243.0757 20.32 0)
+			(at 241.5033 20.32 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11936,7 +12209,7 @@
 			)
 		)
 	)
-	(global_label "LBBus5"
+	(global_label "LBB5"
 		(shape input)
 		(at 134.62 71.12 180)
 		(fields_autoplaced yes)
@@ -11948,7 +12221,7 @@
 		)
 		(uuid "cc6126be-92bf-485b-b2c0-82d945b81283")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 124.6801 71.12 0)
+			(at 126.8572 71.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12560,6 +12833,30 @@
 			)
 		)
 	)
+	(global_label "5V"
+		(shape input)
+		(at 223.52 59.69 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ecbf1aab-eef1-4d4d-8405-2b27f5170304")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 218.2367 59.69 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
 	(global_label "LBA2"
 		(shape input)
 		(at 73.66 72.39 180)
@@ -12824,7 +13121,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "5V"
 		(shape input)
 		(at 208.28 16.51 0)
 		(fields_autoplaced yes)
@@ -12836,7 +13133,7 @@
 		)
 		(uuid "f6e9ba82-a1a8-4dc6-8b41-b78fca16e207")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 215.1357 16.51 0)
+			(at 213.5633 16.51 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12872,7 +13169,7 @@
 			)
 		)
 	)
-	(global_label "LABus3"
+	(global_label "LBA3"
 		(shape input)
 		(at 158.75 127 180)
 		(fields_autoplaced yes)
@@ -12884,7 +13181,7 @@
 		)
 		(uuid "f87d0049-ec08-4f27-bf70-64d05c7e9ca7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 148.9915 127 0)
+			(at 151.1686 127 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13578,7 +13875,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 144.78 180.34 0)
 			(hide yes)
 			(show_name no)
@@ -13601,6 +13898,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 144.78 180.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 144.78 180.34 0)
 			(hide yes)
 			(show_name no)
@@ -13834,6 +14142,85 @@
 		)
 	)
 	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 109.22 171.45 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "38517043-4dbb-4116-860b-afcaec658b92")
+		(property "Reference" "#FLG03"
+			(at 111.125 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 113.03 171.4499 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 109.22 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 109.22 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 109.22 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "515553ec-3df3-440b-9579-91bb8bb99cba")
+		)
+		(instances
+			(project "ALU"
+				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
+					(reference "#FLG03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "74xx:74HC86")
 		(at 143.51 134.62 0)
 		(unit 1)
@@ -13865,7 +14252,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 143.51 134.62 0)
 			(hide yes)
 			(show_name no)
@@ -13888,6 +14275,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 143.51 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 143.51 134.62 0)
 			(hide yes)
 			(show_name no)
@@ -13981,7 +14379,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 142.24 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -14004,6 +14402,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 142.24 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 142.24 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -14590,7 +14999,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-16_W7.62mm_Socket_LongPads"
 			(at 177.8 49.53 0)
 			(hide yes)
 			(show_name no)
@@ -14613,6 +15022,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 177.8 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC283N"
 			(at 177.8 49.53 0)
 			(hide yes)
 			(show_name no)
@@ -14714,7 +15134,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 201.93 19.05 0)
 			(hide yes)
 			(show_name no)
@@ -14737,6 +15157,17 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 201.93 19.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Autoroute-decouple" "U1"
 			(at 201.93 19.05 0)
 			(hide yes)
 			(show_name no)
@@ -14796,7 +15227,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 182.88 86.36 0)
 			(hide yes)
 			(show_name no)
@@ -14829,6 +15260,17 @@
 				)
 			)
 		)
+		(property "Autoroute-decouple" "U2"
+			(at 182.88 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "e08d23a4-7bf2-4954-983e-182ba4fd3766")
 		)
@@ -14839,6 +15281,85 @@
 			(project "ALU"
 				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
 					(reference "C4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 109.22 173.99 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "68194c77-e047-44fa-af03-47441361a74e")
+		(property "Reference" "#FLG04"
+			(at 111.125 173.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 113.03 173.9899 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 109.22 173.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 109.22 173.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 109.22 173.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "24ba0109-78a8-45eb-9e6a-9cb7bc338c7c")
+		)
+		(instances
+			(project "ALU"
+				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
+					(reference "#FLG04")
 					(unit 1)
 				)
 			)
@@ -14876,7 +15397,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 96.52 189.23 0)
 			(hide yes)
 			(show_name no)
@@ -14899,6 +15420,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 96.52 189.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 96.52 189.23 0)
 			(hide yes)
 			(show_name no)
@@ -14956,6 +15488,85 @@
 				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
 					(reference "U5")
 					(unit 5)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 31.75 17.78 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "74b3dcbb-cae3-491f-ac5f-51cc0281f549")
+		(property "Reference" "#FLG02"
+			(at 33.655 17.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 35.56 17.7799 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 31.75 17.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 31.75 17.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 31.75 17.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "638707d2-c56a-4887-8063-0870f76781c6")
+		)
+		(instances
+			(project "ALU"
+				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
+					(reference "#FLG02")
+					(unit 1)
 				)
 			)
 		)
@@ -15347,7 +15958,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-16_W7.62mm_Socket_LongPads"
 			(at 179.07 127 0)
 			(hide yes)
 			(show_name no)
@@ -15370,6 +15981,17 @@
 			)
 		)
 		(property "Description" ""
+			(at 179.07 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC283N"
 			(at 179.07 127 0)
 			(hide yes)
 			(show_name no)
@@ -15471,7 +16093,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 76.2 191.77 0)
 			(hide yes)
 			(show_name no)
@@ -15494,6 +16116,17 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 76.2 191.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Autoroute-decouple" "U5"
 			(at 76.2 191.77 0)
 			(hide yes)
 			(show_name no)
@@ -15642,7 +16275,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 142.24 97.79 0)
 			(hide yes)
 			(show_name no)
@@ -15665,6 +16298,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 142.24 97.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 142.24 97.79 0)
 			(hide yes)
 			(show_name no)
@@ -15760,7 +16404,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-20_W7.62mm_Socket_LongPads"
 			(at 236.22 49.53 0)
 			(hide yes)
 			(show_name no)
@@ -15783,6 +16427,17 @@
 			)
 		)
 		(property "Description" "Octal BUS Transceivers, 3-State outputs"
+			(at 236.22 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC245N"
 			(at 236.22 49.53 0)
 			(hide yes)
 			(show_name no)
@@ -15894,7 +16549,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 247.65 25.4 0)
 			(hide yes)
 			(show_name no)
@@ -15917,6 +16572,17 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 247.65 25.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Autoroute-decouple" "U3"
 			(at 247.65 25.4 0)
 			(hide yes)
 			(show_name no)
@@ -15974,7 +16640,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 140.97 83.82 0)
 			(hide yes)
 			(show_name no)
@@ -15997,6 +16663,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 140.97 83.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 140.97 83.82 0)
 			(hide yes)
 			(show_name no)
@@ -16090,7 +16767,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 62.23 181.61 0)
 			(hide yes)
 			(show_name no)
@@ -16113,6 +16790,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 62.23 181.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 62.23 181.61 0)
 			(hide yes)
 			(show_name no)
@@ -16288,7 +16976,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 44.45 179.07 0)
 			(hide yes)
 			(show_name no)
@@ -16321,6 +17009,17 @@
 				)
 			)
 		)
+		(property "Autoroute-decouple" "U4"
+			(at 44.45 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "79a16f0d-55c1-4463-b773-28f3928e00eb")
 		)
@@ -16331,6 +17030,84 @@
 			(project "ALU"
 				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
 					(reference "C5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 31.75 15.24 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "de11067f-261a-405c-a713-dca236225b48")
+		(property "Reference" "#FLG01"
+			(at 33.655 15.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 35.56 14.986 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 31.75 15.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 31.75 15.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 31.75 15.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fd9709b7-1b93-43d6-85b7-177c3594aa79")
+		)
+		(instances
+			(project "ALU"
+				(path "/af6a4729-ad10-481d-b5ec-4f9b3e39694a"
+					(reference "#FLG01")
 					(unit 1)
 				)
 			)
@@ -16619,7 +17396,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 143.51 149.86 0)
 			(hide yes)
 			(show_name no)
@@ -16642,6 +17419,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 143.51 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 143.51 149.86 0)
 			(hide yes)
 			(show_name no)
@@ -16735,7 +17523,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 143.51 165.1 0)
 			(hide yes)
 			(show_name no)
@@ -16758,6 +17546,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 143.51 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 143.51 165.1 0)
 			(hide yes)
 			(show_name no)
@@ -16851,7 +17650,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 140.97 54.61 0)
 			(hide yes)
 			(show_name no)
@@ -16874,6 +17673,17 @@
 			)
 		)
 		(property "Description" "Quad 2-input XOR"
+			(at 140.97 54.61 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC86N"
 			(at 140.97 54.61 0)
 			(hide yes)
 			(show_name no)

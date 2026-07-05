@@ -2976,10 +2976,6 @@
 		(uuid "9aa8feff-ab8a-4628-aff0-5b9d73c1cee5")
 	)
 	(no_connect
-		(at -62.23 -26.67)
-		(uuid "d18cc789-bf93-4ddf-be25-cd9f26e8de4b")
-	)
-	(no_connect
 		(at 140.97 66.04)
 		(uuid "d73a6aed-5455-481d-bc24-c0ce70f0abb6")
 	)
@@ -3725,7 +3721,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "5V"
 		(shape input)
 		(at 58.42 140.97 0)
 		(fields_autoplaced yes)
@@ -3737,7 +3733,7 @@
 		)
 		(uuid "357072e3-c9d1-462c-91be-c6a70a0b8b43")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 65.2757 140.97 0)
+			(at 63.7033 140.97 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3821,7 +3817,7 @@
 			)
 		)
 	)
-	(global_label "CLR"
+	(global_label "CLEAR"
 		(shape input)
 		(at 132.08 88.9 180)
 		(fields_autoplaced yes)
@@ -3833,7 +3829,7 @@
 		)
 		(uuid "45f1a9ad-003e-474a-b976-e2ebdf178348")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 125.5267 88.9 0)
+			(at 123.2891 88.9 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3893,7 +3889,7 @@
 			)
 		)
 	)
-	(global_label "CLK"
+	(global_label "CLOCK"
 		(shape input)
 		(at 132.08 83.82 180)
 		(fields_autoplaced yes)
@@ -3905,7 +3901,7 @@
 		)
 		(uuid "65bb6661-1f21-4e0f-8d08-261526bdd0de")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 125.5267 83.82 0)
+			(at 122.9262 83.82 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4037,7 +4033,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "5V"
 		(shape input)
 		(at 35.56 140.97 180)
 		(fields_autoplaced yes)
@@ -4049,7 +4045,7 @@
 		)
 		(uuid "9a1929e8-ad6c-443e-a82d-d98c6986afc1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 28.7043 140.97 0)
+			(at 30.2767 140.97 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4229,7 +4225,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "5V"
 		(shape input)
 		(at 153.67 38.1 180)
 		(fields_autoplaced yes)
@@ -4241,7 +4237,7 @@
 		)
 		(uuid "f96e3e22-78e3-4e9b-aacc-8f80829613bc")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 146.8143 38.1 0)
+			(at 148.3867 38.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4309,7 +4305,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 39.37 148.59 0)
 			(hide yes)
 			(show_name no)
@@ -4332,6 +4328,17 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 39.37 148.59 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Autoroute-decouple" "U6"
 			(at 39.37 148.59 0)
 			(hide yes)
 			(show_name no)
@@ -4389,7 +4396,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 74.93 57.15 0)
 			(hide yes)
 			(show_name no)
@@ -4412,6 +4419,17 @@
 			)
 		)
 		(property "Description" "Quad And2"
+			(at 74.93 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC08N"
 			(at 74.93 57.15 0)
 			(hide yes)
 			(show_name no)
@@ -4507,7 +4525,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder"
 			(at 194.31 71.12 0)
 			(hide yes)
 			(show_name no)
@@ -4600,7 +4618,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-16_W7.62mm_Socket_LongPads"
 			(at 153.67 73.66 0)
 			(hide yes)
 			(show_name no)
@@ -4623,6 +4641,17 @@
 			)
 		)
 		(property "Description" "4-bit D-type Register, 3 state out"
+			(at 153.67 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC173N"
 			(at 153.67 73.66 0)
 			(hide yes)
 			(show_name no)
@@ -4722,7 +4751,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 204.47 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -4802,7 +4831,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 74.93 93.98 0)
 			(hide yes)
 			(show_name no)
@@ -4835,47 +4864,58 @@
 				)
 			)
 		)
+		(property "MPN" "SN74HC08N"
+			(at 74.93 93.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
-			(uuid "ee07b63e-6512-48cc-a2bc-ce307485e3dd")
+			(uuid "ee07b63e-6512-48cc-a2bc-ce307485e3de")
 		)
 		(pin "2"
-			(uuid "6c03fea7-bd97-4d57-96c7-39ebb30d8931")
+			(uuid "6c03fea7-bd97-4d57-96c7-39ebb30d8932")
 		)
 		(pin "3"
-			(uuid "dc1e8f90-69d6-4e22-9ec4-93f3d1b16621")
+			(uuid "dc1e8f90-69d6-4e22-9ec4-93f3d1b16622")
 		)
 		(pin "4"
-			(uuid "eeefc56e-323d-4344-a2e1-3890087400e7")
+			(uuid "eeefc56e-323d-4344-a2e1-3890087400e8")
 		)
 		(pin "5"
-			(uuid "17edc086-36e3-497a-a6e0-2569f89fda6a")
+			(uuid "17edc086-36e3-497a-a6e0-2569f89fda6b")
 		)
 		(pin "6"
-			(uuid "19ec3ff5-a58e-43d6-8ea1-126d1b15a70c")
+			(uuid "19ec3ff5-a58e-43d6-8ea1-126d1b15a70d")
 		)
 		(pin "8"
-			(uuid "7e6cd9d6-ee5c-4888-a4c4-6e4863a13f7a")
+			(uuid "7e6cd9d6-ee5c-4888-a4c4-6e4863a13f7b")
 		)
 		(pin "9"
-			(uuid "034ff82a-e282-4c28-a06a-a7c62ac20dc0")
+			(uuid "034ff82a-e282-4c28-a06a-a7c62ac20dc1")
 		)
 		(pin "10"
-			(uuid "2bb84113-6761-4961-b86f-3d69b34fbf85")
+			(uuid "2bb84113-6761-4961-b86f-3d69b34fbf86")
 		)
 		(pin "11"
-			(uuid "ad5b9802-35ed-4bbf-adba-0966757c112d")
+			(uuid "ad5b9802-35ed-4bbf-adba-0966757c112e")
 		)
 		(pin "12"
-			(uuid "2a79068a-f2b3-49cf-a263-0b730216328b")
+			(uuid "2a79068a-f2b3-49cf-a263-0b730216328c")
 		)
 		(pin "13"
-			(uuid "d13ea702-f49f-42f0-8340-cce398243452")
+			(uuid "d13ea702-f49f-42f0-8340-cce398243453")
 		)
 		(pin "7"
-			(uuid "806586cd-5909-4c6a-8147-76a9299cd688")
+			(uuid "806586cd-5909-4c6a-8147-76a9299cd689")
 		)
 		(pin "14"
-			(uuid "bb4709f9-7db5-46b2-b171-ece7c7e6fcd8")
+			(uuid "bb4709f9-7db5-46b2-b171-ece7c7e6fcd9")
 		)
 		(instances
 			(project "ALU"
@@ -4920,7 +4960,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 58.42 166.37 0)
 			(hide yes)
 			(show_name no)
@@ -4953,47 +4993,58 @@
 				)
 			)
 		)
+		(property "MPN" "SN74HC08N"
+			(at 58.42 166.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
-			(uuid "ee07b63e-6512-48cc-a2bc-ce307485e3dd")
+			(uuid "ee07b63e-6512-48cc-a2bc-ce307485e3df")
 		)
 		(pin "2"
-			(uuid "6c03fea7-bd97-4d57-96c7-39ebb30d8931")
+			(uuid "6c03fea7-bd97-4d57-96c7-39ebb30d8933")
 		)
 		(pin "3"
-			(uuid "dc1e8f90-69d6-4e22-9ec4-93f3d1b16621")
+			(uuid "dc1e8f90-69d6-4e22-9ec4-93f3d1b16623")
 		)
 		(pin "4"
-			(uuid "eeefc56e-323d-4344-a2e1-3890087400e7")
+			(uuid "eeefc56e-323d-4344-a2e1-3890087400e9")
 		)
 		(pin "5"
-			(uuid "17edc086-36e3-497a-a6e0-2569f89fda6a")
+			(uuid "17edc086-36e3-497a-a6e0-2569f89fda6c")
 		)
 		(pin "6"
-			(uuid "19ec3ff5-a58e-43d6-8ea1-126d1b15a70c")
+			(uuid "19ec3ff5-a58e-43d6-8ea1-126d1b15a70e")
 		)
 		(pin "8"
-			(uuid "7e6cd9d6-ee5c-4888-a4c4-6e4863a13f7a")
+			(uuid "7e6cd9d6-ee5c-4888-a4c4-6e4863a13f7c")
 		)
 		(pin "9"
-			(uuid "034ff82a-e282-4c28-a06a-a7c62ac20dc0")
+			(uuid "034ff82a-e282-4c28-a06a-a7c62ac20dc2")
 		)
 		(pin "10"
-			(uuid "2bb84113-6761-4961-b86f-3d69b34fbf85")
+			(uuid "2bb84113-6761-4961-b86f-3d69b34fbf87")
 		)
 		(pin "11"
-			(uuid "ad5b9802-35ed-4bbf-adba-0966757c112d")
+			(uuid "ad5b9802-35ed-4bbf-adba-0966757c112f")
 		)
 		(pin "12"
-			(uuid "2a79068a-f2b3-49cf-a263-0b730216328b")
+			(uuid "2a79068a-f2b3-49cf-a263-0b730216328d")
 		)
 		(pin "13"
-			(uuid "d13ea702-f49f-42f0-8340-cce398243452")
+			(uuid "d13ea702-f49f-42f0-8340-cce398243454")
 		)
 		(pin "7"
-			(uuid "806586cd-5909-4c6a-8147-76a9299cd688")
+			(uuid "806586cd-5909-4c6a-8147-76a9299cd68a")
 		)
 		(pin "14"
-			(uuid "bb4709f9-7db5-46b2-b171-ece7c7e6fcd8")
+			(uuid "bb4709f9-7db5-46b2-b171-ece7c7e6fcda")
 		)
 		(instances
 			(project "ALU"
@@ -5038,7 +5089,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder"
 			(at 194.31 49.53 0)
 			(hide yes)
 			(show_name no)
@@ -5083,10 +5134,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "25d175cf-9dfd-4fc9-94e2-ac3ebc055528")
+			(uuid "25d175cf-9dfd-4fc9-94e2-ac3ebc055529")
 		)
 		(pin "2"
-			(uuid "f01850b8-7e24-4c09-94da-0d6b530e260c")
+			(uuid "f01850b8-7e24-4c09-94da-0d6b530e260d")
 		)
 		(instances
 			(project "ALU"
@@ -5129,7 +5180,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 52.07 102.87 0)
 			(hide yes)
 			(show_name no)
@@ -5152,6 +5203,17 @@
 			)
 		)
 		(property "Description" "quad 2-input NOR gate"
+			(at 52.07 102.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC02N"
 			(at 52.07 102.87 0)
 			(hide yes)
 			(show_name no)
@@ -5245,7 +5307,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 157.48 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -5268,6 +5330,17 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 157.48 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Autoroute-decouple" "U8"
 			(at 157.48 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -5325,7 +5398,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 52.07 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -5348,6 +5421,17 @@
 			)
 		)
 		(property "Description" "quad 2-input NOR gate"
+			(at 52.07 67.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC02N"
 			(at 52.07 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -5441,7 +5525,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 54.61 148.59 0)
 			(hide yes)
 			(show_name no)
@@ -5474,11 +5558,22 @@
 				)
 			)
 		)
+		(property "Autoroute-decouple" "U7"
+			(at 54.61 148.59 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
-			(uuid "e447cc57-7a82-40fd-9c0b-f325e79f14ad")
+			(uuid "e447cc57-7a82-40fd-9c0b-f325e79f14ae")
 		)
 		(pin "1"
-			(uuid "2cbc0248-9ea8-46ee-a7d8-1cee8b463e86")
+			(uuid "2cbc0248-9ea8-46ee-a7d8-1cee8b463e87")
 		)
 		(instances
 			(project "ALU"
@@ -5521,7 +5616,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 52.07 85.09 0)
 			(hide yes)
 			(show_name no)
@@ -5544,6 +5639,17 @@
 			)
 		)
 		(property "Description" "quad 2-input NOR gate"
+			(at 52.07 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC02N"
 			(at 52.07 85.09 0)
 			(hide yes)
 			(show_name no)
@@ -5637,7 +5743,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 115.57 167.64 0)
 			(hide yes)
 			(show_name no)
@@ -5670,47 +5776,58 @@
 				)
 			)
 		)
+		(property "MPN" "SN74HC08N"
+			(at 115.57 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
-			(uuid "ee07b63e-6512-48cc-a2bc-ce307485e3dd")
+			(uuid "ee07b63e-6512-48cc-a2bc-ce307485e3e0")
 		)
 		(pin "2"
-			(uuid "6c03fea7-bd97-4d57-96c7-39ebb30d8931")
+			(uuid "6c03fea7-bd97-4d57-96c7-39ebb30d8934")
 		)
 		(pin "3"
-			(uuid "dc1e8f90-69d6-4e22-9ec4-93f3d1b16621")
+			(uuid "dc1e8f90-69d6-4e22-9ec4-93f3d1b16624")
 		)
 		(pin "4"
-			(uuid "eeefc56e-323d-4344-a2e1-3890087400e7")
+			(uuid "eeefc56e-323d-4344-a2e1-3890087400ea")
 		)
 		(pin "5"
-			(uuid "17edc086-36e3-497a-a6e0-2569f89fda6a")
+			(uuid "17edc086-36e3-497a-a6e0-2569f89fda6d")
 		)
 		(pin "6"
-			(uuid "19ec3ff5-a58e-43d6-8ea1-126d1b15a70c")
+			(uuid "19ec3ff5-a58e-43d6-8ea1-126d1b15a70f")
 		)
 		(pin "8"
-			(uuid "7e6cd9d6-ee5c-4888-a4c4-6e4863a13f7a")
+			(uuid "7e6cd9d6-ee5c-4888-a4c4-6e4863a13f7d")
 		)
 		(pin "9"
-			(uuid "034ff82a-e282-4c28-a06a-a7c62ac20dc0")
+			(uuid "034ff82a-e282-4c28-a06a-a7c62ac20dc3")
 		)
 		(pin "10"
-			(uuid "2bb84113-6761-4961-b86f-3d69b34fbf85")
+			(uuid "2bb84113-6761-4961-b86f-3d69b34fbf88")
 		)
 		(pin "11"
-			(uuid "ad5b9802-35ed-4bbf-adba-0966757c112d")
+			(uuid "ad5b9802-35ed-4bbf-adba-0966757c1130")
 		)
 		(pin "12"
-			(uuid "2a79068a-f2b3-49cf-a263-0b730216328b")
+			(uuid "2a79068a-f2b3-49cf-a263-0b730216328e")
 		)
 		(pin "13"
-			(uuid "d13ea702-f49f-42f0-8340-cce398243452")
+			(uuid "d13ea702-f49f-42f0-8340-cce398243455")
 		)
 		(pin "7"
-			(uuid "806586cd-5909-4c6a-8147-76a9299cd688")
+			(uuid "806586cd-5909-4c6a-8147-76a9299cd68b")
 		)
 		(pin "14"
-			(uuid "bb4709f9-7db5-46b2-b171-ece7c7e6fcd8")
+			(uuid "bb4709f9-7db5-46b2-b171-ece7c7e6fcdb")
 		)
 		(instances
 			(project "ALU"
@@ -5755,7 +5872,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 35.56 166.37 0)
 			(hide yes)
 			(show_name no)
@@ -5778,6 +5895,17 @@
 			)
 		)
 		(property "Description" "quad 2-input NOR gate"
+			(at 35.56 166.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC02N"
 			(at 35.56 166.37 0)
 			(hide yes)
 			(show_name no)
@@ -5871,7 +5999,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 52.07 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -5894,6 +6022,17 @@
 			)
 		)
 		(property "Description" "quad 2-input NOR gate"
+			(at 52.07 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74HC02N"
 			(at 52.07 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -5987,7 +6126,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 203.2 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -6021,10 +6160,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "526c1247-3b01-411d-a3eb-007ec50c2a9c")
+			(uuid "526c1247-3b01-411d-a3eb-007ec50c2a9d")
 		)
 		(pin "2"
-			(uuid "ba27a5b3-9d5b-44aa-b285-073253b5f787")
+			(uuid "ba27a5b3-9d5b-44aa-b285-073253b5f788")
 		)
 		(instances
 			(project "ALU"
@@ -6067,7 +6206,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_Socket_LongPads"
 			(at 95.25 73.66 0)
 			(hide yes)
 			(show_name no)
@@ -6100,47 +6239,58 @@
 				)
 			)
 		)
+		(property "MPN" "SN74HC08N"
+			(at 95.25 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
-			(uuid "ee07b63e-6512-48cc-a2bc-ce307485e3dd")
+			(uuid "ee07b63e-6512-48cc-a2bc-ce307485e3e1")
 		)
 		(pin "2"
-			(uuid "6c03fea7-bd97-4d57-96c7-39ebb30d8931")
+			(uuid "6c03fea7-bd97-4d57-96c7-39ebb30d8935")
 		)
 		(pin "3"
-			(uuid "dc1e8f90-69d6-4e22-9ec4-93f3d1b16621")
+			(uuid "dc1e8f90-69d6-4e22-9ec4-93f3d1b16625")
 		)
 		(pin "4"
-			(uuid "eeefc56e-323d-4344-a2e1-3890087400e7")
+			(uuid "eeefc56e-323d-4344-a2e1-3890087400eb")
 		)
 		(pin "5"
-			(uuid "17edc086-36e3-497a-a6e0-2569f89fda6a")
+			(uuid "17edc086-36e3-497a-a6e0-2569f89fda6e")
 		)
 		(pin "6"
-			(uuid "19ec3ff5-a58e-43d6-8ea1-126d1b15a70c")
+			(uuid "19ec3ff5-a58e-43d6-8ea1-126d1b15a710")
 		)
 		(pin "8"
-			(uuid "7e6cd9d6-ee5c-4888-a4c4-6e4863a13f7a")
+			(uuid "7e6cd9d6-ee5c-4888-a4c4-6e4863a13f7e")
 		)
 		(pin "9"
-			(uuid "034ff82a-e282-4c28-a06a-a7c62ac20dc0")
+			(uuid "034ff82a-e282-4c28-a06a-a7c62ac20dc4")
 		)
 		(pin "10"
-			(uuid "2bb84113-6761-4961-b86f-3d69b34fbf85")
+			(uuid "2bb84113-6761-4961-b86f-3d69b34fbf89")
 		)
 		(pin "11"
-			(uuid "ad5b9802-35ed-4bbf-adba-0966757c112d")
+			(uuid "ad5b9802-35ed-4bbf-adba-0966757c1131")
 		)
 		(pin "12"
-			(uuid "2a79068a-f2b3-49cf-a263-0b730216328b")
+			(uuid "2a79068a-f2b3-49cf-a263-0b730216328f")
 		)
 		(pin "13"
-			(uuid "d13ea702-f49f-42f0-8340-cce398243452")
+			(uuid "d13ea702-f49f-42f0-8340-cce398243456")
 		)
 		(pin "7"
-			(uuid "806586cd-5909-4c6a-8147-76a9299cd688")
+			(uuid "806586cd-5909-4c6a-8147-76a9299cd68c")
 		)
 		(pin "14"
-			(uuid "bb4709f9-7db5-46b2-b171-ece7c7e6fcd8")
+			(uuid "bb4709f9-7db5-46b2-b171-ece7c7e6fcdc")
 		)
 		(instances
 			(project "ALU"
