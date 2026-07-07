@@ -1,0 +1,147 @@
+===============================================================================
+ PROGRAM ROM BOARD - In-Place Programmable Program Memory
+ 8-Bit Computer
+ (This file matches ProgramROM.kicad_sch - keep the two in sync.)
+===============================================================================
+
+PURPOSE
+-------
+Holds the user program(s) in an AT28C64 EEPROM that can be reprogrammed in
+place by an Arduino, without removing the chip and without disturbing the rest
+of the computer. The board plugs onto the standard backplane (side rails) and
+connects to the bus entirely through global-label nets.
+
+Two mutually-exclusive modes, selected by PROG (active-high, from the Arduino,
+10k pull-DOWN so RUN is the safe default when the Arduino is off/unplugged):
+
+  PROG = 0  RUN      Computer owns the address (Local Bus A) and reads the ROM
+                     onto the data bus. Arduino isolated (outputs tri-stated).
+  PROG = 1  PROGRAM  Arduino owns A0-A7, the data bus, OE# and WE#, and asserts
+                     HALT to stop the clock. Computer side isolated.
+
+ADDRESSING
+----------
+AT28C64 = 8K x 8 (A0-A12). 8-bit addressing is used:
+  A0-A7   RUN: from Local Bus A (LBA0-7) via the 74HC541 buffer.
+          PROGRAM: from the Arduino via the 74HC595.  (the only muxed lines)
+  A8-A12  "Bank" select from a 5-way DIP switch in BOTH modes. The DIP chooses
+          which 256-byte program slot is active - you run and flash the same
+          slot, so the upper lines need no muxing.
+
+KEY POINTS
+----------
+* HALT (active-high backplane net) is driven by the Arduino during programming
+  to stop the clock so the program counter can't fight the '595. See note (1).
+* In RUN the 74HC157 forces WE# to +5V, so an Arduino fault cannot write while
+  the computer runs.
+* OE# is muxed: WRITE holds OE# high, VERIFY pulls it low to read back.
+* No transistors - WE# is handled by the mux + a 10k pull-up.
+* 5V is NOT shared with the Arduino: the computer powers the board; only GND is
+  common (the Arduino is self-powered over USB).
+
+===============================================================================
+ BACKPLANE NETS (global labels - come in from the side rails)
+===============================================================================
+  LBA0..LBA7   Local Bus A  -> EEPROM address A0-A7 (run mode), via U2
+  BUS0..BUS7   Data bus      <-> EEPROM data (run mode), via U4
+  ~{ROMO}      ROM output-enable (active low) -> EEPROM OE# in run mode
+  HALT         Stop-clock (active high) <- driven by Arduino via J2
+  5V, GND      Power rails
+
+INTERNAL NETS
+  EE_A0..EE_A12  EEPROM address pins (A0-7 muxed; A8-12 from DIP)
+  EE_D0..EE_D7   EEPROM data pins (tap point for '245, Arduino, LEDs)
+  ~{EEOE}        EEPROM OE#  (U5 Za)
+  ~{EEWE}        EEPROM WE#  (U5 Zb, 10k pull-up)
+  PROG           mode select
+  ~{PROG}        /PROG (U6 inverter) -> U3 '595 /OE
+  ARD_SER/SRCLK/RCLK, ~{AOE}, ~{AWE}   Arduino control to U3/U5
+
+===============================================================================
+ NET LIST  (net -> refdes.pin)
+===============================================================================
+PROG     : J2.1, R14.1, U2.1, U2.19, U4.19, U5.1, U6.1
+~{PROG}  : U3.13, U6.2
+~{ROMO}  : <rail>, U5.2          ~{AOE} : J2.5, U5.3      ~{EEOE}: U1.22, U5.4
+5V       : <rail>, U5.5          ~{AWE} : J2.6, U5.6      ~{EEWE}: U1.27, U5.7, R15.2
+HALT     : <rail>, J2.16
+
+ADDRESS LOW (A0-A7)            ADDRESS HIGH (A8-A12)
+ EE_A0: U1.10 U2.18 U3.15       EE_A8 : U1.25 SW1 R9.2
+ EE_A1: U1.9  U2.17 U3.1        EE_A9 : U1.24 SW1 R10.2
+ EE_A2: U1.8  U2.16 U3.2        EE_A10: U1.21 SW1 R11.2
+ EE_A3: U1.7  U2.15 U3.3        EE_A11: U1.23 SW1 R12.2
+ EE_A4: U1.6  U2.14 U3.4        EE_A12: U1.2  SW1 R13.2
+ EE_A5: U1.5  U2.13 U3.5       LBA0..7 -> U2.2..9 (541 inputs)
+ EE_A6: U1.4  U2.12 U3.6
+ EE_A7: U1.3  U2.11 U3.7
+
+DATA (EEPROM <-> '245 <-> bus ; Arduino + LED tap EEPROM side)
+ EE_D0: U1.11 U4.2  J2.7  D8     BUS0: U4.18  ... BUS7: U4.11
+ EE_D1: U1.12 U4.3  J2.8  D7
+ EE_D2: U1.13 U4.4  J2.9  D6
+ EE_D3: U1.15 U4.5  J2.10 D5
+ EE_D4: U1.16 U4.6  J2.11 D4
+ EE_D5: U1.17 U4.7  J2.12 D3
+ EE_D6: U1.18 U4.8  J2.13 D2
+ EE_D7: U1.19 U4.9  J2.14 D1
+ (D1=MSB at top of LED column ... D8=LSB. LEDs reflect the ROM data lines.)
+
+TIE-OFFS
+ U1.20 (CE#) -> GND        U1.28 -> 5V   U1.14 -> GND
+ U1.1, U1.26 (NC)          U3.9 (QH') NC
+ U4.1 (DIR) -> 5V (static A->B, EEPROM drives bus)
+ U5.15 (E#) -> GND ; U5 spare c/d inputs -> GND, Zc/Zd (9,12) NC
+ U6 unused gates B-F: inputs -> GND, outputs NC
+
+===============================================================================
+ COMPONENTS
+===============================================================================
+ U1  AT28C64        EEPROM            DIP-28 (W15.24)
+ U2  74HC541        addr buffer       DIP-20    (sym: 74LS541)
+ U3  74HC595        Arduino addr out  DIP-16
+ U4  74HC245        data isolation    DIP-20    (sym: 74LS245)
+ U5  74HC157        control mux       DIP-16    (sym: 74LS157)
+ U6  74HC04         inverter (/PROG)  DIP-14    (sym: 74LS04, 1 gate used)
+ SW1 SW_DIP_x05     A8-A12 bank select
+ J2  1x16 header    Arduino programming port
+ R9-R13  10k        pull-ups on EE_A8..A12
+ R14     10k        PROG pull-down
+ R15     10k        WE# pull-up
+ C1-C6   100nF      decoupling (one per IC)      C7  10uF  bulk
+ D1-D8 + R1-R8      data-line indicator LEDs (from Template; tied to EE_D7..D0)
+
+J2  ARDUINO HEADER (1x16) - GND-only power, no 5V
+  1 PROG    2 ARD_SER   3 ARD_SRCLK  4 ARD_RCLK  5 ~{AOE}  6 ~{AWE}
+  7..14 = EE_D0..EE_D7   15 GND   16 HALT
+
+===============================================================================
+ MODE TRUTH TABLE
+===============================================================================
+  Signal        RUN (PROG=0)             PROGRAM (PROG=1)
+  U2 '541 /OE   0 enabled (LBA->EE_A)     1 off
+  U3 '595 /OE   1 off                     0 enabled (Arduino->EE_A)
+  U4 '245 /OE   0 enabled (EE->BUS)       1 isolated
+  EE OE#        = ~{ROMO}                 = ~{AOE}  (hi=write, lo=verify)
+  EE WE#        = +5V (cannot write)      = ~{AWE}  (pulsed low)
+  HALT          (computer control)        asserted high by Arduino
+  Arduino D0-7  INPUT / Hi-Z              drive (write) / read (verify)
+
+===============================================================================
+ NOTES
+===============================================================================
+(1) HALT contention: HALT is normally driven by the control logic. If that
+    driver is push-pull, OR the Arduino's HALT in (diode-OR / spare gate, with
+    a pull-down on the clock side) rather than connecting directly, and keep the
+    Arduino pin high-Z except when programming. If the clock's HALT input is a
+    simple OR of sources this is already safe.
+(2) AT28C64 software data protection (SDP): if enabled, send the unlock
+    sequence before writes. Reuse the polling logic from MicroCodeUploader.
+(3) Use page write (<=64 bytes/cycle) + data polling (I/O7) for fast flashing.
+(4) Programming sequence: set DIP to slot -> PROG high (+HALT) -> SDP unlock ->
+    page write -> data-poll -> verify (OE# low, read D0-7) -> PROG low.
+
+ERC: clean except 2 "power pin not driven" notes - inherent to every sub-board
+on this backplane (power arrives via the bidirectional rail symbols). Same as
+the ALU/Registers boards.
+===============================================================================
