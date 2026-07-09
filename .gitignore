@@ -2,6 +2,9 @@
 *.zip
 *.ses
 *.bak
+*/*.lck
+*/*.bak
+*/*.zip
 R2
 *.history
 analysis/
