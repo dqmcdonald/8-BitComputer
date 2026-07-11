@@ -6442,6 +6442,12 @@
 		(uuid "0c9e26cb-cbcf-4239-931b-8a1d31c9e459")
 	)
 	(junction
+		(at 133.35 72.39)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "187a8f77-e8d0-462d-aa7f-c0f16075a065")
+	)
+	(junction
 		(at 281.94 69.85)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6538,12 +6544,6 @@
 		(uuid "9cc8d97d-9b18-426a-9ac4-799d6d2d0ef1")
 	)
 	(junction
-		(at 133.35 73.66)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c0e9a6bc-e5a8-41ec-a94b-29ae8f388551")
-	)
-	(junction
 		(at 281.94 35.56)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6566,12 +6566,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "f53aa828-4279-419e-99d7-6e04b58f7b7b")
-	)
-	(junction
-		(at 133.35 71.12)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "ffc364d1-53fe-4f59-8bf8-4f980666a75e")
 	)
 	(no_connect
 		(at 157.48 96.52)
@@ -6596,16 +6590,6 @@
 			(type default)
 		)
 		(uuid "011b5502-58cf-4bff-b941-4abfadc3ec9b")
-	)
-	(wire
-		(pts
-			(xy 133.35 68.58) (xy 133.35 71.12)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "018388c8-6e42-4dc6-be14-77e5ca9f63b8")
 	)
 	(wire
 		(pts
@@ -6699,6 +6683,16 @@
 	)
 	(wire
 		(pts
+			(xy 130.81 72.39) (xy 133.35 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08a04f28-44c4-456b-8738-32d398e7f5cc")
+	)
+	(wire
+		(pts
 			(xy 21.59 139.7) (xy 24.13 139.7)
 		)
 		(stroke
@@ -6776,6 +6770,16 @@
 			(type default)
 		)
 		(uuid "165d5d6e-eaf6-4d4e-8bbc-0f85e9241514")
+	)
+	(wire
+		(pts
+			(xy 133.35 72.39) (xy 133.35 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "184c9ebd-305f-4de8-b133-ff3bea7d7a7c")
 	)
 	(wire
 		(pts
@@ -6906,6 +6910,16 @@
 			(type default)
 		)
 		(uuid "2a6c5d86-bb89-4084-9bd6-a37ab0d59085")
+	)
+	(wire
+		(pts
+			(xy 133.35 71.12) (xy 133.35 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2b4cfb1a-94b8-48f1-9d92-42f7676ccbf2")
 	)
 	(wire
 		(pts
@@ -7546,16 +7560,6 @@
 			(type default)
 		)
 		(uuid "74ba4942-6ffa-48e8-9d20-5f5937cf8980")
-	)
-	(wire
-		(pts
-			(xy 133.35 73.66) (xy 133.35 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7586a4c2-5c13-49b3-b272-fadead224441")
 	)
 	(wire
 		(pts
@@ -8256,16 +8260,6 @@
 			(type default)
 		)
 		(uuid "be7dafee-0dd7-4e8c-a5be-7b5c925fbe83")
-	)
-	(wire
-		(pts
-			(xy 133.35 71.12) (xy 133.35 73.66)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bfb0d524-8f58-4e48-becf-61aa91b8bcfd")
 	)
 	(wire
 		(pts
@@ -9845,17 +9839,17 @@
 	)
 	(global_label "5V"
 		(shape input)
-		(at 133.35 78.74 0)
+		(at 133.35 68.58 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "280c883e-7d64-4cbc-bb4a-60687525dd1c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 138.6333 78.74 0)
+			(at 128.0667 68.58 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9863,7 +9857,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 	)
@@ -14523,6 +14517,30 @@
 			)
 		)
 	)
+	(global_label "GND"
+		(shape input)
+		(at 130.81 72.39 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "d6f9390f-7f3c-4fd7-9876-7be2a65e9ab2")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 123.9543 72.39 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
 	(global_label "INV5"
 		(shape input)
 		(at 204.47 87.63 0)
@@ -16019,7 +16037,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 185.42 100.33 0)
 			(hide yes)
 			(show_name no)
@@ -16181,7 +16199,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-16_W7.62mm_LongPads"
 			(at 147.32 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -16594,7 +16612,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-28_W15.24mm_LongPads"
 			(at 147.32 50.8 0)
 			(hide yes)
 			(show_name no)
@@ -16627,7 +16645,7 @@
 				)
 			)
 		)
-		(property "MPN" "28C256"
+		(property "MPN" "AT28C256"
 			(at 147.32 50.8 0)
 			(hide yes)
 			(show_name no)
@@ -16945,7 +16963,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 196.85 73.66 0)
 			(hide yes)
 			(show_name no)
@@ -17072,7 +17090,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 210.82 100.33 0)
 			(hide yes)
 			(show_name no)
@@ -17232,7 +17250,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 233.68 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -17450,7 +17468,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 196.85 21.59 0)
 			(hide yes)
 			(show_name no)
@@ -17657,7 +17675,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 233.68 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -18355,7 +18373,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 210.82 110.49 0)
 			(hide yes)
 			(show_name no)
@@ -18389,10 +18407,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55686")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba09f")
 		)
 		(instances
 			(project "ControlLogic"
@@ -18437,7 +18455,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 160.02 17.78 0)
 			(hide yes)
 			(show_name no)
@@ -18519,7 +18537,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x12_P2.54mm_Vertical"
 			(at 210.82 146.05 0)
 			(hide yes)
 			(show_name no)
@@ -18789,7 +18807,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 78.74 177.8 0)
 			(hide yes)
 			(show_name no)
@@ -18948,7 +18966,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 233.68 21.59 0)
 			(hide yes)
 			(show_name no)
@@ -19075,7 +19093,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 210.82 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -19109,10 +19127,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55687")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a0")
 		)
 		(instances
 			(project "ControlLogic"
@@ -19157,7 +19175,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 60.96 179.07 0)
 			(hide yes)
 			(show_name no)
@@ -19364,7 +19382,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 233.68 86.36 0)
 			(hide yes)
 			(show_name no)
@@ -19844,7 +19862,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 234.95 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -19878,10 +19896,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55688")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a1")
 		)
 		(instances
 			(project "ControlLogic"
@@ -20017,7 +20035,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 33.02 179.07 0)
 			(hide yes)
 			(show_name no)
@@ -20235,7 +20253,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 238.76 156.21 0)
 			(hide yes)
 			(show_name no)
@@ -20269,10 +20287,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55689")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a2")
 		)
 		(instances
 			(project "ControlLogic"
@@ -20314,7 +20332,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 238.76 146.05 0)
 			(hide yes)
 			(show_name no)
@@ -20348,10 +20366,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a5568a")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a3")
 		)
 		(instances
 			(project "ControlLogic"
@@ -20394,7 +20412,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 233.68 60.96 0)
 			(hide yes)
 			(show_name no)
@@ -20523,7 +20541,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 153.67 83.82 0)
 			(hide yes)
 			(show_name no)
@@ -20603,7 +20621,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 234.95 100.33 0)
 			(hide yes)
 			(show_name no)
@@ -20637,10 +20655,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a5568b")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a4")
 		)
 		(instances
 			(project "ControlLogic"
@@ -20763,7 +20781,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 233.68 72.39 0)
 			(hide yes)
 			(show_name no)
@@ -20890,7 +20908,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 196.85 46.99 0)
 			(hide yes)
 			(show_name no)
@@ -21019,7 +21037,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x15_P2.54mm_Vertical"
 			(at 148.59 144.78 0)
 			(hide yes)
 			(show_name no)
@@ -21138,7 +21156,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 196.85 34.29 0)
 			(hide yes)
 			(show_name no)
@@ -21345,7 +21363,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 196.85 59.69 0)
 			(hide yes)
 			(show_name no)
@@ -21472,7 +21490,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 185.42 121.92 0)
 			(hide yes)
 			(show_name no)
@@ -21506,10 +21524,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a5568c")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a5")
 		)
 		(instances
 			(project "ControlLogic"
@@ -21554,7 +21572,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x12_P2.54mm_Vertical"
 			(at 179.07 146.05 0)
 			(hide yes)
 			(show_name no)
@@ -21744,7 +21762,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:DIP-14_W7.62mm_LongPads"
 			(at 196.85 87.63 0)
 			(hide yes)
 			(show_name no)
@@ -21963,7 +21981,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder"
 			(at 49.53 177.8 0)
 			(hide yes)
 			(show_name no)
@@ -21997,10 +22015,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "cf6a1218-6270-4041-8913-961d58233990")
+			(uuid "cf6a1218-6270-4041-8913-961d58233991")
 		)
 		(pin "2"
-			(uuid "322af33a-1997-4d73-9955-3bd72ab4eb71")
+			(uuid "322af33a-1997-4d73-9955-3bd72ab4eb72")
 		)
 		(instances
 			(project "ControlLogic"
@@ -22214,7 +22232,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 185.42 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -22248,10 +22266,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a5568d")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a6")
 		)
 		(instances
 			(project "ControlLogic"
@@ -22296,7 +22314,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical"
 			(at 148.59 180.34 0)
 			(hide yes)
 			(show_name no)
@@ -22476,7 +22494,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 234.95 110.49 0)
 			(hide yes)
 			(show_name no)
@@ -22510,10 +22528,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a5568e")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a7")
 		)
 		(instances
 			(project "ControlLogic"
@@ -22636,7 +22654,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
 			(at 237.49 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -22670,10 +22688,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a55685")
+			(uuid "d24dbbe0-b278-4f4a-b71d-78e8b3a5568f")
 		)
 		(pin "2"
-			(uuid "2933f520-12d0-416f-8b16-b0db972ba09e")
+			(uuid "2933f520-12d0-416f-8b16-b0db972ba0a8")
 		)
 		(instances
 			(project "ControlLogic"
