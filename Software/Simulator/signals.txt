@@ -90,3 +90,32 @@ Decoding in the controller:
   bits[12:8]  = lower_direct
   bits[20:13] = decode(enc_upper)  if enc_upper  != 0 else 0
   bits[25:21] = upper_direct
+
+
+Control Word Invariants
+-----------------------
+
+Enforced by validate_microcode() in microcode.py, which write_roms() runs before
+writing rom1.bin/rom2.bin. A violation raises MicrocodeError, so an illegal word
+can never be burned into a ROM. The rules:
+
+1. RAMI and RAMO are never asserted together. RAMI is Direct 1 and RAMO is
+   Decoder 2, so nothing in the hardware prevents it: the RAM would drive the
+   bus and latch from it in the same cycle.
+
+2. RAMI and MRAI are never asserted together. The RAM write and the RAM address
+   register both act on the falling edge, so the write would land at an address
+   that is changing on the same edge. Load the address (MRAI) in one T-state and
+   write (RAMI) in the next — as STA/STB do.
+
+3. At most one bus driver per control word (COUO, ARGO, BRGO, ROMO, RAMO, ALUO,
+   IRGO). The Decoder 2 drivers are mutually exclusive by construction, but COUO
+   is a direct bit and can collide with any of them.
+
+4. Each decoder group is one-hot. Two signals in the same group have no valid
+   3-bit HC138 address, and encode() would silently emit the no-signal sentinel.
+
+5. Bit 13 (Decoder 2, Y0) is never set — it is the reserved no-signal slot.
+
+Rules 1 and 2 come from the same pair check: add further mutually exclusive
+signals to EXCLUSIVE_PAIRS in microcode.py.

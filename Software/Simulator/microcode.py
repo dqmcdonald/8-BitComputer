@@ -98,6 +98,80 @@ def _build_microcode() -> list[list[list[int]]]:
 microcode: list[list[list[int]]] = _build_microcode()
 
 
+class MicrocodeError(Exception):
+    """A control word violates a hardware invariant."""
+
+
+# Signals that drive the shared bus. At most one may be asserted per control
+# word; two drivers at once is output contention on real hardware.
+BUS_DRIVERS: tuple[SF, ...] = (
+    SF.COUO, SF.ARGO, SF.BRGO, SF.ROMO, SF.RAMO, SF.ALUO, SF.IRGO,
+)
+
+# Signal pairs that must never be asserted in the same control word.
+EXCLUSIVE_PAIRS: tuple[tuple[SF, SF, str], ...] = (
+    (SF.RAMI, SF.RAMO, "RAM would drive the bus and latch from it in the same cycle"),
+    (SF.RAMI, SF.MRAI, "RAM address register changes on the same edge as the RAM write"),
+)
+
+# The two HC138 decoder groups are one-hot: more than one bit set in a group
+# has no valid 3-bit encoding, and bit 13 is the reserved Y0 no-signal slot.
+_DECODER1_MASK = 0x0000FF   # bits 0-7
+_DECODER2_MASK = 0x1FE000   # bits 13-20
+_RESERVED_Y0   = 1 << 13
+
+
+def _signal_names(word: int, mask: int = ~0) -> str:
+    return "|".join(
+        flag.name for flag in SF if (word & mask) & flag == flag
+    ) or "none"
+
+
+def validate_word(word: int) -> list[str]:
+    """Return a list of hardware-invariant violations for one control word."""
+    errors: list[str] = []
+
+    for a, b, reason in EXCLUSIVE_PAIRS:
+        if word & a and word & b:
+            errors.append(f"{a.name} and {b.name} both asserted — {reason}")
+
+    drivers = [d.name for d in BUS_DRIVERS if word & d]
+    if len(drivers) > 1:
+        errors.append(f"bus contention — {', '.join(drivers)} all drive the bus at once")
+
+    for mask, group in ((_DECODER1_MASK, 1), (_DECODER2_MASK, 2)):
+        bits = word & mask
+        if bits & (bits - 1):
+            errors.append(
+                f"decoder group {group} is not one-hot — "
+                f"{_signal_names(word, mask)} cannot be encoded together"
+            )
+
+    if word & _RESERVED_Y0:
+        errors.append("reserved bit 13 (decoder 2 Y0) is set")
+
+    return errors
+
+
+def validate_microcode(mc: list[list[list[int]]] | None = None) -> None:
+    """Check every control word in the table, raising on any violation."""
+    mc = microcode if mc is None else mc
+
+    errors: list[str] = []
+    for flag_state, instrs in enumerate(mc):
+        for instr, t_states in enumerate(instrs):
+            for t, word in enumerate(t_states):
+                for err in validate_word(int(word)):
+                    errors.append(
+                        f"flags={flag_state} instr=0x{instr:02X} T{t}: {err}"
+                    )
+
+    if errors:
+        raise MicrocodeError(
+            f"{len(errors)} illegal control word(s):\n  " + "\n  ".join(errors)
+        )
+
+
 def _encode_word(word: int) -> tuple[int, int]:
     """Split a control word into two ROM bytes matching the hardware layout.
 
@@ -120,7 +194,12 @@ def write_roms(rom1_file: str = "rom1.bin", rom2_file: str = "rom2.bin") -> None
 
     10-bit ROM address: [flags(9:8) | instruction(7:3) | t_state(2:0)]
     giving 4 × 32 × 8 = 1024 entries per ROM file.
+
+    Raises MicrocodeError if any control word violates a hardware invariant,
+    so an illegal word can never be burned into a ROM.
     """
+    validate_microcode()
+
     rom1, rom2 = [], []
     for flag_state in range(4):
         for instr in range(32):
