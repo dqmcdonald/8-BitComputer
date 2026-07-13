@@ -7,6 +7,7 @@
 */*.zip
 R2
 *.history
+*.history [0-9]*
 analysis/
 *-design-review.md
 datasheets
