@@ -7,7 +7,6 @@ import logging
 import time
 from enum import IntEnum, auto
 from itertools import chain
-from signal import SIGABRT
 
 from bus import Bus
 from controller import Controller

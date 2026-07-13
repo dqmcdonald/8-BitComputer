@@ -1,0 +1,41 @@
+# Pylint configuration for the 8-Bit Computer simulator.
+#
+# Run from the Simulator directory:
+#     pylint *.py gui/
+#
+# The goal here is signal, not a perfect score. Stock pylint buries real
+# findings under several hundred complaints about house style, so the checks
+# below are switched off deliberately -- each one is a convention this codebase
+# has chosen, not a defect. Everything that could indicate an actual bug stays
+# enabled.
+
+[MAIN]
+# The modules import each other flat ("from bus import Bus"), so pylint needs
+# this directory on its path when it is invoked from elsewhere.
+init-hook = 'import sys; sys.path.insert(0, ".")'
+
+[MESSAGES CONTROL]
+disable =
+    # House style: methods here are short and self-describing. Docstrings are
+    # used where they earn their keep (module headers, non-obvious behaviour)
+    # rather than on every accessor.
+    missing-function-docstring,
+    missing-class-docstring,
+
+    # The simulator mirrors the hardware's naming (getSignalState, clock_pulse,
+    # setupSignals). Mixed camelCase/snake_case is intentional and consistent.
+    invalid-name,
+
+    # test_simulator.py deliberately reaches into module internals (_value,
+    # _controller, ...) to assert on state the public API doesn't expose.
+    protected-access,
+
+[FORMAT]
+max-line-length = 100
+
+[DESIGN]
+# Modules model hardware with a lot of wiring: constructors legitimately take
+# a bus, a controller, and several signals. The stock limit of 5 is too tight.
+max-args = 10
+max-positional-arguments = 10
+max-attributes = 12

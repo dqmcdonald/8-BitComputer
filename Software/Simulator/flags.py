@@ -14,7 +14,6 @@ ALU directly and presents its two bits to the control logic.
 import logging
 
 from alu import ALU
-from controller import Controller
 from module import Module
 from signals import Signal
 

@@ -7,7 +7,6 @@ The arthmetic logic unit can access them to perform arithmatic.
 import logging
 
 from bus import Bus
-from controller import Controller
 from module import Module
 from signals import Signal
 
@@ -69,11 +68,6 @@ class OutputRegister(Register):
     """
     Lightweight subclass of Register that displays the value when latched.
     """
-
-    def __init__(
-        self, name: str, master_bus: Bus, in_signal: Signal, out_signal: Signal
-    ):
-        super().__init__(name, master_bus, in_signal, out_signal)
 
     def getState(self) -> dict:
         state = super().getState()

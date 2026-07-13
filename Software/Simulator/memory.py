@@ -14,7 +14,6 @@ import logging
 import numpy as np
 
 from bus import Bus
-from controller import Controller
 from module import Module
 from register import Register
 from signals import Signal

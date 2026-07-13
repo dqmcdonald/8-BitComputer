@@ -8,7 +8,9 @@ Run with:
 import logging
 import tkinter as tk
 
-import gui  # ensure sys.path is set up
+# Imported for its side effect: gui/__init__.py puts the Simulator directory on
+# sys.path so the plain "from simulator import ..." below resolves. Not dead.
+import gui  # pylint: disable=unused-import
 from simulator import Simulator
 from gui.clock_panel import ClockPanel
 from gui.diagram import DiagramCanvas
