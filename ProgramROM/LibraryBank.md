@@ -1,8 +1,8 @@
 # Library Bank — Design Note
 
 *Reserving an address line on the ProgramROM board for a future "standard
-library" of subroutines. Status: idea / provision only — depends on stack +
-CALL/RET opcodes landing first. (2026-07-14)*
+library" of subroutines. Status: hardware provision built (J1, R16); the
+library itself depends on stack + CALL/RET opcodes landing first. (2026-07-14)*
 
 ## The idea
 
@@ -12,24 +12,49 @@ register" driving one of the bank lines would let a program jump into a fixed
 page of shared routines (multiply, BCD conversion, …) without spending its own
 256 bytes on them.
 
-**Decision: provision for it now.** The insurance is a 3-pin header and one
-backplane net; retrofitting later means cutting a trace on a fabbed board.
-Build nothing beyond the jumper until the stack and subroutine opcodes exist.
+**Decision: provision for it now.** The insurance is a header, a pull-down, and
+a spare hole; retrofitting later means cutting a trace on a fabbed board. Build
+nothing beyond the jumper until the stack and subroutine opcodes exist.
 
 ## Wiring
 
-Take **EE_A12 only** (the MSB, U1.2) off the DIP and route it through a 3-pin
-jumper:
+Take **EE_A12 only** (the MSB, U1.2) off the DIP and route it through **J1**
+(`LibSel`), a 1x04 header footprint with **only three pins installed**:
 
-| Pin | Connects to | Notes |
-|-----|-------------|-------|
-| Center | EE_A12 (U1.2) | |
-| Pos 1 "DIP" | SW1 + R13 pull-up | Exactly today's behavior. Default position. |
-| Pos 2 "LIB" | New backplane global label **LBA8** | 10k pulldown on this side so an undriven rail reads 0 (user space). |
+| Pin | Net | Connects to | Notes |
+|-----|-----|-------------|-------|
+| 1 "DIP" | `DIP` | SW1.6 + R13 10k pull-up to 5V | Exactly today's behavior. Default position (shunt on 1–2). |
+| 2 (center) | `EE_A12` | U1.2 | No resistor of its own — see below. |
+| 3 "LIB" | `LBA8` | R16 10k pull-down to GND | Shunt on 2–3. Undriven rail reads 0 (user space). |
+| 4 (no pin) | `LBA8` | — | Bare hole for a flying wire to a backplane line. |
+
+R13 must sit on the **DIP** net, not on `EE_A12`. Putting it on the common pin
+makes it fight R16 in the LIB position — the two 10k's divide 5V down to 2.5V,
+which the AT28C64 reads as a weak logic 1 (V_IH min 2.0V), i.e. the library
+bank, backwards from the intent.
+
+Because R13 now lives on the DIP side, `EE_A12` has no pull of its own and the
+**shunt is mandatory**: with J1 empty, U1.2 floats and the bank is undefined.
 
 Name the net **LBA8**, not LIB — it is really a 9th program-address bit; the
 1-bit microcode-set flip-flop that drives it is an implementation detail. Who
 drives it and from which board is decided later.
+
+### The fourth hole
+
+Every pin on the backplane connectors is already assigned (B1 1–76, B2 1–38),
+so LBA8 has no home there yet and the board does not commit to one. Instead J1
+pad 4 is an unpopulated through-hole on the LBA8 net — solder a wire from it to
+whichever backplane line the driver ends up on. Spare candidates already routed
+to the connectors:
+
+- **CTRL-19 … CTRL-35** — B1.41–B1.57 / B3.3–B3.19. The natural choice, since
+  LBA8 is microcode-driven and these reach the control connector.
+- **FL-2 … FL-7** — B1.33–B1.38 / B2.33–B2.38.
+
+The wire can stay soldered permanently. Pad 4 touches only LBA8, never
+`EE_A12`, so in the DIP position an external driver just drives an isolated
+stub — no contention, nothing to unplug when flipping back.
 
 ### Why the MSB, and why only one line
 
@@ -45,8 +70,8 @@ modes with no extra hardware:
    hardware.
 
 A second jumpered line only buys extra *fixed* library pages, which doesn't
-matter until the first 256 bytes are full. Padding A11 with the same 3-pin
-footprint is cheap and optional; only wire one register bit and one microcode
+matter until the first 256 bytes are full. Padding A11 with the same J1
+arrangement is cheap and optional; only wire one register bit and one microcode
 signal.
 
 ## Gotchas
@@ -54,7 +79,11 @@ signal.
 - **Flashing the library page**: the Arduino drives only A0–A7, so with the
   jumper in LIB position the upper pages can't be programmed. Flip the jumper
   to DIP and set the A12 switch when flashing the library. Rare, but deserves
-  a silkscreen note.
+  a silkscreen note. (The board has "DIP" and "Lib" position labels; the
+  flashing reminder is not on the silkscreen.)
+- **Fit the jumper**: no shunt on J1 means U1.2 floats — see Wiring. There is
+  no safe default position; the board needs the shunt on 1–2 to behave like a
+  plain DIP-banked ROM.
 - **Timing**: the bit is in the ROM fetch path — same rule as the RAM board's
   bank bits: it must change only on the clock edge that loads the PC and stay
   stable through CLOCK-high. A 74HC74 set/cleared by microcode outputs,
