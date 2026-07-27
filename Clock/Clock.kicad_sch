@@ -18498,7 +18498,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical"
+		(property "Footprint" "Package_TO_SOT_THT:TO-220F-3_Horizontal_TabDown"
 			(at 264.16 120.015 0)
 			(hide yes)
 			(show_name no)
