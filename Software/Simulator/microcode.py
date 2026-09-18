@@ -9,8 +9,16 @@ T0 and T1 are the fetch cycle, common to all instructions.
 """
 
 import argparse
+import sys
 
-import numpy as np
+try:
+    import numpy as np
+except ImportError:
+    sys.exit(
+        "error: numpy is required to generate the microcode ROMs.\n"
+        "Install it with:\n"
+        "    pip install -r requirements.txt"
+    )
 
 from signals import SignalFlags as SF
 from signals import encode

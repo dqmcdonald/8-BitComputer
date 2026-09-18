@@ -18,10 +18,25 @@ COMPILER    = os.path.join(HERE, 'compiler.py')
 ASSEMBLER   = os.path.join(HERE, '..', 'Assembler', 'assembler.py')
 SIM_DIR     = os.path.join(HERE, '..', 'Simulator')
 SIMULATOR   = os.path.join(SIM_DIR, 'simulator.py')
+MICROCODE   = os.path.join(SIM_DIR, 'microcode.py')
 ROM1        = os.path.join(SIM_DIR, 'rom1.bin')
 ROM2        = os.path.join(SIM_DIR, 'rom2.bin')
 TESTS_DIR   = os.path.join(HERE, 'tests')
 CLOCK_SPEED = '100000'
+
+
+def ensure_roms() -> None:
+    """The microcode ROMs are generated artifacts (gitignored); build them
+    on demand so a fresh checkout can run the tests without a manual step."""
+    if os.path.exists(ROM1) and os.path.exists(ROM2):
+        return
+    r = subprocess.run(
+        [sys.executable, MICROCODE, '--rom1', ROM1, '--rom2', ROM2],
+        capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        print(f"Failed to generate microcode ROMs:\n{r.stderr.strip()}")
+        sys.exit(1)
 
 
 def parse_expected(source: str) -> list[int] | None:
@@ -101,6 +116,8 @@ def main():
     if not test_files:
         print(f"No .hll test files found in {TESTS_DIR}")
         sys.exit(1)
+
+    ensure_roms()
 
     print(f"Running {len(test_files)} tests\n")
     passed = failed = 0
